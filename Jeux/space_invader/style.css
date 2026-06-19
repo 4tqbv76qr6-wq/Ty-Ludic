@@ -1,0 +1,29 @@
+body {
+    margin: 0;
+    background: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+canvas {
+    border: 2px solid white;
+}
+
+#controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+#controls button {
+    width: 80px;
+    height: 80px;
+    font-size: 30px;
+    border-radius: 10px;
+    border: none;
+    background: #333;
+    color: white;
+}
