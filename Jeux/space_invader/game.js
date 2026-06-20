@@ -2,6 +2,49 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
 /* ============================================================
+   SCORE & LEVEL
+   ============================================================ */
+let score = 0;
+let level = 1;
+let enemyFireRate = 0.02;
+let gameOverHandled = false;
+let gameRunning = true;
+
+const scoreDisplay = document.getElementById("score");
+const levelDisplay = document.getElementById("level");
+
+/* ============================================================
+   HIGH SCORES
+   ============================================================ */
+const HighScores = {
+    load() {
+        return JSON.parse(localStorage.getItem("highscores") || "[]");
+    },
+
+    save(list) {
+        localStorage.setItem("highscores", JSON.stringify(list));
+    },
+
+    add(name, score, level) {
+        const list = this.load();
+        list.push({ name, score, level });
+        list.sort((a, b) => b.score - a.score);
+        this.save(list.slice(0, 10)); // top 10
+    }
+};
+
+function displayHighScores() {
+    const div = document.getElementById("highscores");
+    const list = HighScores.load();
+
+    div.innerHTML =
+        "<h3>Meilleurs Scores</h3>" +
+        list.map(s => `<div>${s.name} — ${s.score} pts (Niv ${s.level})</div>`).join("");
+}
+
+displayHighScores();
+
+/* ============================================================
    MODULE : PLAYER
    ============================================================ */
 const player = {
@@ -25,7 +68,7 @@ const player = {
 };
 
 /* ============================================================
-   MODULE : BULLETS
+   MODULE : BULLETS (PLAYER)
    ============================================================ */
 const bullets = [];
 
@@ -44,6 +87,47 @@ const Bullets = {
     draw() {
         ctx.fillStyle = "red";
         bullets.forEach(b => ctx.fillRect(b.x, b.y, 4, 10));
+    }
+};
+
+/* ============================================================
+   MODULE : ENEMY BULLETS
+   ============================================================ */
+const enemyBullets = [];
+
+const EnemyBullets = {
+    fire(enemy) {
+        enemyBullets.push({
+            x: enemy.x + enemy.width / 2 - 2,
+            y: enemy.y + enemy.height
+        });
+    },
+
+    update() {
+        enemyBullets.forEach(b => b.y += 4);
+
+        for (let i = enemyBullets.length - 1; i >= 0; i--) {
+            if (enemyBullets[i].y > canvas.height) enemyBullets.splice(i, 1);
+        }
+
+        // collision avec le joueur
+        enemyBullets.forEach(b => {
+            if (
+                b.x < player.x + player.width &&
+                b.x + 4 > player.x &&
+                b.y < player.y + player.height &&
+                b.y + 10 > player.y
+            ) {
+                if (!gameOverHandled) {
+                    setTimeout(() => endGame(), 200);
+                }
+            }
+        });
+    },
+
+    draw() {
+        ctx.fillStyle = "yellow";
+        enemyBullets.forEach(b => ctx.fillRect(b.x, b.y, 4, 10));
     }
 };
 
@@ -84,7 +168,7 @@ const Enemies = {
             enemies.forEach(e => e.y += 20);
         }
 
-        // collisions
+        // collisions avec tirs du joueur
         bullets.forEach(b => {
             enemies.forEach(e => {
                 if (e.alive &&
@@ -95,9 +179,26 @@ const Enemies = {
                 ) {
                     e.alive = false;
                     b.y = -100;
+
+                    score += 10;
+                    scoreDisplay.textContent = "Score : " + score;
                 }
             });
         });
+
+        // tirs ennemis dynamiques
+        if (Math.random() < enemyFireRate) {
+            const shooters = enemies.filter(e => e.alive);
+            if (shooters.length > 0) {
+                const shooter = shooters[Math.floor(Math.random() * shooters.length)];
+                EnemyBullets.fire(shooter);
+            }
+        }
+
+        // passage au niveau suivant
+        if (enemies.every(e => !e.alive)) {
+            nextLevel();
+        }
     },
 
     draw() {
@@ -111,7 +212,145 @@ const Enemies = {
 Enemies.init();
 
 /* ============================================================
-   MODULE : TOUCH CONTROLS
+   MODULE : BUNKERS
+   ============================================================ */
+const bunkers = [];
+
+const Bunkers = {
+    init() {
+        const bunkerWidth = 60;
+        const bunkerHeight = 40;
+        const positions = [80, 220, 360];
+
+        positions.forEach(x => {
+            bunkers.push({
+                x: x,
+                y: canvas.height - 150,
+                width: bunkerWidth,
+                height: bunkerHeight,
+                health: 6
+            });
+        });
+    },
+
+    update() {
+        bullets.forEach(b => {
+            bunkers.forEach(bk => {
+                if (
+                    bk.health > 0 &&
+                    b.x < bk.x + bk.width &&
+                    b.x + 4 > bk.x &&
+                    b.y < bk.y + bk.height &&
+                    b.y + 10 > bk.y
+                ) {
+                    bk.health--;
+                    b.y = -100;
+                }
+            });
+        });
+
+        enemyBullets.forEach(b => {
+            bunkers.forEach(bk => {
+                if (
+                    bk.health > 0 &&
+                    b.x < bk.x + bk.width &&
+                    b.x + 4 > bk.x &&
+                    b.y < bk.y + bk.height &&
+                    b.y + 10 > bk.y
+                ) {
+                    bk.health--;
+                    b.y = canvas.height + 100;
+                }
+            });
+        });
+    },
+
+    draw() {
+        bunkers.forEach(bk => {
+            if (bk.health > 0) {
+                ctx.fillStyle = `rgb(${50 * bk.health}, ${200 - 20 * bk.health}, 50)`;
+                ctx.fillRect(bk.x, bk.y, bk.width, bk.height);
+            }
+        });
+    }
+};
+
+Bunkers.init();
+
+/* ============================================================
+   NIVEAUX
+   ============================================================ */
+function nextLevel() {
+    level++;
+    levelDisplay.textContent = "Niveau : " + level;
+
+    enemies.length = 0;
+    bullets.length = 0;
+    enemyBullets.length = 0;
+
+    enemyDirection = 1;
+    const rows = 3 + Math.floor(level / 2);
+    const cols = 6;
+
+    Enemies.init(rows, cols);
+
+    enemyFireRate = Math.min(0.05, 0.02 + level * 0.005);
+}
+
+/* ============================================================
+   GAME OVER SCREEN
+   ============================================================ */
+function showGameOverScreen() {
+    gameRunning = false;
+
+    ctx.fillStyle = "rgba(0,0,0,0.8)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#0ff";
+    ctx.font = "28px 'Press Start 2P'";
+    ctx.fillText("GAME OVER", 80, 200);
+
+    ctx.font = "16px 'Press Start 2P'";
+    ctx.fillText("Score : " + score, 120, 260);
+    ctx.fillText("Niveau : " + level, 120, 300);
+
+    ctx.fillText("▶ Rejouer", 120, 380);
+    ctx.fillText("◀ Menu", 120, 430);
+
+    canvas.addEventListener("click", handleGameOverClick);
+}
+
+function handleGameOverClick(e) {
+    const y = e.offsetY;
+
+    if (y > 350 && y < 400) {
+        document.location.reload();
+    }
+
+    if (y > 410 && y < 460) {
+        window.location.href = "menu.html";
+    }
+}
+
+/* ============================================================
+   FIN DE PARTIE
+   ============================================================ */
+function endGame() {
+    if (gameOverHandled) return;
+    gameOverHandled = true;
+
+    const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
+    if (name) {
+        HighScores.add(name, score, level);
+    }
+
+    setTimeout(() => {
+        showGameOverScreen();
+    }, 300);
+}
+
+/* ============================================================
+   TOUCH CONTROLS
    ============================================================ */
 const Controls = {
     init() {
@@ -137,19 +376,25 @@ Controls.init();
 function update() {
     player.update();
     Bullets.update();
+    EnemyBullets.update();
     Enemies.update();
+    Bunkers.update();
 }
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     player.draw();
+    Bunkers.draw();
     Bullets.draw();
     Enemies.draw();
+    EnemyBullets.draw();
 }
 
 function loop() {
-    update();
-    draw();
+    if (gameRunning) {
+        update();
+        draw();
+    }
     requestAnimationFrame(loop);
 }
 
