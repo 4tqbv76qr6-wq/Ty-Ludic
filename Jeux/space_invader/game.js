@@ -72,6 +72,7 @@ const player = {
     movingRight: false,
 
     update() {
+        if (!gameRunning) return;
         if (this.movingLeft && this.x > 0) this.x -= this.speed;
         if (this.movingRight && this.x < canvas.width - this.width) this.x += this.speed;
     },
@@ -89,10 +90,12 @@ const bullets = [];
 
 const Bullets = {
     fire() {
+        if (!gameRunning) return;
         bullets.push({ x: player.x + 18, y: player.y });
     },
 
     update() {
+        if (!gameRunning) return;
         bullets.forEach(b => b.y -= 5);
         for (let i = bullets.length - 1; i >= 0; i--) {
             if (bullets[i].y < 0) bullets.splice(i, 1);
@@ -112,6 +115,7 @@ const enemyBullets = [];
 
 const EnemyBullets = {
     fire(enemy) {
+        if (!gameRunning) return;
         enemyBullets.push({
             x: enemy.x + enemy.width / 2 - 2,
             y: enemy.y + enemy.height
@@ -119,6 +123,8 @@ const EnemyBullets = {
     },
 
     update() {
+        if (!gameRunning) return;
+
         enemyBullets.forEach(b => b.y += 4);
 
         for (let i = enemyBullets.length - 1; i >= 0; i--) {
@@ -155,6 +161,7 @@ let enemyDirection = 1;
 
 const Enemies = {
     init(rows = 3, cols = 6) {
+        enemies.length = 0;
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
                 enemies.push({
@@ -169,6 +176,8 @@ const Enemies = {
     },
 
     update() {
+        if (!gameRunning) return;
+
         enemies.forEach(e => {
             if (e.alive) e.x += enemyDirection;
         });
@@ -245,6 +254,8 @@ const Bunkers = {
     },
 
     update() {
+        if (!gameRunning) return;
+
         bullets.forEach(b => {
             bunkers.forEach(bk => {
                 if (
@@ -348,7 +359,7 @@ function endGame() {
     if (gameOverHandled) return;
     gameOverHandled = true;
 
-    // 🔥 Stopper immédiatement la boucle du jeu
+    // 🔥 Stopper immédiatement TOUT le jeu
     gameRunning = false;
 
     const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
@@ -406,10 +417,8 @@ function draw() {
 }
 
 function loop() {
-    if (gameRunning) {
-        update();
-        draw();
-    }
+    update();
+    draw();
     requestAnimationFrame(loop);
 }
 
