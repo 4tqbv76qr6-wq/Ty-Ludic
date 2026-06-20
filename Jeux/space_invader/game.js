@@ -47,18 +47,6 @@ function displayHighScores() {
 displayHighScores();
 
 /* ============================================================
-   HIGH SCORES (GLOBAL FIREBASE)
-   ============================================================ */
-function saveGlobalScore(name, score, level) {
-    db.collection("scores_space_invader").add({
-        name,
-        score,
-        level,
-        date: Date.now()
-    });
-}
-
-/* ============================================================
    PLAYER
    ============================================================ */
 const player = {
@@ -341,11 +329,9 @@ function endGame() {
     player.alive = false;
 
     const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
-    if (name) {
-        HighScores.add(name, score, level);
-        saveGlobalScore(name, score, level);
-    }
+    if (name) HighScores.add(name, score, level);
 
+    // 🔥 Activation des clics Game Over
     canvas.addEventListener("click", handleGameOverClick);
 }
 
