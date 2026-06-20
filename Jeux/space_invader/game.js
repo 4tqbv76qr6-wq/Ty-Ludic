@@ -56,25 +56,7 @@ function saveGlobalScore(name, score, level) {
         score,
         level,
         date: Date.now()
-    })
-    .then(() => console.log("Score global enregistré"))
-    .catch(err => console.error("Erreur Firestore :", err));
-}
-
-function loadGlobalScores() {
-    const div = document.getElementById("highscores");
-
-    db.collection("scores_space_invader")
-        .orderBy("score", "desc")
-        .limit(10)
-        .get()
-        .then(snapshot => {
-            const list = snapshot.docs.map(doc => doc.data());
-
-            div.innerHTML =
-                "<h3>Classement Mondial</h3>" +
-                list.map(s => `<div>${s.name} — ${s.score} pts (Niv ${s.level})</div>`).join("");
-        });
+    });
 }
 
 /* ============================================================
@@ -327,11 +309,9 @@ function nextLevel() {
 }
 
 /* ============================================================
-   GAME OVER
+   GAME OVER SCREEN
    ============================================================ */
 function showGameOverScreen() {
-    gameRunning = false;
-
     ctx.fillStyle = "rgba(0,0,0,0.8)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -362,11 +342,14 @@ function handleGameOverClick(e) {
 }
 
 /* ============================================================
-   END GAME
+   END GAME (CORRIGÉ)
    ============================================================ */
 function endGame() {
     if (gameOverHandled) return;
     gameOverHandled = true;
+
+    // 🔥 Stopper immédiatement la boucle du jeu
+    gameRunning = false;
 
     const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
 
@@ -376,7 +359,6 @@ function endGame() {
     }
 
     setTimeout(() => {
-        loadGlobalScores();
         showGameOverScreen();
     }, 300);
 }
@@ -406,6 +388,7 @@ Controls.init();
    GAME LOOP
    ============================================================ */
 function update() {
+    if (!gameRunning) return;
     player.update();
     Bullets.update();
     EnemyBullets.update();
