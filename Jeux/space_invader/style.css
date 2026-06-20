@@ -1,3 +1,4 @@
+/* --- Mise en page générale --- */
 body {
     margin: 0;
     background: radial-gradient(circle at center, #000, #050505, #000);
@@ -7,9 +8,10 @@ body {
     align-items: center;
     height: 100vh;
     font-family: 'Press Start 2P', monospace;
+    color: white;
 }
 
-/* Cadre arcade */
+/* --- Cadre arcade --- */
 #arcade-frame {
     background: #111;
     padding: 20px;
@@ -21,7 +23,7 @@ body {
     align-items: center;
 }
 
-/* Marquee rétro */
+/* --- Marquee rétro --- */
 #marquee {
     font-size: 28px;
     color: #0ff;
@@ -29,14 +31,14 @@ body {
     text-shadow: 0 0 10px #0ff;
 }
 
-/* Score + niveau */
+/* --- Score + niveau --- */
 #score, #level {
     color: white;
     font-size: 16px;
     margin-bottom: 5px;
 }
 
-/* Bezel autour du canvas */
+/* --- Bezel autour du canvas --- */
 #bezel {
     padding: 20px;
     background: radial-gradient(circle, #222, #000);
@@ -49,7 +51,7 @@ canvas {
     border: 2px solid white;
 }
 
-/* Contrôles tactiles */
+/* --- Contrôles tactiles --- */
 #controls {
     margin-top: 20px;
     display: flex;
@@ -67,16 +69,35 @@ canvas {
     box-shadow: 0 0 10px #0ff;
 }
 
-/* High Scores */
+/* --- High Scores (global + local) --- */
 #highscores {
     margin-top: 20px;
     color: white;
     font-size: 14px;
     text-align: center;
+    max-width: 500px;
 }
 
 #highscores h3 {
     margin-bottom: 10px;
+    color: #0ff;
+    text-shadow: 0 0 5px #0ff;
+}
+
+#highscores div {
+    margin: 4px 0;
+}
+
+/* Optionnel : si tu ajoutes les scores locaux */
+#localscores {
+    margin-top: 10px;
+    color: #ccc;
+    font-size: 12px;
+    text-align: center;
+}
+
+#localscores h3 {
+    margin-bottom: 5px;
     color: #0ff;
     text-shadow: 0 0 5px #0ff;
 }

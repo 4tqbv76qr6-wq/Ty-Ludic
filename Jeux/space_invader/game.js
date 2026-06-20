@@ -11,7 +11,6 @@ let score = 0;
 let level = 1;
 let enemyFireRate = 0.02;
 let gameOverHandled = false;
-let gameRunning = true;
 
 const scoreDisplay = document.getElementById("score");
 const levelDisplay = document.getElementById("level");
@@ -70,9 +69,10 @@ const player = {
     speed: 5,
     movingLeft: false,
     movingRight: false,
+    alive: true,
 
     update() {
-        if (!gameRunning) return;
+        if (!this.alive) return;
         if (this.movingLeft && this.x > 0) this.x -= this.speed;
         if (this.movingRight && this.x < canvas.width - this.width) this.x += this.speed;
     },
@@ -90,12 +90,11 @@ const bullets = [];
 
 const Bullets = {
     fire() {
-        if (!gameRunning) return;
+        if (!player.alive) return;
         bullets.push({ x: player.x + 18, y: player.y });
     },
 
     update() {
-        if (!gameRunning) return;
         bullets.forEach(b => b.y -= 5);
         for (let i = bullets.length - 1; i >= 0; i--) {
             if (bullets[i].y < 0) bullets.splice(i, 1);
@@ -115,7 +114,7 @@ const enemyBullets = [];
 
 const EnemyBullets = {
     fire(enemy) {
-        if (!gameRunning) return;
+        if (!player.alive) return;
         enemyBullets.push({
             x: enemy.x + enemy.width / 2 - 2,
             y: enemy.y + enemy.height
@@ -123,8 +122,6 @@ const EnemyBullets = {
     },
 
     update() {
-        if (!gameRunning) return;
-
         enemyBullets.forEach(b => b.y += 4);
 
         for (let i = enemyBullets.length - 1; i >= 0; i--) {
@@ -176,8 +173,6 @@ const Enemies = {
     },
 
     update() {
-        if (!gameRunning) return;
-
         enemies.forEach(e => {
             if (e.alive) e.x += enemyDirection;
         });
@@ -208,7 +203,7 @@ const Enemies = {
             });
         });
 
-        if (Math.random() < enemyFireRate) {
+        if (Math.random() < enemyFireRate && player.alive) {
             const shooters = enemies.filter(e => e.alive);
             if (shooters.length > 0) {
                 const shooter = shooters[Math.floor(Math.random() * shooters.length)];
@@ -254,8 +249,6 @@ const Bunkers = {
     },
 
     update() {
-        if (!gameRunning) return;
-
         bullets.forEach(b => {
             bunkers.forEach(bk => {
                 if (
@@ -336,10 +329,29 @@ function showGameOverScreen() {
 
     ctx.fillText("▶ Rejouer", 120, 380);
     ctx.fillText("◀ Menu", 120, 430);
+}
+
+/* ============================================================
+   END GAME
+   ============================================================ */
+function endGame() {
+    if (gameOverHandled) return;
+    gameOverHandled = true;
+
+    player.alive = false;
+
+    const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
+    if (name) {
+        HighScores.add(name, score, level);
+        saveGlobalScore(name, score, level);
+    }
 
     canvas.addEventListener("click", handleGameOverClick);
 }
 
+/* ============================================================
+   CLICK HANDLER
+   ============================================================ */
 function handleGameOverClick(e) {
     const y = e.offsetY;
 
@@ -350,27 +362,6 @@ function handleGameOverClick(e) {
     if (y > 410 && y < 460) {
         window.location.href = "menu.html";
     }
-}
-
-/* ============================================================
-   END GAME (ARRÊT COMPLET)
-   ============================================================ */
-function endGame() {
-    if (gameOverHandled) return;
-    gameOverHandled = true;
-
-    // 🔥 Stoppe TOUT immédiatement
-    gameRunning = false;
-
-    const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
-
-    if (name) {
-        HighScores.add(name, score, level);
-        saveGlobalScore(name, score, level);
-    }
-
-    // 🔥 On dessine le Game Over APRÈS l’arrêt complet
-    showGameOverScreen();
 }
 
 /* ============================================================
@@ -395,15 +386,37 @@ const Controls = {
 Controls.init();
 
 /* ============================================================
-   GAME LOOP (ARRÊT COMPLET)
+   GAME LOOP
    ============================================================ */
-function loop() {
-    update();   // s’exécute seulement si gameRunning = true
-    draw();     // dessine toujours la frame actuelle
+function update() {
+    if (!player.alive) return;
 
-    if (gameRunning) {
-        requestAnimationFrame(loop);  // 🔥 on boucle SEULEMENT si le jeu tourne
+    player.update();
+    Bullets.update();
+    EnemyBullets.update();
+    Enemies.update();
+    Bunkers.update();
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!player.alive) {
+        showGameOverScreen();
+        return;
     }
+
+    player.draw();
+    Bunkers.draw();
+    Bullets.draw();
+    Enemies.draw();
+    EnemyBullets.draw();
+}
+
+function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
 }
 
 loop();
