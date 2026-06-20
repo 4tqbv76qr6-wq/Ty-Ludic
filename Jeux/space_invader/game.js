@@ -1,3 +1,6 @@
+/* ============================================================
+   CANVAS
+   ============================================================ */
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
@@ -14,7 +17,7 @@ const scoreDisplay = document.getElementById("score");
 const levelDisplay = document.getElementById("level");
 
 /* ============================================================
-   HIGH SCORES
+   HIGH SCORES (LOCAL)
    ============================================================ */
 const HighScores = {
     load() {
@@ -29,7 +32,7 @@ const HighScores = {
         const list = this.load();
         list.push({ name, score, level });
         list.sort((a, b) => b.score - a.score);
-        this.save(list.slice(0, 10)); // top 10
+        this.save(list.slice(0, 10));
     }
 };
 
@@ -38,14 +41,44 @@ function displayHighScores() {
     const list = HighScores.load();
 
     div.innerHTML =
-        "<h3>Meilleurs Scores</h3>" +
+        "<h3>Meilleurs Scores (Local)</h3>" +
         list.map(s => `<div>${s.name} — ${s.score} pts (Niv ${s.level})</div>`).join("");
 }
 
 displayHighScores();
 
 /* ============================================================
-   MODULE : PLAYER
+   HIGH SCORES (GLOBAL FIREBASE)
+   ============================================================ */
+function saveGlobalScore(name, score, level) {
+    db.collection("scores_space_invader").add({
+        name,
+        score,
+        level,
+        date: Date.now()
+    })
+    .then(() => console.log("Score global enregistré"))
+    .catch(err => console.error("Erreur Firestore :", err));
+}
+
+function loadGlobalScores() {
+    const div = document.getElementById("highscores");
+
+    db.collection("scores_space_invader")
+        .orderBy("score", "desc")
+        .limit(10)
+        .get()
+        .then(snapshot => {
+            const list = snapshot.docs.map(doc => doc.data());
+
+            div.innerHTML =
+                "<h3>Classement Mondial</h3>" +
+                list.map(s => `<div>${s.name} — ${s.score} pts (Niv ${s.level})</div>`).join("");
+        });
+}
+
+/* ============================================================
+   PLAYER
    ============================================================ */
 const player = {
     x: canvas.width / 2 - 20,
@@ -68,7 +101,7 @@ const player = {
 };
 
 /* ============================================================
-   MODULE : BULLETS (PLAYER)
+   BULLETS (PLAYER)
    ============================================================ */
 const bullets = [];
 
@@ -91,7 +124,7 @@ const Bullets = {
 };
 
 /* ============================================================
-   MODULE : ENEMY BULLETS
+   ENEMY BULLETS
    ============================================================ */
 const enemyBullets = [];
 
@@ -110,7 +143,6 @@ const EnemyBullets = {
             if (enemyBullets[i].y > canvas.height) enemyBullets.splice(i, 1);
         }
 
-        // collision avec le joueur
         enemyBullets.forEach(b => {
             if (
                 b.x < player.x + player.width &&
@@ -132,7 +164,7 @@ const EnemyBullets = {
 };
 
 /* ============================================================
-   MODULE : ENEMIES
+   ENEMIES
    ============================================================ */
 const enemies = [];
 const enemyWidth = 40;
@@ -168,7 +200,6 @@ const Enemies = {
             enemies.forEach(e => e.y += 20);
         }
 
-        // collisions avec tirs du joueur
         bullets.forEach(b => {
             enemies.forEach(e => {
                 if (e.alive &&
@@ -186,7 +217,6 @@ const Enemies = {
             });
         });
 
-        // tirs ennemis dynamiques
         if (Math.random() < enemyFireRate) {
             const shooters = enemies.filter(e => e.alive);
             if (shooters.length > 0) {
@@ -195,7 +225,6 @@ const Enemies = {
             }
         }
 
-        // passage au niveau suivant
         if (enemies.every(e => !e.alive)) {
             nextLevel();
         }
@@ -212,7 +241,7 @@ const Enemies = {
 Enemies.init();
 
 /* ============================================================
-   MODULE : BUNKERS
+   BUNKERS
    ============================================================ */
 const bunkers = [];
 
@@ -278,7 +307,7 @@ const Bunkers = {
 Bunkers.init();
 
 /* ============================================================
-   NIVEAUX
+   LEVELS
    ============================================================ */
 function nextLevel() {
     level++;
@@ -298,7 +327,7 @@ function nextLevel() {
 }
 
 /* ============================================================
-   GAME OVER SCREEN
+   GAME OVER
    ============================================================ */
 function showGameOverScreen() {
     gameRunning = false;
@@ -333,18 +362,21 @@ function handleGameOverClick(e) {
 }
 
 /* ============================================================
-   FIN DE PARTIE
+   END GAME
    ============================================================ */
 function endGame() {
     if (gameOverHandled) return;
     gameOverHandled = true;
 
     const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
+
     if (name) {
         HighScores.add(name, score, level);
+        saveGlobalScore(name, score, level);
     }
 
     setTimeout(() => {
+        loadGlobalScores();
         showGameOverScreen();
     }, 300);
 }
