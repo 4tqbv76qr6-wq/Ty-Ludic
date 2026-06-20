@@ -353,13 +353,13 @@ function handleGameOverClick(e) {
 }
 
 /* ============================================================
-   END GAME (CORRIGÉ)
+   END GAME (ARRÊT COMPLET)
    ============================================================ */
 function endGame() {
     if (gameOverHandled) return;
     gameOverHandled = true;
 
-    // 🔥 Stopper immédiatement TOUT le jeu
+    // 🔥 Stoppe TOUT immédiatement
     gameRunning = false;
 
     const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
@@ -369,9 +369,8 @@ function endGame() {
         saveGlobalScore(name, score, level);
     }
 
-    setTimeout(() => {
-        showGameOverScreen();
-    }, 300);
+    // 🔥 On dessine le Game Over APRÈS l’arrêt complet
+    showGameOverScreen();
 }
 
 /* ============================================================
@@ -396,30 +395,15 @@ const Controls = {
 Controls.init();
 
 /* ============================================================
-   GAME LOOP
+   GAME LOOP (ARRÊT COMPLET)
    ============================================================ */
-function update() {
-    if (!gameRunning) return;
-    player.update();
-    Bullets.update();
-    EnemyBullets.update();
-    Enemies.update();
-    Bunkers.update();
-}
-
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    player.draw();
-    Bunkers.draw();
-    Bullets.draw();
-    Enemies.draw();
-    EnemyBullets.draw();
-}
-
 function loop() {
-    update();
-    draw();
-    requestAnimationFrame(loop);
+    update();   // s’exécute seulement si gameRunning = true
+    draw();     // dessine toujours la frame actuelle
+
+    if (gameRunning) {
+        requestAnimationFrame(loop);  // 🔥 on boucle SEULEMENT si le jeu tourne
+    }
 }
 
 loop();
