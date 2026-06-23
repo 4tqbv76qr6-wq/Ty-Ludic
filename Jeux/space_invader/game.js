@@ -1,8 +1,105 @@
 /* ============================================================
+   RESPONSIVE CANVAS
+   ============================================================ */
+function resizeGame() {
+    const wrapper = document.querySelector(".canvas-wrapper");
+    const canvas = document.getElementById("game");
+
+    const ratio = 500 / 600; // ratio d'origine
+
+    const width = wrapper.clientWidth;
+    const height = width / ratio;
+
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+}
+
+window.addEventListener("resize", resizeGame);
+window.addEventListener("orientationchange", resizeGame);
+window.addEventListener("load", resizeGame);
+
+/* ============================================================
    CANVAS
    ============================================================ */
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+
+/* ============================================================
+   STARFIELD BACKGROUND
+   ============================================================ */
+const stars = [];
+
+function initStars(count = 80) {
+    stars.length = 0;
+    for (let i = 0; i < count; i++) {
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2 + 1,
+            speed: Math.random() * 0.5 + 0.2
+        });
+    }
+}
+
+function updateStars() {
+    stars.forEach(s => {
+        s.y += s.speed;
+        if (s.y > canvas.height) {
+            s.y = 0;
+            s.x = Math.random() * canvas.width;
+        }
+    });
+}
+
+function drawStars() {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#0ff";
+    stars.forEach(s => {
+        ctx.fillRect(s.x, s.y, s.size, s.size);
+    });
+}
+
+initStars();
+
+/* ============================================================
+   EXPLOSIONS
+   ============================================================ */
+const explosions = [];
+
+function addExplosion(x, y) {
+    explosions.push({
+        x,
+        y,
+        frame: 0,
+        maxFrame: 8,
+        size: 10
+    });
+}
+
+function updateExplosions() {
+    for (let i = explosions.length - 1; i >= 0; i--) {
+        explosions[i].frame++;
+        if (explosions[i].frame > explosions[i].maxFrame) {
+            explosions.splice(i, 1);
+        }
+    }
+}
+
+function drawExplosions() {
+    explosions.forEach(ex => {
+        const p = ex.frame / ex.maxFrame; // progression 0 → 1
+        const alpha = 1 - p;
+        const size = ex.size + p * 20;
+
+        ctx.fillStyle = `rgba(255, 200, 0, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(ex.x, ex.y, size, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+
 
 /* ============================================================
    SCORE & LEVEL
@@ -53,21 +150,53 @@ const player = {
     x: canvas.width / 2 - 20,
     y: canvas.height - 60,
     width: 40,
-    height: 20,
+    height: 24,
     speed: 5,
     movingLeft: false,
     movingRight: false,
     alive: true,
+    flameFrame: 0, // animation propulsion
 
     update() {
         if (!this.alive) return;
+
         if (this.movingLeft && this.x > 0) this.x -= this.speed;
         if (this.movingRight && this.x < canvas.width - this.width) this.x += this.speed;
+
+        // animation de la flamme
+        this.flameFrame = (this.flameFrame + 1) % 20;
     },
 
     draw() {
         ctx.fillStyle = "white";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+
+        const x = this.x;
+        const y = this.y;
+
+        // --- STYLE 1 : VAISSEAU CLASSIQUE AMÉLIORÉ ---
+
+        // cockpit
+        ctx.fillRect(x + 12, y, 16, 6);
+
+        // corps principal
+        ctx.fillRect(x + 6, y + 6, 28, 10);
+
+        // ailes
+        ctx.fillRect(x, y + 8, 10, 12);
+        ctx.fillRect(x + 30, y + 8, 10, 12);
+
+        // base
+        ctx.fillRect(x + 8, y + 16, 24, 6);
+
+        // --- PROPULSION ANIMÉE ---
+        // flamme qui pulse : petite / grande / petite / grande
+        const flameSize = (this.flameFrame < 10) ? 6 : 10;
+
+        ctx.fillStyle = "orange";
+        ctx.fillRect(x + 18, y + 22, 4, flameSize);
+
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(x + 19, y + 22, 2, flameSize - 2);
     }
 };
 
@@ -144,6 +273,28 @@ const enemyWidth = 40;
 const enemyHeight = 20;
 let enemyDirection = 1;
 
+/* ============================================================
+   ALIEN CLASSIQUE (STYLE 1)
+   ============================================================ */
+function drawAlien(e) {
+    ctx.fillStyle = "lime";
+
+    if (e.frame === 0) {
+        // FRAME 0 (position normale)
+        ctx.fillRect(e.x + 10, e.y, 20, 10);      // tête
+        ctx.fillRect(e.x, e.y + 10, 40, 10);      // corps
+        ctx.fillRect(e.x + 5, e.y + 20, 10, 5);   // pied gauche
+        ctx.fillRect(e.x + 25, e.y + 20, 10, 5);  // pied droit
+    } else {
+        // FRAME 1 (position animée)
+        ctx.fillRect(e.x + 12, e.y, 16, 10);      // tête plus petite
+        ctx.fillRect(e.x + 2, e.y + 10, 36, 10);  // corps plus large
+        ctx.fillRect(e.x + 8, e.y + 22, 8, 5);    // pied gauche
+        ctx.fillRect(e.x + 24, e.y + 22, 8, 5);   // pied droit
+    }
+}
+
+
 const Enemies = {
     init(rows = 3, cols = 6) {
         enemies.length = 0;
@@ -187,6 +338,9 @@ const Enemies = {
 
                     score += 10;
                     scoreDisplay.textContent = "Score : " + score;
+
+                    // explosion
+                    addExplosion(e.x + e.width / 2, e.y + e.height / 2);
                 }
             });
         });
@@ -205,9 +359,8 @@ const Enemies = {
     },
 
     draw() {
-        ctx.fillStyle = "green";
         enemies.forEach(e => {
-            if (e.alive) ctx.fillRect(e.x, e.y, e.width, e.height);
+            if (e.alive) drawAlien(e);
         });
     }
 };
@@ -215,70 +368,97 @@ const Enemies = {
 Enemies.init();
 
 /* ============================================================
-   BUNKERS
+   BUNKERS EN MORCEAUX (STYLE SPACE INVADERS)
    ============================================================ */
 const bunkers = [];
 
 const Bunkers = {
     init() {
-        const bunkerWidth = 60;
-        const bunkerHeight = 40;
         const positions = [80, 220, 360];
+        const blockSize = 8; // petits blocs pixel-art
 
         positions.forEach(x => {
-            bunkers.push({
-                x: x,
-                y: canvas.height - 150,
-                width: bunkerWidth,
-                height: bunkerHeight,
-                health: 6
-            });
+            const blocks = [];
+
+            // forme du bunker (7 colonnes × 5 lignes)
+            const pattern = [
+                "0111110",
+                "1111111",
+                "1111111",
+                "1110111",
+                "1100011"
+            ];
+
+            for (let row = 0; row < pattern.length; row++) {
+                for (let col = 0; col < pattern[row].length; col++) {
+                    if (pattern[row][col] === "1") {
+                        blocks.push({
+                            x: x + col * blockSize,
+                            y: canvas.height - 150 + row * blockSize,
+                            size: blockSize,
+                            alive: true
+                        });
+                    }
+                }
+            }
+
+            bunkers.push(blocks);
         });
     },
 
     update() {
+        // collisions avec tirs du joueur
         bullets.forEach(b => {
-            bunkers.forEach(bk => {
-                if (
-                    bk.health > 0 &&
-                    b.x < bk.x + bk.width &&
-                    b.x + 4 > bk.x &&
-                    b.y < bk.y + bk.height &&
-                    b.y + 10 > bk.y
-                ) {
-                    bk.health--;
-                    b.y = -100;
-                }
+            bunkers.forEach(blocks => {
+                blocks.forEach(bl => {
+                    if (
+                        bl.alive &&
+                        b.x < bl.x + bl.size &&
+                        b.x + 4 > bl.x &&
+                        b.y < bl.y + bl.size &&
+                        b.y + 10 > bl.y
+                    ) {
+                        bl.alive = false;
+                        b.y = -100;
+                    }
+                });
             });
         });
 
+        // collisions avec tirs ennemis
         enemyBullets.forEach(b => {
-            bunkers.forEach(bk => {
-                if (
-                    bk.health > 0 &&
-                    b.x < bk.x + bk.width &&
-                    b.x + 4 > bk.x &&
-                    b.y < bk.y + bk.height &&
-                    b.y + 10 > bk.y
-                ) {
-                    bk.health--;
-                    b.y = canvas.height + 100;
-                }
+            bunkers.forEach(blocks => {
+                blocks.forEach(bl => {
+                    if (
+                        bl.alive &&
+                        b.x < bl.x + bl.size &&
+                        b.x + 4 > bl.x &&
+                        b.y < bl.y + bl.size &&
+                        b.y + 10 > bl.y
+                    ) {
+                        bl.alive = false;
+                        b.y = canvas.height + 100;
+                    }
+                });
             });
         });
     },
 
     draw() {
-        bunkers.forEach(bk => {
-            if (bk.health > 0) {
-                ctx.fillStyle = `rgb(${50 * bk.health}, ${200 - 20 * bk.health}, 50)`;
-                ctx.fillRect(bk.x, bk.y, bk.width, bk.height);
-            }
+        ctx.fillStyle = "rgb(60, 200, 60)";
+
+        bunkers.forEach(blocks => {
+            blocks.forEach(bl => {
+                if (bl.alive) {
+                    ctx.fillRect(bl.x, bl.y, bl.size, bl.size);
+                }
+            });
         });
     }
 };
 
 Bunkers.init();
+
 
 /* ============================================================
    LEVELS
@@ -331,7 +511,6 @@ function endGame() {
     const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
     if (name) HighScores.add(name, score, level);
 
-    // 🔥 Activation des clics Game Over
     canvas.addEventListener("click", handleGameOverClick);
 }
 
@@ -377,6 +556,8 @@ Controls.init();
 function update() {
     if (!player.alive) return;
 
+    updateStars();
+    updateExplosions();
     player.update();
     Bullets.update();
     EnemyBullets.update();
@@ -384,8 +565,9 @@ function update() {
     Bunkers.update();
 }
 
+
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawStars();
 
     if (!player.alive) {
         showGameOverScreen();
@@ -397,7 +579,9 @@ function draw() {
     Bullets.draw();
     Enemies.draw();
     EnemyBullets.draw();
+    drawExplosions(); // explosions après les tirs
 }
+
 
 function loop() {
     update();

@@ -3,9 +3,7 @@ body {
     background: radial-gradient(circle at center, #000, #050505, #000);
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
     font-family: 'Press Start 2P', monospace;
 }
 
@@ -19,47 +17,64 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    max-width: 520px;
 }
 
 /* Marquee rétro */
 #marquee {
-    font-size: 28px;
+    font-size: 22px;
     color: #0ff;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     text-shadow: 0 0 10px #0ff;
 }
 
-/* Score + niveau */
-#score, #level {
-    color: white;
-    font-size: 16px;
-    margin-bottom: 5px;
+/* HUD */
+#hud {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 10px;
 }
 
-/* Bezel autour du canvas */
+#score, #level {
+    color: white;
+    font-size: 14px;
+}
+
+/* Bezel */
 #bezel {
-    padding: 20px;
+    width: 100%;
     background: radial-gradient(circle, #222, #000);
     border: 6px solid #333;
     border-radius: 10px;
     box-shadow: 0 0 20px #0ff inset;
+    padding: 10px;
 }
 
-canvas {
+/* Canvas responsive */
+.canvas-wrapper {
+    width: 100%;
+}
+
+#game {
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
     border: 2px solid white;
 }
 
 /* Contrôles tactiles */
 #controls {
-    margin-top: 20px;
+    margin-top: 15px;
     display: flex;
     gap: 20px;
 }
 
 #controls button {
-    width: 80px;
-    height: 80px;
-    font-size: 30px;
+    width: 70px;
+    height: 70px;
+    font-size: 28px;
     border-radius: 10px;
     border: none;
     background: #333;
@@ -75,8 +90,64 @@ canvas {
     text-align: center;
 }
 
-#highscores h3 {
-    margin-bottom: 10px;
-    color: #0ff;
-    text-shadow: 0 0 5px #0ff;
+/* Orientation paysage */
+@media (orientation: landscape) {
+    body {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    #arcade-frame {
+        max-width: 700px;
+    }
+
+    #controls {
+        flex-direction: column;
+        margin-left: 20px;
+    }
+}
+
+/* ============================================================
+   MODE PORTRAIT OBLIGATOIRE
+   ============================================================ */
+
+@media (orientation: landscape) {
+    body::before {
+        content: "Veuillez tourner votre appareil en mode portrait pour jouer à Space Invader";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        color: #0ff;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        z-index: 9999;
+        text-shadow: 0 0 10px #0ff;
+    }
+
+    /* On masque tout le jeu derrière */
+    #arcade-frame,
+    #controls,
+    #highscores {
+        display: none !important;
+    }
+}
+/* Empêche le copier-coller, le zoom, la sélection, etc. */
+#controls button {
+    -webkit-touch-callout: none; /* empêche menu copier/coller */
+    -webkit-user-select: none;   /* empêche sélection */
+    user-select: none;
+    touch-action: none;          /* empêche zoom / double-tap */
+}
+body {
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
 }

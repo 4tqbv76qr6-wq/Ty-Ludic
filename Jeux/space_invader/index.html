@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <title>Mini Space Invaders</title>
 
-    <!-- Police rétro -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,11 +13,15 @@
 
         <div id="marquee">TY‑LUDIC ARCADE</div>
 
-        <div id="score">Score : 0</div>
-        <div id="level">Niveau : 1</div>
+        <div id="hud">
+            <div id="score">Score : 0</div>
+            <div id="level">Niveau : 1</div>
+        </div>
 
         <div id="bezel">
-            <canvas id="game" width="500" height="600"></canvas>
+            <div class="canvas-wrapper">
+                <canvas id="game" width="500" height="600"></canvas>
+            </div>
         </div>
     </div>
 
