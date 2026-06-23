@@ -37,7 +37,7 @@ body {
     padding: 0 10px;
 }
 
-#score, #level {
+#score, #level, #best {
     color: white;
     font-size: 14px;
 }
@@ -64,11 +64,27 @@ body {
     border: 2px solid white;
 }
 
-/* Contrôles tactiles */
+/* ============================================================
+   CONTRÔLES TACTILES — VERSION ERGONOMIQUE
+   ============================================================ */
+
 #controls {
     margin-top: 15px;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; /* espace entre déplacement et tir */
+}
+
+/* Groupe des boutons gauche/droite */
+#move-buttons {
+    display: flex;
     gap: 20px;
+}
+
+/* Bouton de tir légèrement décalé */
+#fire {
+    margin-left: 10px;
 }
 
 #controls button {
@@ -80,6 +96,12 @@ body {
     background: #333;
     color: white;
     box-shadow: 0 0 10px #0ff;
+
+    /* Empêche le copier-coller, le zoom, la sélection, etc. */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
 }
 
 /* High Scores */
@@ -90,7 +112,10 @@ body {
     text-align: center;
 }
 
-/* Orientation paysage */
+/* ============================================================
+   MODE PAYSAGE — MESSAGE BLOQUANT
+   ============================================================ */
+
 @media (orientation: landscape) {
     body {
         flex-direction: row;
@@ -106,10 +131,6 @@ body {
         margin-left: 20px;
     }
 }
-
-/* ============================================================
-   MODE PORTRAIT OBLIGATOIRE
-   ============================================================ */
 
 @media (orientation: landscape) {
     body::before {
@@ -141,13 +162,6 @@ body {
 }
 
 /* Empêche le copier-coller, le zoom, la sélection, etc. */
-#controls button {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: none;
-}
-
 body {
     -webkit-user-select: none;
     user-select: none;
@@ -155,7 +169,7 @@ body {
 }
 
 /* ============================================================
-   POPUP DE TRANSITION DE NIVEAU (AJOUT TY‑LUDIC)
+   POPUP DE TRANSITION DE NIVEAU (TY‑LUDIC)
    ============================================================ */
 
 #level-popup {
