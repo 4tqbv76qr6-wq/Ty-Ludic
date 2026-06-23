@@ -5,7 +5,7 @@ function resizeGame() {
     const wrapper = document.querySelector(".canvas-wrapper");
     const canvas = document.getElementById("game");
 
-    const ratio = 500 / 600; // ratio d'origine
+    const ratio = 500 / 600;
 
     const width = wrapper.clientWidth;
     const height = width / ratio;
@@ -23,6 +23,20 @@ window.addEventListener("load", resizeGame);
    ============================================================ */
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+
+/* ============================================================
+   POPUP DE NIVEAU
+   ============================================================ */
+let waitingForStart = false;
+
+const popup = document.getElementById("level-popup");
+const popupTitle = document.getElementById("level-title");
+const popupStart = document.getElementById("level-start");
+
+popupStart.addEventListener("click", () => {
+    popup.classList.add("hidden");
+    waitingForStart = false;
+});
 
 /* ============================================================
    STARFIELD BACKGROUND
@@ -89,7 +103,7 @@ function updateExplosions() {
 
 function drawExplosions() {
     explosions.forEach(ex => {
-        const p = ex.frame / ex.maxFrame; // progression 0 → 1
+        const p = ex.frame / ex.maxFrame;
         const alpha = 1 - p;
         const size = ex.size + p * 20;
 
@@ -99,7 +113,6 @@ function drawExplosions() {
         ctx.fill();
     });
 }
-
 
 /* ============================================================
    SCORE & LEVEL
@@ -111,9 +124,10 @@ let gameOverHandled = false;
 
 const scoreDisplay = document.getElementById("score");
 const levelDisplay = document.getElementById("level");
+const bestDisplay = document.getElementById("best");
 
 /* ============================================================
-   HIGH SCORES (LOCAL)
+   HIGH SCORES — NOUVEAU SYSTÈME
    ============================================================ */
 const HighScores = {
     load() {
@@ -124,24 +138,52 @@ const HighScores = {
         localStorage.setItem("highscores", JSON.stringify(list));
     },
 
-    add(name, score, level) {
+    add(score, level) {
         const list = this.load();
-        list.push({ name, score, level });
+
+        const entry = {
+            score,
+            level,
+            date: new Date().toLocaleString()
+        };
+
+        list.push(entry);
         list.sort((a, b) => b.score - a.score);
+
+        const index = list.indexOf(entry);
+
         this.save(list.slice(0, 10));
+
+        return index;
+    },
+
+    best() {
+        const list = this.load();
+        return list.length > 0 ? list[0].score : 0;
     }
 };
 
-function displayHighScores() {
+bestDisplay.textContent = "Record : " + HighScores.best();
+
+/* ============================================================
+   AFFICHAGE DES SCORES
+   ============================================================ */
+function showHighScores(highlightIndex = -1) {
     const div = document.getElementById("highscores");
     const list = HighScores.load();
 
-    div.innerHTML =
-        "<h3>Meilleurs Scores (Local)</h3>" +
-        list.map(s => `<div>${s.name} — ${s.score} pts (Niv ${s.level})</div>`).join("");
-}
+    div.innerHTML = "<h3>Meilleurs Scores</h3>";
 
-displayHighScores();
+    list.forEach((s, i) => {
+        const style = (i === highlightIndex)
+            ? "color:#0ff; font-weight:bold; text-shadow:0 0 10px #0ff;"
+            : "color:white;";
+
+        div.innerHTML += `<div style="${style}">
+            ${s.score} pts — Niv ${s.level} — ${s.date}
+        </div>`;
+    });
+}
 
 /* ============================================================
    PLAYER
@@ -155,7 +197,7 @@ const player = {
     movingLeft: false,
     movingRight: false,
     alive: true,
-    flameFrame: 0, // animation propulsion
+    flameFrame: 0,
 
     update() {
         if (!this.alive) return;
@@ -163,7 +205,6 @@ const player = {
         if (this.movingLeft && this.x > 0) this.x -= this.speed;
         if (this.movingRight && this.x < canvas.width - this.width) this.x += this.speed;
 
-        // animation de la flamme
         this.flameFrame = (this.flameFrame + 1) % 20;
     },
 
@@ -173,23 +214,12 @@ const player = {
         const x = this.x;
         const y = this.y;
 
-        // --- STYLE 1 : VAISSEAU CLASSIQUE AMÉLIORÉ ---
-
-        // cockpit
         ctx.fillRect(x + 12, y, 16, 6);
-
-        // corps principal
         ctx.fillRect(x + 6, y + 6, 28, 10);
-
-        // ailes
         ctx.fillRect(x, y + 8, 10, 12);
         ctx.fillRect(x + 30, y + 8, 10, 12);
-
-        // base
         ctx.fillRect(x + 8, y + 16, 24, 6);
 
-        // --- PROPULSION ANIMÉE ---
-        // flamme qui pulse : petite / grande / petite / grande
         const flameSize = (this.flameFrame < 10) ? 6 : 10;
 
         ctx.fillStyle = "orange";
@@ -201,7 +231,7 @@ const player = {
 };
 
 /* ============================================================
-   BULLETS (PLAYER)
+   BULLETS
    ============================================================ */
 const bullets = [];
 
@@ -273,27 +303,21 @@ const enemyWidth = 40;
 const enemyHeight = 20;
 let enemyDirection = 1;
 
-/* ============================================================
-   ALIEN CLASSIQUE (STYLE 1)
-   ============================================================ */
 function drawAlien(e) {
     ctx.fillStyle = "lime";
 
     if (e.frame === 0) {
-        // FRAME 0 (position normale)
-        ctx.fillRect(e.x + 10, e.y, 20, 10);      // tête
-        ctx.fillRect(e.x, e.y + 10, 40, 10);      // corps
-        ctx.fillRect(e.x + 5, e.y + 20, 10, 5);   // pied gauche
-        ctx.fillRect(e.x + 25, e.y + 20, 10, 5);  // pied droit
+        ctx.fillRect(e.x + 10, e.y, 20, 10);
+        ctx.fillRect(e.x, e.y + 10, 40, 10);
+        ctx.fillRect(e.x + 5, e.y + 20, 10, 5);
+        ctx.fillRect(e.x + 25, e.y + 20, 10, 5);
     } else {
-        // FRAME 1 (position animée)
-        ctx.fillRect(e.x + 12, e.y, 16, 10);      // tête plus petite
-        ctx.fillRect(e.x + 2, e.y + 10, 36, 10);  // corps plus large
-        ctx.fillRect(e.x + 8, e.y + 22, 8, 5);    // pied gauche
-        ctx.fillRect(e.x + 24, e.y + 22, 8, 5);   // pied droit
+        ctx.fillRect(e.x + 12, e.y, 16, 10);
+        ctx.fillRect(e.x + 2, e.y + 10, 36, 10);
+        ctx.fillRect(e.x + 8, e.y + 22, 8, 5);
+        ctx.fillRect(e.x + 24, e.y + 22, 8, 5);
     }
 }
-
 
 const Enemies = {
     init(rows = 3, cols = 6) {
@@ -305,7 +329,8 @@ const Enemies = {
                     y: 50 + r * 40,
                     width: enemyWidth,
                     height: enemyHeight,
-                    alive: true
+                    alive: true,
+                    frame: 0
                 });
             }
         }
@@ -338,8 +363,8 @@ const Enemies = {
 
                     score += 10;
                     scoreDisplay.textContent = "Score : " + score;
+                    bestDisplay.textContent = "Record : " + HighScores.best();
 
-                    // explosion
                     addExplosion(e.x + e.width / 2, e.y + e.height / 2);
                 }
             });
@@ -368,19 +393,18 @@ const Enemies = {
 Enemies.init();
 
 /* ============================================================
-   BUNKERS EN MORCEAUX (STYLE SPACE INVADERS)
+   BUNKERS
    ============================================================ */
 const bunkers = [];
 
 const Bunkers = {
     init() {
         const positions = [80, 220, 360];
-        const blockSize = 8; // petits blocs pixel-art
+        const blockSize = 8;
 
         positions.forEach(x => {
             const blocks = [];
 
-            // forme du bunker (7 colonnes × 5 lignes)
             const pattern = [
                 "0111110",
                 "1111111",
@@ -407,7 +431,6 @@ const Bunkers = {
     },
 
     update() {
-        // collisions avec tirs du joueur
         bullets.forEach(b => {
             bunkers.forEach(blocks => {
                 blocks.forEach(bl => {
@@ -425,7 +448,6 @@ const Bunkers = {
             });
         });
 
-        // collisions avec tirs ennemis
         enemyBullets.forEach(b => {
             bunkers.forEach(blocks => {
                 blocks.forEach(bl => {
@@ -459,7 +481,6 @@ const Bunkers = {
 
 Bunkers.init();
 
-
 /* ============================================================
    LEVELS
    ============================================================ */
@@ -478,10 +499,14 @@ function nextLevel() {
     Enemies.init(rows, cols);
 
     enemyFireRate = Math.min(0.05, 0.02 + level * 0.005);
+
+    popupTitle.textContent = "LEVEL " + level;
+    popup.classList.remove("hidden");
+    waitingForStart = true;
 }
 
 /* ============================================================
-   GAME OVER SCREEN
+   GAME OVER — NOUVEAU SYSTÈME
    ============================================================ */
 function showGameOverScreen() {
     ctx.fillStyle = "rgba(0,0,0,0.8)";
@@ -499,24 +524,19 @@ function showGameOverScreen() {
     ctx.fillText("◀ Menu", 120, 430);
 }
 
-/* ============================================================
-   END GAME
-   ============================================================ */
 function endGame() {
     if (gameOverHandled) return;
     gameOverHandled = true;
 
     player.alive = false;
 
-    const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
-    if (name) HighScores.add(name, score, level);
+    const index = HighScores.add(score, level);
+
+    showHighScores(index);
 
     canvas.addEventListener("click", handleGameOverClick);
 }
 
-/* ============================================================
-   CLICK HANDLER
-   ============================================================ */
 function handleGameOverClick(e) {
     const y = e.offsetY;
 
@@ -554,6 +574,7 @@ Controls.init();
    GAME LOOP
    ============================================================ */
 function update() {
+    if (waitingForStart) return;
     if (!player.alive) return;
 
     updateStars();
@@ -564,7 +585,6 @@ function update() {
     Enemies.update();
     Bunkers.update();
 }
-
 
 function draw() {
     drawStars();
@@ -579,9 +599,8 @@ function draw() {
     Bullets.draw();
     Enemies.draw();
     EnemyBullets.draw();
-    drawExplosions(); // explosions après les tirs
+    drawExplosions();
 }
-
 
 function loop() {
     update();

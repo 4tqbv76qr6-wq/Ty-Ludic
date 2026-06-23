@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mini Space Invaders</title>
+    <title>Alien Pulse</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -16,6 +16,7 @@
         <div id="hud">
             <div id="score">Score : 0</div>
             <div id="level">Niveau : 1</div>
+            <div id="best">Record : 0</div>
         </div>
 
         <div id="bezel">
@@ -32,6 +33,14 @@
     </div>
 
     <div id="highscores"></div>
+
+    <!-- ⭐ Popup de transition de niveau -->
+    <div id="level-popup" class="hidden">
+        <div id="level-box">
+            <h2 id="level-title">LEVEL 1</h2>
+            <button id="level-start">START</button>
+        </div>
+    </div>
 
     <script src="game.js"></script>
 </body>
