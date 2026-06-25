@@ -3,6 +3,7 @@
    ============================================================ */
 const GAME_WIDTH = 500;
 const GAME_HEIGHT = 600;
+let CURRENT_SCALE = 1; // ← utilisé pour corriger les clics
 
 function autoScaleGame() {
     const wrapper = document.getElementById("game-wrapper");
@@ -12,8 +13,11 @@ function autoScaleGame() {
 
     const scale = Math.min(
         screenW / GAME_WIDTH,
-        screenH / GAME_HEIGHT
+        screenH / GAME_HEIGHT,
+        1.2
     );
+
+    CURRENT_SCALE = scale; // ← mémorisation du scale réel
 
     wrapper.style.transform = `scale(${scale})`;
     wrapper.style.transformOrigin = "top left";
@@ -155,7 +159,7 @@ function updateHud() {
 }
 
 /* ============================================================
-   PADDLE
+   PADDLE — Capsule néon
    ============================================================ */
 const paddle = {
     width: 80,
@@ -172,18 +176,40 @@ const paddle = {
     },
 
     draw() {
-        ctx.fillStyle = "white";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        const r = this.height / 2;
+
+        const grad = ctx.createLinearGradient(this.x, this.y, this.x + this.width, this.y);
+        grad.addColorStop(0, "#0ff");
+        grad.addColorStop(0.5, "#fff");
+        grad.addColorStop(1, "#0ff");
+
+        ctx.fillStyle = grad;
+
+        ctx.beginPath();
+        ctx.moveTo(this.x + r, this.y);
+        ctx.lineTo(this.x + this.width - r, this.y);
+        ctx.arcTo(this.x + this.width, this.y, this.x + this.width, this.y + r, r);
+        ctx.lineTo(this.x + this.width, this.y + this.height - r);
+        ctx.arcTo(this.x + this.width, this.y + this.height, this.x + this.width - r, this.y + this.height, r);
+        ctx.lineTo(this.x + r, this.y + this.height);
+        ctx.arcTo(this.x, this.y + this.height, this.x, this.y + this.height - r, r);
+        ctx.lineTo(this.x, this.y + r);
+        ctx.arcTo(this.x, this.y, this.x + r, this.y, r);
+        ctx.fill();
+
+        ctx.strokeStyle = "#0ff";
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 };
 
 /* ============================================================
-   BALL
+   BALL — Bille centrée + rayon
    ============================================================ */
 const ball = {
     x: canvas.width / 2,
     y: canvas.height - 60,
-    size: 6,
+    radius: 6,
     dx: 3,
     dy: -3,
     moving: false,
@@ -202,26 +228,42 @@ const ball = {
         this.x += this.dx;
         this.y += this.dy;
 
-        if (this.x <= 0 || this.x >= canvas.width - this.size) this.dx *= -1;
-        if (this.y <= 0) this.dy *= -1;
+        if (this.x - this.radius <= 0 || this.x + this.radius >= canvas.width)
+            this.dx *= -1;
+
+        if (this.y - this.radius <= 0)
+            this.dy *= -1;
 
         if (
-            this.x < paddle.x + paddle.width &&
-            this.x + this.size > paddle.x &&
-            this.y + this.size > paddle.y &&
-            this.y < paddle.y + paddle.height
+            this.x + this.radius > paddle.x &&
+            this.x - this.radius < paddle.x + paddle.width &&
+            this.y + this.radius > paddle.y &&
+            this.y - this.radius < paddle.y + paddle.height
         ) {
             this.dy *= -1;
         }
 
-        if (this.y > canvas.height) {
+        if (this.y - this.radius > canvas.height) {
             endGame();
         }
     },
 
     draw() {
-        ctx.fillStyle = "cyan";
-        ctx.fillRect(this.x, this.y, this.size, this.size);
+        const r = this.radius;
+
+        const grad = ctx.createRadialGradient(
+            this.x - r * 0.3, this.y - r * 0.3, r * 0.1,
+            this.x, this.y, r
+        );
+
+        grad.addColorStop(0, "#ffffff");
+        grad.addColorStop(0.4, "#7df");
+        grad.addColorStop(1, "#004");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, r, 0, Math.PI * 2);
+        ctx.fill();
     }
 };
 
@@ -257,10 +299,10 @@ function updateBricks() {
         if (!b.alive) return;
 
         if (
-            ball.x < b.x + b.width &&
-            ball.x + ball.size > b.x &&
-            ball.y < b.y + b.height &&
-            ball.y + ball.size > b.y
+            ball.x + ball.radius > b.x &&
+            ball.x - ball.radius < b.x + b.width &&
+            ball.y + ball.radius > b.y &&
+            ball.y - ball.radius < b.y + b.height
         ) {
             b.alive = false;
             ball.dy *= -1;
@@ -287,8 +329,11 @@ function drawBricks() {
 }
 
 /* ============================================================
-   LEVEL UP
+   GAME OVER — Boutons néon + clics corrigés
    ============================================================ */
+const BTN_REPLAY = { x: 140, y: 520, w: 220, h: 40 };
+const BTN_QUIT   = { x: 140, y: 570, w: 220, h: 40 };
+
 function nextLevel() {
     level++;
     updateHud();
@@ -296,14 +341,42 @@ function nextLevel() {
     initBricks();
 }
 
-/* ============================================================
-   GAME OVER
-   ============================================================ */
 function endGame() {
     ball.moving = false;
     gameOver = true;
     newScoreIndex = HighScores.add("player", score, level);
     updateHud();
+}
+
+function drawRoundedButton(btn, colorFill, colorStroke, text) {
+    const r = 10;
+
+    ctx.save();
+    ctx.shadowColor = colorStroke;
+    ctx.shadowBlur = 15;
+
+    ctx.fillStyle = colorFill;
+    ctx.beginPath();
+    ctx.moveTo(btn.x + r, btn.y);
+    ctx.lineTo(btn.x + btn.w - r, btn.y);
+    ctx.quadraticCurveTo(btn.x + btn.w, btn.y, btn.x + btn.w, btn.y + r);
+    ctx.lineTo(btn.x + btn.w, btn.y + btn.h - r);
+    ctx.quadraticCurveTo(btn.x + btn.w, btn.y + btn.h, btn.x + btn.w - r, btn.y + btn.h);
+    ctx.lineTo(btn.x + r, btn.y + btn.h);
+    ctx.quadraticCurveTo(btn.x, btn.y + btn.h, btn.x, btn.y + btn.h - r);
+    ctx.lineTo(btn.x, btn.y + r);
+    ctx.quadraticCurveTo(btn.x, btn.y, btn.x + r, btn.y);
+    ctx.fill();
+
+    ctx.strokeStyle = colorStroke;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = colorStroke;
+    ctx.fillText(text, btn.x + 35, btn.y + 26);
+
+    ctx.restore();
 }
 
 function drawGameOver() {
@@ -326,17 +399,9 @@ function drawGameOver() {
         ctx.fillText(`${s.score} pts (Niv ${s.level})`, 70, 230 + i * 18);
     });
 
-    // REJOUER
-    ctx.fillStyle = "#0ff";
-    ctx.fillRect(140, 520, 220, 40);
-    ctx.fillStyle = "black";
-    ctx.fillText("REJOUER", 155, 545);
-
-    // QUITTER
-    ctx.fillStyle = "#f00";
-    ctx.fillRect(140, 570, 220, 40);
-    ctx.fillStyle = "black";
-    ctx.fillText("QUITTER", 165, 595);
+    // Boutons néon
+    drawRoundedButton(BTN_REPLAY, "#022", "#0ff", "REJOUER");
+    drawRoundedButton(BTN_QUIT, "#200", "#f00", "QUITTER");
 }
 
 function restartGame() {
@@ -356,17 +421,33 @@ function handleReplayTap(clientX, clientY) {
     if (!gameOver) return;
 
     const rect = canvas.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
+
+    // coordonnées dans l’espace “scalé”
+    const xScaled = clientX - rect.left;
+    const yScaled = clientY - rect.top;
+
+    // conversion vers coordonnées canvas non-scalées
+    const x = xScaled / CURRENT_SCALE;
+    const y = yScaled / CURRENT_SCALE;
 
     // Rejouer
-    if (x > 140 && x < 360 && y > 520 && y < 560) {
+    if (
+        x > BTN_REPLAY.x &&
+        x < BTN_REPLAY.x + BTN_REPLAY.w &&
+        y > BTN_REPLAY.y &&
+        y < BTN_REPLAY.y + BTN_REPLAY.h
+    ) {
         restartGame();
     }
 
     // Quitter
-    if (x > 140 && x < 360 && y > 570 && y < 610) {
-        window.location.href = "../index.html"; 
+    if (
+        x > BTN_QUIT.x &&
+        x < BTN_QUIT.x + BTN_QUIT.w &&
+        y > BTN_QUIT.y &&
+        y < BTN_QUIT.y + BTN_QUIT.h
+    ) {
+        window.location.href = "../index.html";
     }
 }
 
@@ -380,7 +461,7 @@ canvas.addEventListener("click", (e) => {
 });
 
 /* ============================================================
-   TOUCH CONTROLS (boutons ◀️ 🎬 ▶️)
+   TOUCH CONTROLS
    ============================================================ */
 const Controls = {
     init() {
@@ -388,7 +469,6 @@ const Controls = {
         const right = document.getElementById("right");
         const fire = document.getElementById("fire");
 
-        // Gauche
         left.addEventListener("touchstart", () => {
             if (!gameOver) paddle.movingLeft = true;
         });
@@ -402,7 +482,6 @@ const Controls = {
             paddle.movingLeft = false;
         });
 
-        // Droite
         right.addEventListener("touchstart", () => {
             if (!gameOver) paddle.movingRight = true;
         });
@@ -416,7 +495,6 @@ const Controls = {
             paddle.movingRight = false;
         });
 
-        // Feu (lance la balle)
         fire.addEventListener("touchstart", () => {
             if (!gameOver) ball.moving = true;
         });
@@ -427,7 +505,6 @@ const Controls = {
 };
 
 Controls.init();
-
 
 /* ============================================================
    GAME LOOP
