@@ -380,6 +380,56 @@ canvas.addEventListener("click", (e) => {
 });
 
 /* ============================================================
+   TOUCH CONTROLS (boutons ◀️ 🎬 ▶️)
+   ============================================================ */
+const Controls = {
+    init() {
+        const left = document.getElementById("left");
+        const right = document.getElementById("right");
+        const fire = document.getElementById("fire");
+
+        // Gauche
+        left.addEventListener("touchstart", () => {
+            if (!gameOver) paddle.movingLeft = true;
+        });
+        left.addEventListener("touchend", () => {
+            paddle.movingLeft = false;
+        });
+        left.addEventListener("mousedown", () => {
+            if (!gameOver) paddle.movingLeft = true;
+        });
+        left.addEventListener("mouseup", () => {
+            paddle.movingLeft = false;
+        });
+
+        // Droite
+        right.addEventListener("touchstart", () => {
+            if (!gameOver) paddle.movingRight = true;
+        });
+        right.addEventListener("touchend", () => {
+            paddle.movingRight = false;
+        });
+        right.addEventListener("mousedown", () => {
+            if (!gameOver) paddle.movingRight = true;
+        });
+        right.addEventListener("mouseup", () => {
+            paddle.movingRight = false;
+        });
+
+        // Feu (lance la balle)
+        fire.addEventListener("touchstart", () => {
+            if (!gameOver) ball.moving = true;
+        });
+        fire.addEventListener("click", () => {
+            if (!gameOver) ball.moving = true;
+        });
+    }
+};
+
+Controls.init();
+
+
+/* ============================================================
    GAME LOOP
    ============================================================ */
 function update() {
