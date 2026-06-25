@@ -21,7 +21,10 @@ function autoScaleGame() {
 
 window.addEventListener("resize", autoScaleGame);
 window.addEventListener("orientationchange", autoScaleGame);
-window.addEventListener("load", autoScaleGame);
+window.addEventListener("load", () => {
+    autoScaleGame();
+    updateHud();
+});
 
 /* ============================================================
    CANVAS
@@ -107,7 +110,7 @@ function drawExplosions() {
 }
 
 /* ============================================================
-   SCORE & LEVEL & RECORD
+   SCORE / LEVEL / RECORD
    ============================================================ */
 let score = 0;
 let level = 1;
@@ -116,10 +119,10 @@ let newScoreIndex = -1;
 
 const scoreDisplay = document.getElementById("score");
 const levelDisplay = document.getElementById("level");
-const bestDisplay = document.getElementById("best"); // à ajouter dans le HUD HTML
+const bestDisplay = document.getElementById("best");
 
 /* ============================================================
-   HIGH SCORES (TOP 10 + record)
+   HIGH SCORES
    ============================================================ */
 const HighScores = {
     load() {
@@ -136,7 +139,7 @@ const HighScores = {
         list.sort((a, b) => b.score - a.score);
         const trimmed = list.slice(0, 10);
         this.save(trimmed);
-        return trimmed.findIndex(s => s.score === score && s.level === level && s.name === name);
+        return trimmed.findIndex(s => s.score === score && s.level === level);
     },
 
     best() {
@@ -148,12 +151,8 @@ const HighScores = {
 function updateHud() {
     scoreDisplay.textContent = "Score : " + score;
     levelDisplay.textContent = "Niveau : " + level;
-    if (bestDisplay) {
-        bestDisplay.textContent = "Record : " + HighScores.best();
-    }
+    bestDisplay.textContent = "Record : " + HighScores.best();
 }
-
-updateHud();
 
 /* ============================================================
    PADDLE
@@ -298,12 +297,13 @@ function nextLevel() {
 }
 
 /* ============================================================
-   GAME OVER + TOP 10 DANS LE CANVAS
+   GAME OVER
    ============================================================ */
 function endGame() {
     ball.moving = false;
     gameOver = true;
     newScoreIndex = HighScores.add("player", score, level);
+    updateHud();
 }
 
 function drawGameOver() {
@@ -323,18 +323,20 @@ function drawGameOver() {
 
     list.forEach((s, i) => {
         ctx.fillStyle = (i === newScoreIndex) ? "#0ff" : "white";
-        ctx.fillText(
-            `${s.score} pts (Niv ${s.level})`,
-            70,
-            230 + i * 18
-        );
+        ctx.fillText(`${s.score} pts (Niv ${s.level})`, 70, 230 + i * 18);
     });
 
-    // Bouton REJOUER
+    // REJOUER
     ctx.fillStyle = "#0ff";
     ctx.fillRect(140, 520, 220, 40);
     ctx.fillStyle = "black";
     ctx.fillText("REJOUER", 155, 545);
+
+    // QUITTER
+    ctx.fillStyle = "#f00";
+    ctx.fillRect(140, 570, 220, 40);
+    ctx.fillStyle = "black";
+    ctx.fillText("QUITTER", 165, 595);
 }
 
 function restartGame() {
@@ -348,30 +350,7 @@ function restartGame() {
 }
 
 /* ============================================================
-   TOUCH CONTROLS
-   ============================================================ */
-const Controls = {
-    init() {
-        const left = document.getElementById("left");
-        const right = document.getElementById("right");
-        const fire = document.getElementById("fire");
-
-        left.addEventListener("touchstart", () => paddle.movingLeft = true);
-        left.addEventListener("touchend", () => paddle.movingLeft = false);
-
-        right.addEventListener("touchstart", () => paddle.movingRight = true);
-        right.addEventListener("touchend", () => paddle.movingRight = false);
-
-        fire.addEventListener("touchstart", () => {
-            if (!gameOver) ball.moving = true;
-        });
-    }
-};
-
-Controls.init();
-
-/* ============================================================
-   REJOUER VIA TAP SUR LE CANVAS
+   TOUCH + CLICK : REJOUER / QUITTER
    ============================================================ */
 function handleReplayTap(clientX, clientY) {
     if (!gameOver) return;
@@ -380,8 +359,14 @@ function handleReplayTap(clientX, clientY) {
     const x = clientX - rect.left;
     const y = clientY - rect.top;
 
+    // Rejouer
     if (x > 140 && x < 360 && y > 520 && y < 560) {
         restartGame();
+    }
+
+    // Quitter
+    if (x > 140 && x < 360 && y > 570 && y < 610) {
+        window.location.href = "../index.html"; 
     }
 }
 

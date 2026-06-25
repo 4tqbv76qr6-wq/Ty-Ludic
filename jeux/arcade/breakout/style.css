@@ -51,12 +51,13 @@ body {
    HUD (Score / Record / Niveau)
    ============================================================ */
 #hud {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
     padding: 6px 10px;
     background: rgba(0, 0, 0, 0.35);
     border-radius: 6px;
+    text-align: center;
 }
 
 #score, #best, #level {
