@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>TY‑LUDIC — User Lab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            background: #111;
+            color: #0ff;
+            font-family: monospace;
+            padding: 20px;
+        }
+        h1 { color: #0ff; }
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            font-size: 1rem;
+        }
+        .box {
+            border: 1px solid #0ff;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>TY‑LUDIC — User Lab</h1>
+
+    <div class="box">
+        <h2>Créer un compte</h2>
+        <input id="emailCreate" type="email" placeholder="Email">
+        <input id="passwordCreate" type="password" placeholder="Mot de passe">
+        <input id="pseudoCreate" type="text" placeholder="Pseudo">
+        <button onclick="User.createAccount()">Créer le compte</button>
+    </div>
+
+    <div class="box">
+        <h2>Connexion</h2>
+        <input id="emailLogin" type="email" placeholder="Email">
+        <input id="passwordLogin" type="password" placeholder="Mot de passe">
+        <button onclick="User.login()">Connexion</button>
+    </div>
+
+    <div class="box">
+        <h2>Utilisateur connecté</h2>
+        <pre id="userData">Aucun utilisateur</pre>
+        <button onclick="User.logout()">Déconnexion</button>
+    </div>
+
+    <script src="user.js"></script>
+
+</body>
+</html>
