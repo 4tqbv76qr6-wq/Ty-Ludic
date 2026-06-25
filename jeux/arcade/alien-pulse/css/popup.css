@@ -1,0 +1,52 @@
+/* ============================================================
+   POPUP DE TRANSITION DE NIVEAU
+   ============================================================ */
+
+#level-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+}
+
+#level-popup.hidden {
+    display: none;
+}
+
+#level-box {
+    background: #111;
+    border: 3px solid #0ff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 25px #0ff;
+}
+
+#level-title {
+    font-size: 22px;
+    color: #0ff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #0ff;
+}
+
+#level-start {
+    background: #0ff;
+    color: #000;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-family: 'Press Start 2P';
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #0ff;
+}
+
+#level-start:hover {
+    background: #fff;
+}
