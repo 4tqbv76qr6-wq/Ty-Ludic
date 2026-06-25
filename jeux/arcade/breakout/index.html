@@ -9,29 +9,34 @@
 </head>
 <body>
 
-    <div id="arcade-frame">
+    <!-- ⭐ NOUVEAU WRAPPER GLOBAL -->
+    <div id="game-wrapper">
 
-        <div id="marquee">TY‑LUDIC BREAKOUT</div>
+        <div id="arcade-frame">
 
-        <div id="hud">
-            <div id="score">Score : 0</div>
-            <div id="level">Niveau : 1</div>
-        </div>
+            <div id="marquee">TY‑LUDIC BREAKOUT</div>
 
-        <div id="bezel">
-            <div class="canvas-wrapper">
-                <canvas id="game" width="500" height="600"></canvas>
+            <div id="hud">
+                <div id="score">Score : 0</div>
+                <div id="level">Niveau : 1</div>
+            </div>
+
+            <div id="bezel">
+                <div class="canvas-wrapper">
+                    <canvas id="game" width="500" height="600"></canvas>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="controls">
-        <button id="left">◀️</button>
-        <button id="fire">🎬</button>
-        <button id="right">▶️</button>
-    </div>
+        <div id="controls">
+            <button id="left">◀️</button>
+            <button id="fire">🎬</button>
+            <button id="right">▶️</button>
+        </div>
 
-    <div id="highscores"></div>
+        <div id="highscores"></div>
+
+    </div> <!-- fin game-wrapper -->
 
     <script src="game.js"></script>
 </body>

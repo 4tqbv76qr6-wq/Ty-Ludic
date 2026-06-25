@@ -5,6 +5,16 @@ body {
     flex-direction: column;
     align-items: center;
     font-family: 'Press Start 2P', monospace;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+/* ⭐ WRAPPER GLOBAL (nouveau) */
+#game-wrapper {
+    width: 500px;      /* largeur interne fixe */
+    transform-origin: top left;
+    position: relative;
 }
 
 /* Cadre arcade */
@@ -17,8 +27,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    max-width: 520px;
+    width: 500px;      /* FIXÉ pour éviter les déformations */
 }
 
 /* Marquee rétro */
@@ -44,22 +53,24 @@ body {
 
 /* Bezel */
 #bezel {
-    width: 100%;
     background: radial-gradient(circle, #222, #000);
     border: 6px solid #333;
     border-radius: 10px;
     box-shadow: 0 0 20px #0ff inset;
     padding: 10px;
+    width: 500px;      /* FIXÉ */
 }
 
-/* Canvas responsive */
+/* Canvas wrapper */
 .canvas-wrapper {
-    width: 100%;
+    width: 500px;
+    height: 600px;
 }
 
+/* Canvas FIXE (le scale se fait sur #game-wrapper) */
 #game {
-    width: 100%;
-    height: auto;
+    width: 500px;
+    height: 600px;
     image-rendering: pixelated;
     border: 2px solid white;
 }
@@ -69,6 +80,8 @@ body {
     margin-top: 15px;
     display: flex;
     gap: 20px;
+    width: 500px;      /* FIXÉ */
+    justify-content: center;
 }
 
 #controls button {
@@ -80,6 +93,10 @@ body {
     background: #333;
     color: white;
     box-shadow: 0 0 10px #0ff;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
 }
 
 /* High Scores */
@@ -88,26 +105,10 @@ body {
     color: white;
     font-size: 14px;
     text-align: center;
+    width: 500px;      /* FIXÉ */
 }
 
-/* Orientation paysage */
-@media (orientation: landscape) {
-    body {
-        flex-direction: row;
-        justify-content: center;
-    }
-
-    #arcade-frame {
-        max-width: 700px;
-    }
-
-    #controls {
-        flex-direction: column;
-        margin-left: 20px;
-    }
-}
-
-/* Mode portrait obligatoire */
+/* Orientation paysage : message obligatoire */
 @media (orientation: landscape) {
     body::before {
         content: "Veuillez tourner votre appareil en mode portrait pour jouer";
@@ -129,23 +130,7 @@ body {
         text-shadow: 0 0 10px #0ff;
     }
 
-    #arcade-frame,
-    #controls,
-    #highscores {
+    #game-wrapper {
         display: none !important;
     }
-}
-
-/* Empêche zoom / sélection */
-#controls button {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: none;
-}
-
-body {
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: manipulation;
 }

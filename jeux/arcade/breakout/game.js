@@ -1,28 +1,37 @@
 /* ============================================================
-   RESPONSIVE CANVAS
+   RESPONSIVE — AUTO SCALE GLOBAL
    ============================================================ */
-function resizeGame() {
-    const wrapper = document.querySelector(".canvas-wrapper");
-    const canvas = document.getElementById("game");
+const GAME_WIDTH = 500;
+const GAME_HEIGHT = 600;
 
-    const ratio = 500 / 600;
+function autoScaleGame() {
+    const wrapper = document.getElementById("game-wrapper");
 
-    const width = wrapper.clientWidth;
-    const height = width / ratio;
+    const screenW = window.innerWidth;
+    const screenH = window.innerHeight;
 
-    canvas.style.width = width + "px";
-    canvas.style.height = height + "px";
+    const scale = Math.min(
+        screenW / GAME_WIDTH,
+        screenH / GAME_HEIGHT
+    );
+
+    wrapper.style.transform = `scale(${scale})`;
+    wrapper.style.transformOrigin = "top left";
 }
 
-window.addEventListener("resize", resizeGame);
-window.addEventListener("orientationchange", resizeGame);
-window.addEventListener("load", resizeGame);
+window.addEventListener("resize", autoScaleGame);
+window.addEventListener("orientationchange", autoScaleGame);
+window.addEventListener("load", autoScaleGame);
 
 /* ============================================================
    CANVAS
    ============================================================ */
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+
+// Résolution interne fixe
+canvas.width = GAME_WIDTH;
+canvas.height = GAME_HEIGHT;
 
 /* ============================================================
    STARFIELD
@@ -186,11 +195,9 @@ const ball = {
         this.x += this.dx;
         this.y += this.dy;
 
-        // murs
         if (this.x <= 0 || this.x >= canvas.width - this.size) this.dx *= -1;
         if (this.y <= 0) this.dy *= -1;
 
-        // paddle
         if (
             this.x < paddle.x + paddle.width &&
             this.x + this.size > paddle.x &&
@@ -200,7 +207,6 @@ const ball = {
             this.dy *= -1;
         }
 
-        // chute
         if (this.y > canvas.height) {
             endGame();
         }
