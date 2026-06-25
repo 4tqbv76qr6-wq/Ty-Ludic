@@ -1,3 +1,6 @@
+/* ============================================================
+   GLOBAL
+   ============================================================ */
 body {
     margin: 0;
     background: radial-gradient(circle at center, #000, #050505, #000);
@@ -10,14 +13,18 @@ body {
     touch-action: manipulation;
 }
 
-/* ⭐ WRAPPER GLOBAL (nouveau) */
+/* ============================================================
+   WRAPPER GLOBAL (scalé par JS)
+   ============================================================ */
 #game-wrapper {
-    width: 500px;      /* largeur interne fixe */
+    width: 500px;
     transform-origin: top left;
     position: relative;
 }
 
-/* Cadre arcade */
+/* ============================================================
+   ARCADE FRAME
+   ============================================================ */
 #arcade-frame {
     background: #111;
     padding: 20px;
@@ -27,10 +34,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 500px;      /* FIXÉ pour éviter les déformations */
+    width: 500px;
 }
 
-/* Marquee rétro */
+/* ============================================================
+   MARQUEE
+   ============================================================ */
 #marquee {
     font-size: 22px;
     color: #0ff;
@@ -38,36 +47,46 @@ body {
     text-shadow: 0 0 10px #0ff;
 }
 
-/* HUD */
+/* ============================================================
+   HUD (Score / Record / Niveau)
+   ============================================================ */
 #hud {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 0 10px;
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 6px;
 }
 
-#score, #level {
+#score, #best, #level {
     color: white;
-    font-size: 14px;
+    font-size: 16px;
 }
 
-/* Bezel */
+/* ============================================================
+   BEZEL
+   ============================================================ */
 #bezel {
     background: radial-gradient(circle, #222, #000);
     border: 6px solid #333;
     border-radius: 10px;
     box-shadow: 0 0 20px #0ff inset;
     padding: 10px;
-    width: 500px;      /* FIXÉ */
+    width: 500px;
 }
 
-/* Canvas wrapper */
+/* ============================================================
+   CANVAS WRAPPER
+   ============================================================ */
 .canvas-wrapper {
     width: 500px;
     height: 600px;
 }
 
-/* Canvas FIXE (le scale se fait sur #game-wrapper) */
+/* ============================================================
+   CANVAS (fixe, scale via wrapper)
+   ============================================================ */
 #game {
     width: 500px;
     height: 600px;
@@ -75,12 +94,14 @@ body {
     border: 2px solid white;
 }
 
-/* Contrôles tactiles */
+/* ============================================================
+   TOUCH CONTROLS
+   ============================================================ */
 #controls {
     margin-top: 15px;
     display: flex;
     gap: 20px;
-    width: 500px;      /* FIXÉ */
+    width: 500px;
     justify-content: center;
 }
 
@@ -99,16 +120,9 @@ body {
     touch-action: none;
 }
 
-/* High Scores */
-#highscores {
-    margin-top: 20px;
-    color: white;
-    font-size: 14px;
-    text-align: center;
-    width: 500px;      /* FIXÉ */
-}
-
-/* Orientation paysage : message obligatoire */
+/* ============================================================
+   MODE PAYSAGE : BLOQUÉ
+   ============================================================ */
 @media (orientation: landscape) {
     body::before {
         content: "Veuillez tourner votre appareil en mode portrait pour jouer";

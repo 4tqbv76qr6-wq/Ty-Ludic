@@ -9,15 +9,17 @@
 </head>
 <body>
 
-    <!-- ⭐ NOUVEAU WRAPPER GLOBAL -->
+    <!-- ⭐ WRAPPER GLOBAL (scalé par JS) -->
     <div id="game-wrapper">
 
         <div id="arcade-frame">
 
             <div id="marquee">TY‑LUDIC BREAKOUT</div>
 
+            <!-- ⭐ HUD simplifié : Score / Record / Niveau -->
             <div id="hud">
                 <div id="score">Score : 0</div>
+                <div id="best">Record : 0</div>
                 <div id="level">Niveau : 1</div>
             </div>
 
@@ -28,13 +30,12 @@
             </div>
         </div>
 
+        <!-- ⭐ Contrôles tactiles -->
         <div id="controls">
             <button id="left">◀️</button>
             <button id="fire">🎬</button>
             <button id="right">▶️</button>
         </div>
-
-        <div id="highscores"></div>
 
     </div> <!-- fin game-wrapper -->
 

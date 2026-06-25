@@ -29,7 +29,6 @@ window.addEventListener("load", autoScaleGame);
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-// Résolution interne fixe
 canvas.width = GAME_WIDTH;
 canvas.height = GAME_HEIGHT;
 
@@ -108,16 +107,19 @@ function drawExplosions() {
 }
 
 /* ============================================================
-   SCORE & LEVEL
+   SCORE & LEVEL & RECORD
    ============================================================ */
 let score = 0;
 let level = 1;
+let gameOver = false;
+let newScoreIndex = -1;
 
 const scoreDisplay = document.getElementById("score");
 const levelDisplay = document.getElementById("level");
+const bestDisplay = document.getElementById("best"); // à ajouter dans le HUD HTML
 
 /* ============================================================
-   HIGH SCORES
+   HIGH SCORES (TOP 10 + record)
    ============================================================ */
 const HighScores = {
     load() {
@@ -132,20 +134,26 @@ const HighScores = {
         const list = this.load();
         list.push({ name, score, level });
         list.sort((a, b) => b.score - a.score);
-        this.save(list.slice(0, 10));
+        const trimmed = list.slice(0, 10);
+        this.save(trimmed);
+        return trimmed.findIndex(s => s.score === score && s.level === level && s.name === name);
+    },
+
+    best() {
+        const list = this.load();
+        return list.length ? list[0].score : 0;
     }
 };
 
-function displayHighScores() {
-    const div = document.getElementById("highscores");
-    const list = HighScores.load();
-
-    div.innerHTML =
-        "<h3>Meilleurs Scores (Breakout)</h3>" +
-        list.map(s => `<div>${s.name} — ${s.score} pts (Niv ${s.level})</div>`).join("");
+function updateHud() {
+    scoreDisplay.textContent = "Score : " + score;
+    levelDisplay.textContent = "Niveau : " + level;
+    if (bestDisplay) {
+        bestDisplay.textContent = "Record : " + HighScores.best();
+    }
 }
 
-displayHighScores();
+updateHud();
 
 /* ============================================================
    PADDLE
@@ -259,7 +267,7 @@ function updateBricks() {
             ball.dy *= -1;
 
             score += 10;
-            scoreDisplay.textContent = "Score : " + score;
+            updateHud();
 
             addExplosion(b.x + b.width / 2, b.y + b.height / 2);
         }
@@ -284,22 +292,59 @@ function drawBricks() {
    ============================================================ */
 function nextLevel() {
     level++;
-    levelDisplay.textContent = "Niveau : " + level;
-
+    updateHud();
     ball.reset();
     initBricks();
 }
 
 /* ============================================================
-   GAME OVER
+   GAME OVER + TOP 10 DANS LE CANVAS
    ============================================================ */
 function endGame() {
     ball.moving = false;
+    gameOver = true;
+    newScoreIndex = HighScores.add("player", score, level);
+}
 
-    const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
-    if (name) HighScores.add(name, score, level);
+function drawGameOver() {
+    ctx.fillStyle = "rgba(0,0,0,0.85)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    document.location.reload();
+    ctx.fillStyle = "#0ff";
+    ctx.font = "24px 'Press Start 2P'";
+    ctx.fillText("GAME OVER", 70, 80);
+
+    ctx.font = "14px 'Press Start 2P'";
+    ctx.fillText("Score : " + score, 70, 130);
+    ctx.fillText("Niveau : " + level, 70, 155);
+
+    const list = HighScores.load();
+    ctx.fillText("TOP 10", 70, 200);
+
+    list.forEach((s, i) => {
+        ctx.fillStyle = (i === newScoreIndex) ? "#0ff" : "white";
+        ctx.fillText(
+            `${s.score} pts (Niv ${s.level})`,
+            70,
+            230 + i * 18
+        );
+    });
+
+    // Bouton REJOUER
+    ctx.fillStyle = "#0ff";
+    ctx.fillRect(140, 520, 220, 40);
+    ctx.fillStyle = "black";
+    ctx.fillText("REJOUER", 155, 545);
+}
+
+function restartGame() {
+    score = 0;
+    level = 1;
+    gameOver = false;
+    newScoreIndex = -1;
+    updateHud();
+    initBricks();
+    ball.reset();
 }
 
 /* ============================================================
@@ -317,11 +362,37 @@ const Controls = {
         right.addEventListener("touchstart", () => paddle.movingRight = true);
         right.addEventListener("touchend", () => paddle.movingRight = false);
 
-        fire.addEventListener("touchstart", () => ball.moving = true);
+        fire.addEventListener("touchstart", () => {
+            if (!gameOver) ball.moving = true;
+        });
     }
 };
 
 Controls.init();
+
+/* ============================================================
+   REJOUER VIA TAP SUR LE CANVAS
+   ============================================================ */
+function handleReplayTap(clientX, clientY) {
+    if (!gameOver) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    if (x > 140 && x < 360 && y > 520 && y < 560) {
+        restartGame();
+    }
+}
+
+canvas.addEventListener("touchstart", (e) => {
+    const t = e.touches[0];
+    handleReplayTap(t.clientX, t.clientY);
+});
+
+canvas.addEventListener("click", (e) => {
+    handleReplayTap(e.clientX, e.clientY);
+});
 
 /* ============================================================
    GAME LOOP
@@ -329,6 +400,9 @@ Controls.init();
 function update() {
     updateStars();
     updateExplosions();
+
+    if (gameOver) return;
+
     paddle.update();
     ball.update();
     updateBricks();
@@ -336,6 +410,13 @@ function update() {
 
 function draw() {
     drawStars();
+
+    if (gameOver) {
+        drawGameOver();
+        drawExplosions();
+        return;
+    }
+
     paddle.draw();
     ball.draw();
     drawBricks();
