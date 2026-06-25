@@ -1,0 +1,222 @@
+body {
+    margin: 0;
+    background: radial-gradient(circle at center, #000, #050505, #000);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Press Start 2P', monospace;
+}
+
+/* Cadre arcade */
+#arcade-frame {
+    background: #111;
+    padding: 20px;
+    border: 8px solid #444;
+    border-radius: 20px;
+    box-shadow: 0 0 40px #0ff inset, 0 0 20px #0ff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 520px;
+}
+
+/* Marquee rétro */
+#marquee {
+    font-size: 22px;
+    color: #0ff;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px #0ff;
+}
+
+/* HUD */
+#hud {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 10px;
+}
+
+#score, #level, #best {
+    color: white;
+    font-size: 14px;
+}
+
+/* Bezel */
+#bezel {
+    width: 100%;
+    background: radial-gradient(circle, #222, #000);
+    border: 6px solid #333;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #0ff inset;
+    padding: 10px;
+}
+
+/* Canvas responsive */
+.canvas-wrapper {
+    width: 100%;
+}
+
+#game {
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    border: 2px solid white;
+}
+
+/* ============================================================
+   CONTRÔLES TACTILES — VERSION ERGONOMIQUE
+   ============================================================ */
+
+#controls {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; /* espace entre déplacement et tir */
+}
+
+/* Groupe des boutons gauche/droite */
+#move-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+/* Bouton de tir légèrement décalé */
+#fire {
+    margin-left: 10px;
+}
+
+#controls button {
+    width: 70px;
+    height: 70px;
+    font-size: 28px;
+    border-radius: 10px;
+    border: none;
+    background: #333;
+    color: white;
+    box-shadow: 0 0 10px #0ff;
+
+    /* Empêche le copier-coller, le zoom, la sélection, etc. */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
+}
+
+/* High Scores */
+#highscores {
+    margin-top: 20px;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* ============================================================
+   MODE PAYSAGE — MESSAGE BLOQUANT
+   ============================================================ */
+
+@media (orientation: landscape) {
+    body {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    #arcade-frame {
+        max-width: 700px;
+    }
+
+    #controls {
+        flex-direction: column;
+        margin-left: 20px;
+    }
+}
+
+@media (orientation: landscape) {
+    body::before {
+        content: "Veuillez tourner votre appareil en mode portrait pour jouer à Alien Pulse";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        color: #0ff;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        z-index: 9999;
+        text-shadow: 0 0 10px #0ff;
+    }
+
+    /* On masque tout le jeu derrière */
+    #arcade-frame,
+    #controls,
+    #highscores {
+        display: none !important;
+    }
+}
+
+/* Empêche le copier-coller, le zoom, la sélection, etc. */
+body {
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+/* ============================================================
+   POPUP DE TRANSITION DE NIVEAU (TY‑LUDIC)
+   ============================================================ */
+
+#level-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+}
+
+#level-popup.hidden {
+    display: none;
+}
+
+#level-box {
+    background: #111;
+    border: 3px solid #0ff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 25px #0ff;
+}
+
+#level-title {
+    font-size: 22px;
+    color: #0ff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #0ff;
+}
+
+#level-start {
+    background: #0ff;
+    color: #000;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-family: 'Press Start 2P';
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #0ff;
+}
+
+#level-start:hover {
+    background: #fff;
+}

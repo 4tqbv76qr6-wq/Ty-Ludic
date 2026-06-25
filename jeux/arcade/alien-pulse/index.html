@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Alien Pulse</title>
 
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <!-- ============================================================
+         CSS MODULAIRE TY‑LUDIC
+         ============================================================ -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/arcade-frame.css">
+    <link rel="stylesheet" href="css/canvas.css">
+    <link rel="stylesheet" href="css/hud.css">
+    <link rel="stylesheet" href="css/controls.css">
+    <link rel="stylesheet" href="css/highscores.css">
+    <link rel="stylesheet" href="css/popup.css">
+    <link rel="stylesheet" href="css/orientation.css">
+    <link rel="stylesheet" href="css/theme-tyludic.css">
+</head>
+<body>
+
+    <div id="arcade-frame">
+
+        <div id="marquee">TY‑LUDIC ARCADE</div>
+
+        <div id="hud">
+            <div id="score">Score : 0</div>
+            <div id="level">Niveau : 1</div>
+            <div id="best">Record : 0</div>
+        </div>
+
+        <div id="bezel">
+            <div class="canvas-wrapper">
+                <canvas id="game" width="500" height="600"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⭐ NOUVELLE DISPOSITION DES CONTRÔLES -->
+    <div id="controls">
+        <div id="move-buttons">
+            <button id="left">◀️</button>
+            <button id="right">▶️</button>
+        </div>
+
+        <button id="fire">🔥</button>
+    </div>
+
+    <div id="highscores"></div>
+
+    <!-- ⭐ Popup de transition de niveau -->
+    <div id="level-popup" class="hidden">
+        <div id="level-box">
+            <h2 id="level-title">LEVEL 1</h2>
+            <button id="level-start">START</button>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         CHARGEMENT DES MODULES (ORDRE CRITIQUE)
+         ============================================================ -->
+<script src="../../../test/user.js"></script>
+
+    <!-- CORE -->
+    <script src="js/core/config.js"></script>
+    <script src="js/core/state.js"></script>
+    <script src="js/core/levels.js"></script>
+
+    <!-- ENGINE -->
+    <script src="js/engine/stars.js"></script>
+    <script src="js/engine/explosions.js"></script>
+
+    <!-- PLAYER -->
+    <script src="js/player/player.js"></script>
+    <script src="js/player/bullets.js"></script>
+
+    <!-- ENEMIES -->
+    <script src="js/enemies/enemies.js"></script>
+    <script src="js/enemies/enemyBullets.js"></script>
+
+    <!-- BUNKERS -->
+    <script src="js/bunkers/bunkers.js"></script>
+
+    <!-- UI -->
+    <script src="js/ui/popup.js"></script>
+    <script src="js/ui/scores.js"></script>
+    <script src="js/ui/gameover.js"></script>
+    <script src="js/ui/controls.js"></script>
+
+    <!-- LOOP + MAIN -->
+    <script src="js/core/loop.js"></script>
+    <script src="main.js"></script>
+
+</body>
+</html>
