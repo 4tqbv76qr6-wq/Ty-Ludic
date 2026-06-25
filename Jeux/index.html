@@ -2,60 +2,57 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeux — TY‑LUDIC</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Les jeux du studio – TY‑LUDIC</title>
+    <link rel="stylesheet" href="hub-jeux.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-<header>
-    <h1>Les Jeux du Studio</h1>
-    <p class="subtitle">Prototypes, mini‑jeux et expériences interactives</p>
-
-    <nav>
+<header class="tl-header">
+    <div class="tl-logo">TY‑LUDIC</div>
+    <nav class="tl-nav">
         <a href="../index.html">Accueil</a>
-        <a href="index.html">Jeux</a>
-        <a href="../studio/a_propos.html">Le Studio</a>
-        <a href="../studio/contact.html">Contact</a>
+        <a href="../jeux/index.html" class="active">Jeux</a>
+        <a href="../studio/index.html">Le Studio</a>
+        <a href="../contact/index.html">Contact</a>
     </nav>
 </header>
 
-<main>
+<main class="hub-container">
+    <section class="hub-intro">
+        <h1>Les jeux du studio</h1>
+        <p>Choisis ton univers : arcade rétro, réflexion, ou RPG narratif.</p>
+    </section>
 
-<section class="intro">
-    <h2>Catalogue des jeux</h2>
-    <p>
-        Retrouvez ici l’ensemble des prototypes et mini‑jeux créés au sein du studio TY‑LUDIC.
-        Tous les jeux sont jouables directement dans votre navigateur, sans installation.
-    </p>
-</section>
+    <section class="hub-grid">
+        <!-- ARCADE -->
+        <article class="hub-card hub-arcade">
+            <div class="hub-icon">🕹️</div>
+            <h2>Jeux d’arcade</h2>
+            <p>Jeux rapides, vintage, inspirés des bornes d’arcade.</p>
+            <a href="arcade/index.html" class="hub-button">Entrer dans l’arcade</a>
+        </article>
 
-<section class="games-list">
-    <h2>Jeux disponibles</h2>
+        <!-- RÉFLEXION -->
+        <article class="hub-card hub-reflexion">
+            <div class="hub-icon">🧩</div>
+            <h2>Jeux de réflexion</h2>
+            <p>Puzzles, logique, mini‑casse‑têtes pour faire travailler les neurones.</p>
+            <a href="reflexion/index.html" class="hub-button">Explorer les puzzles</a>
+        </article>
 
-    <ul>
-        <li>
-            <strong>Space Invader — Prototype</strong><br>
-            <a href="space_invader/index.html">Jouer maintenant</a>
-        </li>
-
-        <li>
-            <strong>Démo RPG — Moteur en développement</strong><br>
-            <a href="rpg_demo/index.html">Explorer la démo</a>
-        </li>
-
-        <li>
-            <strong>Prototypes divers</strong><br>
-            <a href="prototypes/index.html">Voir les prototypes</a>
-        </li>
-    </ul>
-</section>
-
+        <!-- RPG -->
+        <article class="hub-card hub-rpg">
+            <div class="hub-icon">🛡️</div>
+            <h2>Jeux RPG</h2>
+            <p>Exploration, combats, univers narratifs et prototypes de moteur RPG.</p>
+            <a href="rpg/index.html" class="hub-button">Entrer dans l’univers RPG</a>
+        </article>
+    </section>
 </main>
 
-<footer>
-    <p>© 2026 TY‑LUDIC — Studio de jeux indépendant</p>
+<footer class="tl-footer">
+    © 2026 TY‑LUDIC — Studio de jeux indépendant
 </footer>
 
 </body>
