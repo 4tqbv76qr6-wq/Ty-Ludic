@@ -3,7 +3,7 @@
    ============================================================ */
 const GAME_WIDTH = 500;
 const GAME_HEIGHT = 600;
-let CURRENT_SCALE = 1; // ← utilisé pour corriger les clics
+let CURRENT_SCALE = 1;
 
 function autoScaleGame() {
     const wrapper = document.getElementById("game-wrapper");
@@ -17,7 +17,7 @@ function autoScaleGame() {
         1.2
     );
 
-    CURRENT_SCALE = scale; // ← mémorisation du scale réel
+    CURRENT_SCALE = scale;
 
     wrapper.style.transform = `scale(${scale})`;
     wrapper.style.transformOrigin = "top left";
@@ -268,13 +268,14 @@ const ball = {
 };
 
 /* ============================================================
-   BRICKS
+   BRICKS — Collision logique + rebonds cohérents
    ============================================================ */
 const bricks = [];
 const brickRowsBase = 5;
 const brickCols = 7;
 const brickWidth = 60;
 const brickHeight = 20;
+const brickGap = 5;
 
 function initBricks() {
     bricks.length = 0;
@@ -283,8 +284,8 @@ function initBricks() {
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < brickCols; c++) {
             bricks.push({
-                x: 20 + c * (brickWidth + 5),
-                y: 50 + r * (brickHeight + 5),
+                x: 20 + c * (brickWidth + brickGap),
+                y: 50 + r * (brickHeight + brickGap),
                 width: brickWidth,
                 height: brickHeight,
                 alive: true,
@@ -295,24 +296,40 @@ function initBricks() {
 }
 
 function updateBricks() {
-    bricks.forEach(b => {
-        if (!b.alive) return;
+    const rows = brickRowsBase + (level - 1);
 
-        if (
-            ball.x + ball.radius > b.x &&
-            ball.x - ball.radius < b.x + b.width &&
-            ball.y + ball.radius > b.y &&
-            ball.y - ball.radius < b.y + b.height
-        ) {
+    const col = Math.floor((ball.x - 20) / (brickWidth + brickGap));
+    const row = Math.floor((ball.y - 50) / (brickHeight + brickGap));
+
+    if (row >= 0 && row < rows && col >= 0 && col < brickCols) {
+        const index = row * brickCols + col;
+        const b = bricks[index];
+
+        if (b && b.alive) {
+
+            const prevX = ball.x - ball.dx;
+            const prevY = ball.y - ball.dy;
+
+            const hitLeft   = prevX < b.x;
+            const hitRight  = prevX > b.x + b.width;
+            const hitTop    = prevY < b.y;
+            const hitBottom = prevY > b.y + b.height;
+
+            if (hitLeft || hitRight) {
+                ball.dx *= -1;
+            } else if (hitTop || hitBottom) {
+                ball.dy *= -1;
+            } else {
+                ball.dy *= -1;
+            }
+
             b.alive = false;
-            ball.dy *= -1;
-
             score += 10;
             updateHud();
 
             addExplosion(b.x + b.width / 2, b.y + b.height / 2);
         }
-    });
+    }
 
     if (bricks.every(b => !b.alive)) {
         nextLevel();
@@ -329,7 +346,7 @@ function drawBricks() {
 }
 
 /* ============================================================
-   GAME OVER — Boutons néon + clics corrigés
+   GAME OVER
    ============================================================ */
 const BTN_REPLAY = { x: 140, y: 520, w: 220, h: 40 };
 const BTN_QUIT   = { x: 140, y: 570, w: 220, h: 40 };
@@ -399,7 +416,6 @@ function drawGameOver() {
         ctx.fillText(`${s.score} pts (Niv ${s.level})`, 70, 230 + i * 18);
     });
 
-    // Boutons néon
     drawRoundedButton(BTN_REPLAY, "#022", "#0ff", "REJOUER");
     drawRoundedButton(BTN_QUIT, "#200", "#f00", "QUITTER");
 }
@@ -422,15 +438,12 @@ function handleReplayTap(clientX, clientY) {
 
     const rect = canvas.getBoundingClientRect();
 
-    // coordonnées dans l’espace “scalé”
     const xScaled = clientX - rect.left;
     const yScaled = clientY - rect.top;
 
-    // conversion vers coordonnées canvas non-scalées
     const x = xScaled / CURRENT_SCALE;
     const y = yScaled / CURRENT_SCALE;
 
-    // Rejouer
     if (
         x > BTN_REPLAY.x &&
         x < BTN_REPLAY.x + BTN_REPLAY.w &&
@@ -440,7 +453,6 @@ function handleReplayTap(clientX, clientY) {
         restartGame();
     }
 
-    // Quitter
     if (
         x > BTN_QUIT.x &&
         x < BTN_QUIT.x + BTN_QUIT.w &&
