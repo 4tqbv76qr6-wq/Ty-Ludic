@@ -159,7 +159,7 @@ function updateHud() {
 }
 
 /* ============================================================
-   PADDLE — Capsule néon
+   PADDLE — Capsule néon + SPIN
    ============================================================ */
 const paddle = {
     width: 80,
@@ -169,10 +169,15 @@ const paddle = {
     speed: 6,
     movingLeft: false,
     movingRight: false,
+    vx: 0, // vitesse horizontale réelle
 
     update() {
+        let oldX = this.x;
+
         if (this.movingLeft && this.x > 0) this.x -= this.speed;
         if (this.movingRight && this.x < canvas.width - this.width) this.x += this.speed;
+
+        this.vx = this.x - oldX; // vitesse réelle
     },
 
     draw() {
@@ -204,7 +209,7 @@ const paddle = {
 };
 
 /* ============================================================
-   BALL — Bille centrée + rayon
+   BALL — Bille centrée + ANGLE + SPIN
    ============================================================ */
 const ball = {
     x: canvas.width / 2,
@@ -234,13 +239,32 @@ const ball = {
         if (this.y - this.radius <= 0)
             this.dy *= -1;
 
+        /* ============================================================
+           COLLISION RAQUETTE — ANGLE + SPIN
+        ============================================================ */
         if (
             this.x + this.radius > paddle.x &&
             this.x - this.radius < paddle.x + paddle.width &&
             this.y + this.radius > paddle.y &&
             this.y - this.radius < paddle.y + paddle.height
         ) {
-            this.dy *= -1;
+            const impact = (this.x - paddle.x) / paddle.width;
+            const angle = (impact - 0.5) * (Math.PI * 5 / 6); // -75° à +75°
+
+            const speed = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
+
+            let newDx = speed * Math.sin(angle);
+            let newDy = -speed * Math.cos(angle);
+
+            // SPIN
+            const spinFactor = 0.35;
+            newDx += paddle.vx * spinFactor;
+
+            const maxDx = speed * 0.9;
+            newDx = Math.max(-maxDx, Math.min(maxDx, newDx));
+
+            this.dx = newDx;
+            this.dy = newDy;
         }
 
         if (this.y - this.radius > canvas.height) {
@@ -556,3 +580,4 @@ function loop() {
 initBricks();
 ball.reset();
 loop();
+
