@@ -2,147 +2,57 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>TY‑LUDIC — Studio de jeux indépendant</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="accueil.css">
+    <title>Les jeux du studio – TY‑LUDIC</title>
+    <link rel="stylesheet" href="css/hub-menu.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<header class="site-header">
-    <div class="brand">
-        <div class="brand-mark">TY‑LUDIC</div>
-        <div class="brand-sub">Studio de jeux indépendant — Bretagne</div>
-    </div>
-    <nav class="main-nav">
+<header class="tl-header">
+    <div class="tl-logo">TY‑LUDIC</div>
+    <nav class="tl-nav">
         <a href="index.html" class="active">Accueil</a>
-        <a href="jeux/index.html">Jeux</a>
-        <a href="studio.html">Le Studio</a>
-        <a href="contact.html">Contact</a>
-        <a href="test/index.html">login</a>
-
+        <a href="jeux/index.html" >Jeux</a>
+        <a href="studio/index.html">Le Studio</a>
+        <a href="contact/index.html">Contact</a>
     </nav>
 </header>
 
-<main>
-
-    <!-- Bloc identité -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Un atelier de jeux indépendants, en Bretagne.</h1>
-            <p>
-                TY‑LUDIC est un petit studio artisanal où l’on conçoit des jeux simples, sincères
-                et faits main. Pas de pression, pas de marketing : juste le plaisir de créer,
-                d’expérimenter et de partager.
-            </p>
-          
-            </div>
-        </div>
+<main class="hub-container">
+    <section class="hub-intro">
+        <h1>Ty-Ludic</h1>
+        <p>Studio de jeux indépendant, en Bretagne. Rien à télécharger, tout est en ligne et totalement gratuit.</p>
     </section>
 
-    <!-- Séparateur vertical “menhir” -->
-    <div class="menhir-separator"></div>
+    <section class="hub-grid">
+        <!-- Jeux -->
+        <article class="hub-card hub-arcade">
+            <div class="hub-icon">🕹️</div>
+            <h2>Jeux</h2>
+            <p>Jeux d'arcade, de réflexion, RPG</p>
+            <a href="jeux/index.html" class="hub-button">Viens jouer</a>
+        </article>
 
-    <!-- Bloc philosophie -->
-    <section class="philo">
-        <h2>Notre approche</h2>
-        <p class="philo-intro">
-            TY‑LUDIC est un atelier numérique breton : discret, exigeant, humain.
-            Chaque projet est une petite pièce artisanale, pensée pour être jouée
-            tranquillement, sans contrainte.
-        </p>
-        <div class="philo-grid">
-            <div class="philo-item">
-                <h3>🎮 Création libre</h3>
-                <p>Des jeux conçus sans pression commerciale, pour le plaisir d’explorer des idées et des mécaniques.</p>
-            </div>
-            <div class="philo-item">
-                <h3>🛠️ Fait main</h3>
-                <p>Code, visuels, systèmes : tout est construit à la main, avec une attention particulière à la cohérence.</p>
-            </div>
-            <div class="philo-item">
-                <h3>🌿 Ancré en Bretagne</h3>
-                <p>Un studio discret, posé, inspiré par la sobriété et la simplicité des paysages bretons.</p>
-            </div>
-            <div class="philo-item">
-                <h3>🤝 Partage</h3>
-                <p>Des jeux pensés pour un cercle amical et familial, dans un esprit de partage et de convivialité.</p>
-            </div>
-        </div>
+        <!-- Studio-->
+        <article class="hub-card hub-reflexion">
+            <div class="hub-icon">🏠</div>
+            <h2>Le studio</h2>
+            <p>Découvre le studio, sa philosophie, ses actualités.</p>
+            <a href="studio/index.html" class="hub-button">Visite guidée</a>
+        </article>
+
+        <!--Contact-->
+        <article class="hub-card hub-rpg">
+            <div class="hub-icon">📡</div>
+            <h2>Canal Ty-Ludic</h2>
+            <p>Deviens membre ty-ludic, accède au tchat, contacte l'équipe ty-ludic.</p>
+            <a href="contact/index.html" class="hub-button">On cause</a>
+        </article>
     </section>
-
-    <!-- Séparateur -->
-    <div class="menhir-separator"></div>
-
-    <!-- Univers -->
-    <section class="univers">
-        <h2>Les univers TY‑LUDIC</h2>
-        <div class="univers-grid">
-            <article class="univers-card">
-                <h3>Arcade</h3>
-                <p>Des jeux rapides, clairs, inspirés des bornes d’arcade, avec une touche moderne.</p>
-                <a href="arcade/index.html" class="link-arrow">Accéder à l’arcade →</a>
-            </article>
-            <article class="univers-card">
-                <h3>RPG</h3>
-                <p>Un moteur en développement pour des aventures plus longues, narratives et exploratoires.</p>
-                <a href="rpg/index.html" class="link-arrow">Explorer le RPG →</a>
-            </article>
-            <article class="univers-card">
-                <h3>Prototypes</h3>
-                <p>Des essais, des idées, des mécaniques en cours de test. Un terrain de jeu expérimental.</p>
-                <a href="prototypes/index.html" class="link-arrow">Voir les prototypes →</a>
-            </article>
-        </div>
-    </section>
-
-    <!-- Séparateur -->
-    <div class="menhir-separator"></div>
-
-    <!-- Jeux récents -->
-    <section class="games">
-        <h2>Jeux à venir</h2>
-        <div class="games-list">
-            <article class="game-item">
-                <div class="game-main">
-                    <h3>Tetris</h3>
-                    <p>Le fameux jeux de réflexio et rapidité revisité par TY-Ludic.</p>
-                </div>
-                <div class="game-actions">
-                    <a href="arcade/space-invader/index.html" class="btn small">Jouer</a>
-                </div>
-            </article>
-
-            <article class="game-item">
-                <div class="game-main">
-                    <h3>4 à la suite</h3>
-                    <p>Un remake de puissance 4.</p>
-                </div>
-                <div class="game-actions">
-                    <a href="arcade/breakout/index.html" class="btn small">Jouer</a>
-                </div>
-            </article>
-
-            <article class="game-item">
-                <div class="game-main">
-                    <h3>Démo RPG — Moteur en développement</h3>
-                    <p>Une base technique pour de futurs jeux de rôle TY‑LUDIC, encore en chantier.</p>
-                </div>
-                <div class="game-actions">
-                    <a href="rpg/index.html" class="btn small">Explorer</a>
-                </div>
-            </article>
-        </div>
-    </section>
-
 </main>
 
-<footer class="site-footer">
-    <div class="footer-left">
-        © 2026 TY‑LUDIC — Studio de jeux indépendant, Bretagne
-    </div>
-    <div class="footer-right">
-        <span>Atelier artisanal numérique</span>
-    </div>
+<footer class="tl-footer">
+    © 2026 TY‑LUDIC — Studio de jeux indépendant
 </footer>
 
 </body>
