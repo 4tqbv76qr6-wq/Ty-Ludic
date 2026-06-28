@@ -120,6 +120,11 @@ if (auth.currentUser && pseudo) {
 <script type="module">
 alert("Script OK");
 </script>
+<script type="module">
+import { auth } from "./contact/inscription/firebase-init.js";
+alert("Firebase chargé : " + (auth ? "OUI" : "NON"));
+</script>
+
 
 </body>
 </html>
