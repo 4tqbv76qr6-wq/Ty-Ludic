@@ -258,3 +258,35 @@ body {
     border-top: 1px solid #1f3a4f;
     background: #050811;
 }
+
+
+/* ================================
+   SELECTION LANGUE
+   ================================ */
+.lang-switch {
+    margin-left: 24px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lang-switch a {
+    color: #cfe7ff;
+    text-decoration: none;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: 0.2s ease;
+}
+
+.lang-switch a.active {
+    color: #00e5ff;
+    font-weight: 600;
+}
+
+.lang-switch a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 6px #00e5ff;
+}
+
+
