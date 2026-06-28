@@ -18,6 +18,9 @@
         <a href="contact/index.html" data-i18n="menu_contact"></a>
     </nav>
 
+    <!-- Bloc utilisateur -->
+    <div id="user-info" class="tl-user"></div>
+
     <div class="lang-switch">
         <a href="index.html" onclick="localStorage.setItem('lang','fr')" class="lang-item">
             🇫🇷 <span>FR</span>
@@ -97,5 +100,21 @@
     });
 </script>
 
+<!-- Affichage du pseudo si connecté -->
+<script type="module">
+import { auth } from "./contact/inscription/firebase-init.js";
+
+const pseudo = localStorage.getItem("tyludic_pseudo");
+const userBox = document.getElementById("user-info");
+
+// Si un utilisateur est connecté
+if (auth.currentUser && pseudo) {
+    userBox.textContent = "Connecté : " + pseudo;
+} else {
+    userBox.textContent = "";
+}
+</script>
+
 </body>
 </html>
+
