@@ -2,58 +2,45 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Les jeux du studio – TY‑LUDIC</title>
-    <link rel="stylesheet" href="../css/hub-menu.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Créer un compte – TY‑LUDIC</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="tl-header">
-    <div class="tl-logo">TY‑LUDIC</div>
-    <nav class="tl-nav">
-        <a href="index.html" class="active">Accueil</a>
-        <a href="jeux/index.html" >Jeux</a>
-        <a href="studio/index.html">Le Studio</a>
-        <a href="contact/index.html">Contact</a>
-    </nav>
-</header>
+<div class="account-wrapper">
 
-<main class="hub-container">
-    <section class="hub-intro">
-        <h1>Ty-Ludic</h1>
-        <p>Studio de jeux indépendant, en Bretagne. Rien à télécharger, tout est en ligne et totalement gratuit.</p>
-    </section>
+    <h1>Créer un compte TY‑LUDIC</h1>
+    <p>Choisis un pseudo et un mot de passe pour commencer l’aventure.</p>
 
-    <section class="hub-grid">
-        <!-- Jeux -->
-        <article class="hub-card hub-arcade">
-            <div class="hub-icon">🧾</div>
-            <h2>Inscription</h2>
-            <p>Crée un compte pour rentrer dans les high scores tous joueurs confondus, gagner des skins,bonus, badges</p>
-            <a href="inscription/index.html" class="hub-button">Création</a>
-        </article>
+    <form id="create-account-form">
 
-        <!-- Studio-->
-        <article class="hub-card hub-reflexion">
-            <div class="hub-icon">🎤</div>
-            <h2>Tchat</h2>
-            <p>Discute avec les autres joueurs</p>
-            <a href="studio/index.html" class="hub-button">Tchat</a>
-        </article>
+        <label for="pseudo">Pseudo</label>
+        <input type="text" id="pseudo" maxlength="16" autocomplete="off" required>
 
-        <!--Contact-->
-        <article class="hub-card hub-rpg">
-            <div class="hub-icon">📩</div>
-            <h2>Contact Ty-Ludic</h2>
-            <p>Tu as des questions, un problème de jeu, contacte nous </p>
-            <a href="rpg/index.html" class="hub-button">On t'écoute</a>
-        </article>
-    </section>
-</main>
+        <small class="hint">
+            3–16 caractères, lettres/chiffres, _ et -.  
+            Interdit : @, dates (1980, 01011980…)
+        </small>
 
-<footer class="tl-footer">
-    © 2026 TY‑LUDIC — Studio de jeux indépendant
-</footer>
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" minlength="6" required>
+
+        <small class="hint">
+            Minimum 6 caractères.  
+            Interdit : dates, suites simples (123456, abcdef…)
+        </small>
+
+        <div id="error-msg"></div>
+
+        <button type="submit" id="create-btn">Créer mon compte</button>
+
+    </form>
+
+</div>
+
+<!-- ⭐ IMPORTANT : modules ES -->
+<script type="module" src="firebase-init.js"></script>
+<script type="module" src="create-account.js"></script>
 
 </body>
 </html>
