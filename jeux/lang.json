@@ -1,58 +1,52 @@
 {
   "fr": {
-    "menu_home": "Accueil",
-    "menu_games": "Jeux",
+    "games_title": "Les jeux du studio",
+    "games_subtitle": "Choisis ton univers : arcade rétro, réflexion, ou RPG narratif.",
 
-    "arcade_title": "Arcade – TY‑LUDIC",
-    "arcade_intro_title": "Bienvenue dans notre salon d'arcade",
-    "arcade_intro_text": "Choisis ton jeu.",
+    "games_arcade_title": "Jeux d’arcade",
+    "games_arcade_text": "Jeux rapides, vintage, inspirés des bornes d’arcade.",
+    "games_arcade_button": "Viens te défouler",
 
-    "arcade_alien_title": "Alien Pulse",
-    "arcade_alien_text": "Empêche les aliens de nous envahir",
-    "arcade_alien_button": "Shoot les tous",
+    "games_puzzle_title": "Jeux de réflexion",
+    "games_puzzle_text": "Puzzles, logique, mini‑casse‑têtes pour faire travailler les neurones.",
+    "games_puzzle_button": "Triture toi les méninges",
 
-    "arcade_breakout_title": "Breakout",
-    "arcade_breakout_text": "Fracasse moi ces murs de brique.",
-    "arcade_breakout_button": "C'est parti",
-
-    "footer_text": "© 2026 TY‑LUDIC — Studio de jeux indépendant"
+    "games_rpg_title": "Jeux RPG",
+    "games_rpg_text": "Exploration, combats, univers narratifs et prototypes de moteur RPG.",
+    "games_rpg_button": "Explore l’univers RPG"
   },
 
   "en": {
-    "menu_home": "Home",
-    "menu_games": "Games",
+    "games_title": "Studio Games",
+    "games_subtitle": "Choose your universe: retro arcade, puzzle, or narrative RPG.",
 
-    "arcade_title": "Arcade – TY‑LUDIC",
-    "arcade_intro_title": "Welcome to our arcade room",
-    "arcade_intro_text": "Pick your game.",
+    "games_arcade_title": "Arcade Games",
+    "games_arcade_text": "Fast, vintage games inspired by classic arcade machines.",
+    "games_arcade_button": "Release some steam",
 
-    "arcade_alien_title": "Alien Pulse",
-    "arcade_alien_text": "Stop the aliens from invading us.",
-    "arcade_alien_button": "Shoot them all",
+    "games_puzzle_title": "Puzzle Games",
+    "games_puzzle_text": "Puzzles, logic challenges, and mini brain‑teasers.",
+    "games_puzzle_button": "Challenge your mind",
 
-    "arcade_breakout_title": "Breakout",
-    "arcade_breakout_text": "Smash those brick walls.",
-    "arcade_breakout_button": "Let's go",
-
-    "footer_text": "© 2026 TY‑LUDIC — Independent game studio"
+    "games_rpg_title": "RPG Games",
+    "games_rpg_text": "Exploration, combat, narrative worlds, and RPG engine prototypes.",
+    "games_rpg_button": "Explore the RPG universe"
   },
 
   "es": {
-    "menu_home": "Inicio",
-    "menu_games": "Juegos",
+    "games_title": "Juegos del estudio",
+    "games_subtitle": "Elige tu universo: arcade retro, rompecabezas o RPG narrativo.",
 
-    "arcade_title": "Arcade – TY‑LUDIC",
-    "arcade_intro_title": "Bienvenido a nuestra sala arcade",
-    "arcade_intro_text": "Elige tu juego.",
+    "games_arcade_title": "Juegos arcade",
+    "games_arcade_text": "Juegos rápidos y vintage inspirados en las máquinas arcade.",
+    "games_arcade_button": "Desahógate",
 
-    "arcade_alien_title": "Alien Pulse",
-    "arcade_alien_text": "Evita que los alienígenas nos invadan.",
-    "arcade_alien_button": "Dispárales a todos",
+    "games_puzzle_title": "Juegos de rompecabezas",
+    "games_puzzle_text": "Puzles, lógica y mini desafíos para activar tus neuronas.",
+    "games_puzzle_button": "Pon tu mente a prueba",
 
-    "arcade_breakout_title": "Breakout",
-    "arcade_breakout_text": "Rompe esos muros de ladrillo.",
-    "arcade_breakout_button": "Vamos allá",
-
-    "footer_text": "© 2026 TY‑LUDIC — Estudio de juegos independiente"
+    "games_rpg_title": "Juegos RPG",
+    "games_rpg_text": "Exploración, combate, mundos narrativos y prototipos de motor RPG.",
+    "games_rpg_button": "Explora el universo RPG"
   }
 }
