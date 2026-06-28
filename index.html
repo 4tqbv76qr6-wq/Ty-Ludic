@@ -106,30 +106,6 @@
 <!-- Affichage du pseudo si connecté -->
 <script type="module">
 import { auth } from "./contact/inscription/firebase-init.js";
-
-const pseudo = localStorage.getItem("tyludic_pseudo");
-const userBox = document.getElementById("user-info");
-
-// Si un utilisateur est connecté
-if (auth.currentUser && pseudo) {
-    userBox.textContent = "Connecté : " + pseudo;
-} else {
-    userBox.textContent = "";
-}
-</script>
-<script type="module">
-alert("Script OK");
-</script>
-<script type="module">
-import { auth } from "./contact/inscription/firebase-init.js";
-alert("Firebase chargé : " + (auth ? "OUI" : "NON"));
-</script>
-<script type="module">
-import { auth } from "./contact/inscription/firebase-init.js";
-alert("Utilisateur connecté : " + (auth.currentUser ? "OUI" : "NON"));
-</script>
-<script type="module">
-import { auth } from "./contact/inscription/firebase-init.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
 const userBox = document.getElementById("user-info");
@@ -144,7 +120,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 </script>
-
 
 </body>
 </html>
