@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title data-i18n="arcade_title">Arcade – TY‑LUDIC</title>
-    <link rel="stylesheet" href="../../css/hub-menu.css">
+    <title data-i18n="menu_games">Jeux – TY‑LUDIC</title>
+    <link rel="stylesheet" href="../css/hub-menu.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -12,42 +12,52 @@
     <div class="tl-logo">TY‑LUDIC</div>
 
     <nav class="tl-nav">
-        <a href="../../index.html" data-i18n="menu_home"></a>
-        <a href="../index.html" class="active" data-i18n="menu_games"></a>
+        <a href="../index.html" data-i18n="menu_home"></a>
+        <a href="../jeux/index.html" class="active" data-i18n="menu_games"></a>
+        <a href="../studio/index.html" data-i18n="menu_studio"></a>
+        <a href="../contact/index.html" data-i18n="menu_contact"></a>
     </nav>
 
     <div class="lang-switch">
-        <a href="index.html" onclick="localStorage.setItem('lang','fr')" class="lang-item">🇫🇷 <span>FR</span></a>
+        <a href="../jeux/index.html" onclick="localStorage.setItem('lang','fr')" class="lang-item">🇫🇷 <span>FR</span></a>
         <span>|</span>
-        <a href="index.html" onclick="localStorage.setItem('lang','en')" class="lang-item">🇬🇧 <span>EN</span></a>
+        <a href="../jeux/index.html" onclick="localStorage.setItem('lang','en')" class="lang-item">🇬🇧 <span>EN</span></a>
         <span>|</span>
-        <a href="index.html" onclick="localStorage.setItem('lang','es')" class="lang-item">🇪🇸 <span>ES</span></a>
+        <a href="../jeux/index.html" onclick="localStorage.setItem('lang','es')" class="lang-item">🇪🇸 <span>ES</span></a>
     </div>
 </header>
 
 <main class="hub-container">
 
     <section class="hub-intro">
-        <h1 data-i18n="arcade_intro_title"></h1>
-        <p data-i18n="arcade_intro_text"></p>
+        <h1 data-i18n="games_title"></h1>
+        <p data-i18n="games_subtitle"></p>
     </section>
 
     <section class="hub-grid">
 
-        <!-- ALIEN PULSE -->
+        <!-- ARCADE -->
         <article class="hub-card hub-arcade">
-            <div class="hub-icon">🛸</div>
-            <h2 data-i18n="arcade_alien_title"></h2>
-            <p data-i18n="arcade_alien_text"></p>
-            <a href="alien-pulse/index.html" class="hub-button" data-i18n="arcade_alien_button"></a>
+            <div class="hub-icon">🕹️</div>
+            <h2 data-i18n="games_arcade_title"></h2>
+            <p data-i18n="games_arcade_text"></p>
+            <a href="arcade/index.html" class="hub-button" data-i18n="games_arcade_button"></a>
         </article>
 
-        <!-- BREAKOUT -->
+        <!-- RÉFLEXION -->
         <article class="hub-card hub-reflexion">
-            <div class="hub-icon">🧱</div>
-            <h2 data-i18n="arcade_breakout_title"></h2>
-            <p data-i18n="arcade_breakout_text"></p>
-            <a href="breakout/index.html" class="hub-button" data-i18n="arcade_breakout_button"></a>
+            <div class="hub-icon">🧠</div>
+            <h2 data-i18n="games_puzzle_title"></h2>
+            <p data-i18n="games_puzzle_text"></p>
+            <a href="reflexion/index.html" class="hub-button" data-i18n="games_puzzle_button"></a>
+        </article>
+
+        <!-- RPG -->
+        <article class="hub-card hub-rpg">
+            <div class="hub-icon">🛡️</div>
+            <h2 data-i18n="games_rpg_title"></h2>
+            <p data-i18n="games_rpg_text"></p>
+            <a href="rpg/index.html" class="hub-button" data-i18n="games_rpg_button"></a>
         </article>
 
     </section>
@@ -56,8 +66,10 @@
 <footer class="tl-footer" data-i18n="footer_text"></footer>
 
 <script>
+    // Langue courante (FR par défaut)
     const currentLang = localStorage.getItem("lang") || "fr";
 
+    // Chargement du JSON multilingue
     fetch("lang.json")
         .then(r => r.json())
         .then(data => {
@@ -67,8 +79,9 @@
                 if (text) el.textContent = text;
             });
         })
-        .catch(err => console.error("Erreur chargement lang-arcade.json", err));
+        .catch(err => console.error("Erreur chargement lang.json", err));
 
+    // Activation visuelle de la langue sélectionnée
     document.querySelectorAll(".lang-item").forEach(el => {
         if (el.textContent.includes(currentLang.toUpperCase())) {
             el.classList.add("active");
