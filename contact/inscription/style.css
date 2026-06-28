@@ -1,0 +1,41 @@
+.account-wrapper {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #0b1020;
+    border-radius: 10px;
+    color: #e5f0ff;
+    font-family: system-ui;
+}
+
+label {
+    margin-top: 12px;
+    display: block;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: none;
+    background: #1a2238;
+    color: #fff;
+}
+
+button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background: #00e5ff;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#error-msg {
+    margin-top: 10px;
+    color: #ff7d7d;
+}

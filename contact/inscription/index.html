@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un compte – TY‑LUDIC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="account-wrapper">
+
+    <h1>Créer un compte TY‑LUDIC</h1>
+    <p>Choisis un pseudo et un mot de passe pour commencer l’aventure.</p>
+
+    <form id="create-account-form">
+
+        <!-- PSEUDO -->
+        <label for="pseudo">Pseudo</label>
+        <input type="text" id="pseudo" maxlength="16" autocomplete="off" required>
+
+        <small class="hint">
+            3–16 caractères, lettres/chiffres, _ et -.  
+            Interdit : @, dates (1980, 01011980…)
+        </small>
+
+        <!-- MOT DE PASSE -->
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" minlength="6" required>
+
+        <small class="hint">
+            Minimum 6 caractères.  
+            Interdit : dates, suites simples (123456, abcdef…)
+        </small>
+
+        <!-- ERREURS -->
+        <div id="error-msg"></div>
+
+        <!-- BOUTON -->
+        <button type="submit" id="create-btn">Créer mon compte</button>
+
+    </form>
+
+</div>
+
+<!-- ⭐ IMPORTANT : scripts en module -->
+<script type="module" src="firebase-init.js"></script>
+<script type="module" src="create-account.js"></script>
+
+</body>
+</html>
