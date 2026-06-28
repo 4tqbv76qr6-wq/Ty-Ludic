@@ -124,6 +124,10 @@ alert("Script OK");
 import { auth } from "./contact/inscription/firebase-init.js";
 alert("Firebase chargé : " + (auth ? "OUI" : "NON"));
 </script>
+<script type="module">
+import { auth } from "./contact/inscription/firebase-init.js";
+alert("Utilisateur connecté : " + (auth.currentUser ? "OUI" : "NON"));
+</script>
 
 
 </body>
