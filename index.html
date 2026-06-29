@@ -114,7 +114,7 @@ const pseudo = localStorage.getItem("tyludic_pseudo");
 // Attendre que Firebase Auth soit prêt
 onAuthStateChanged(auth, (user) => {
     if (user && pseudo) {
-        userBox.textContent = "Connecté : " + pseudo;
+        userBox.textContent = "👤 " + pseudo;
     } else {
         userBox.textContent = "";
     }
