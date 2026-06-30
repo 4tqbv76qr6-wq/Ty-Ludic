@@ -81,14 +81,14 @@ const Enemies = {
                     ============================================================ */
                     if (score % 300=== 0) {
 
-                        // Bouclier déjà actif → cumul +10
+                        // Bouclier déjà actif → cumul +1
                         if (player.shieldActive) {
-                            player.shield += 2;
+                            player.shield += 1;
                         }
 
                         // Bouclier inactif → activation à 10
                         else {
-                            player.shield = 2;
+                            player.shield = 1;
                             player.shieldActive = true;
                         }
 
