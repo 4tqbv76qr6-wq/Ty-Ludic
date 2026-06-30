@@ -75,15 +75,35 @@ const Enemies = {
                     bestDisplay.textContent = "Record : " + HighScores.best();
 
                     addExplosion(e.x + e.width / 2, e.y + e.height / 2);
+
+                    /* ============================================================
+                       ⭐ Activation du bouclier tous les 300 points
+                    ============================================================ */
+                    if (score % 300=== 0) {
+
+                        // Bouclier déjà actif → cumul +10
+                        if (player.shieldActive) {
+                            player.shield += 2;
+                        }
+
+                        // Bouclier inactif → activation à 10
+                        else {
+                            player.shield = 2;
+                            player.shieldActive = true;
+                        }
+
+                        // Flash d’activation
+                        player.shieldHitTimer = 10;
+                    }
                 }
             });
         });
 
         /* ============================================================
            ⭐ Tirs ennemis équilibrés
-           ============================================================ */
+        ============================================================ */
 
-        const MAX_ENEMY_BULLETS = 8; // limite dure → jouable
+        const MAX_ENEMY_BULLETS = 7; // limite dure → jouable
 
         enemies.forEach(e => {
             if (!e.alive || !player.alive) return;
