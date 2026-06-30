@@ -32,6 +32,22 @@
             <div id="best">Record : 0</div>
         </div>
 
+        <!-- ⭐ SÉLECTEUR DE DIFFICULTÉ -->
+        <div id="difficulty-wrapper">
+            <label for="difficultySelect">Difficulté :</label>
+            <select id="difficultySelect">
+                <option value="facile">Facile</option>
+                <option value="moyen" selected>Moyen</option>
+                <option value="difficile">Difficile</option>
+                <option value="cauchemar">Cauchemar</option>
+            </select>
+        </div>
+
+        <!-- ⭐ BOUTON START -->
+        <div id="start-wrapper">
+            <button id="start-button">START GAME</button>
+        </div>
+
         <div id="bezel">
             <div class="canvas-wrapper">
                 <canvas id="game" width="500" height="600"></canvas>
@@ -93,6 +109,17 @@
     <!-- LOOP + MAIN -->
     <script src="js/core/loop.js"></script>
     <script src="main.js"></script>
+
+    <!-- ⭐ Activation de la difficulté + START -->
+    <script>
+        document.getElementById("difficultySelect").addEventListener("change", e => {
+            applyDifficulty(e.target.value);
+        });
+
+        document.getElementById("start-button").addEventListener("click", () => {
+            startGame(); // ⭐ tu vas l’ajouter dans main.js
+        });
+    </script>
 
 </body>
 </html>

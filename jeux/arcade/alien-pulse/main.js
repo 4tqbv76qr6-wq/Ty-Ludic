@@ -1,12 +1,14 @@
 /* ============================================================
-   INITIALISATION
+   ALIEN PULSE — MAIN
    ============================================================ */
 
+function startGame() {
+    // Initialisation comme avant
+    initStars();
+    Bunkers.init();
+    Enemies.init();
+    Controls.init();
 
-initStars();
-Bunkers.init();
-Enemies.init();
-Controls.init();
-
-
-loop();
+    // Démarrage de la boucle de jeu
+    loop();
+}
