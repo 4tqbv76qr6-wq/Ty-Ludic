@@ -33,17 +33,22 @@ const Enemies = {
                     width: enemyWidth,
                     height: enemyHeight,
                     alive: true,
-                    frame: 0
+                    frame: 0,
+
+                    // ⭐ Cooldown individuel équilibré
+                    shootCooldown: 50 + Math.random() * 80 // entre 0.8s et 2s
                 });
             }
         }
     },
 
     update() {
+        // Déplacement horizontal
         enemies.forEach(e => {
             if (e.alive) e.x += enemyDirection;
         });
 
+        // Changement de direction + descente
         const hitEdge = enemies.some(e =>
             e.alive && (e.x <= 0 || e.x >= canvas.width - enemyWidth)
         );
@@ -53,6 +58,7 @@ const Enemies = {
             enemies.forEach(e => e.y += 20);
         }
 
+        // Collision avec les tirs du joueur
         bullets.forEach(b => {
             enemies.forEach(e => {
                 if (e.alive &&
@@ -73,14 +79,46 @@ const Enemies = {
             });
         });
 
-        if (Math.random() < enemyFireRate && player.alive) {
-            const shooters = enemies.filter(e => e.alive);
-            if (shooters.length > 0) {
-                const shooter = shooters[Math.floor(Math.random() * shooters.length)];
-                EnemyBullets.fire(shooter);
-            }
-        }
+        /* ============================================================
+           ⭐ Tirs ennemis équilibrés
+           ============================================================ */
 
+        const MAX_ENEMY_BULLETS = 8; // limite dure → jouable
+
+        enemies.forEach(e => {
+            if (!e.alive || !player.alive) return;
+
+            e.shootCooldown--;
+
+            if (e.shootCooldown <= 0) {
+
+                // ⭐ Probabilité de tir (évite le spam)
+                if (Math.random() < 0.4) { // 40% de chance de tirer
+                    if (enemyBullets.length < MAX_ENEMY_BULLETS) {
+
+                        // ⭐ Tir directionnel adouci
+                        const angle = Math.atan2(
+                            player.y - e.y,
+                            player.x - e.x
+                        ) + (Math.random() * 0.4 - 0.2); // ± 0.2 rad de dispersion
+
+                        const speed = 2 + Math.random() * 2; // vitesse entre 2 et 4
+
+                        enemyBullets.push({
+                            x: e.x + e.width / 2 - 2,
+                            y: e.y + e.height,
+                            dx: Math.cos(angle) * speed,
+                            dy: Math.sin(angle) * speed
+                        });
+                    }
+                }
+
+                // ⭐ Cooldown réinitialisé
+                e.shootCooldown = 50 + Math.random() * 80;
+            }
+        });
+
+        // Niveau suivant
         if (enemies.every(e => !e.alive)) {
             nextLevel();
         }
