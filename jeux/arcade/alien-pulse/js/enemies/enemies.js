@@ -6,6 +6,50 @@ const enemyWidth = 40;
 const enemyHeight = 20;
 let enemyDirection = 1;
 
+/* ============================================================
+   BONUS ALIEN
+   ============================================================ */
+let bonusAlien = {
+    x: -100,
+    y: 30,              // plus bas
+    width: 40,
+    height: 20,
+    speed: 2,           // moins rapide
+    active: false,
+    direction: 1
+};
+
+function spawnBonusAlien() {
+    if (bonusAlien.active) return;
+
+    // apparition moins fréquente
+    if (Math.random() < 0.004) { // 0.4% par frame
+        bonusAlien.active = true;
+
+        if (Math.random() < 0.5) {
+            bonusAlien.x = -bonusAlien.width;
+            bonusAlien.direction = 1;
+        } else {
+            bonusAlien.x = canvas.width + bonusAlien.width;
+            bonusAlien.direction = -1;
+        }
+
+        bonusAlien.y = 30;
+    }
+}
+
+function drawBonusAlien() {
+    ctx.fillStyle = "magenta";
+
+    const x = bonusAlien.x;
+    const y = bonusAlien.y;
+
+    // forme arcade stylée
+    ctx.fillRect(x + 10, y, 20, 6);      // tête
+    ctx.fillRect(x + 4, y + 6, 32, 8);   // corps
+    ctx.fillRect(x + 16, y + 14, 8, 6);  // queue
+}
+
 function drawAlien(e) {
     ctx.fillStyle = "lime";
 
@@ -34,21 +78,17 @@ const Enemies = {
                     height: enemyHeight,
                     alive: true,
                     frame: 0,
-
-                    // ⭐ Cooldown individuel équilibré
-                    shootCooldown: 50 + Math.random() * 80 // entre 0.8s et 2s
+                    shootCooldown: 50 + Math.random() * 80
                 });
             }
         }
     },
 
     update() {
-        // Déplacement horizontal
         enemies.forEach(e => {
             if (e.alive) e.x += enemyDirection;
         });
 
-        // Changement de direction + descente
         const hitEdge = enemies.some(e =>
             e.alive && (e.x <= 0 || e.x >= canvas.width - enemyWidth)
         );
@@ -58,7 +98,6 @@ const Enemies = {
             enemies.forEach(e => e.y += 20);
         }
 
-        // Collision avec les tirs du joueur
         bullets.forEach(b => {
             enemies.forEach(e => {
                 if (e.alive &&
@@ -70,29 +109,27 @@ const Enemies = {
                     e.alive = false;
                     b.y = -100;
 
+                    const previousScore = score;
                     score += 10;
+
                     scoreDisplay.textContent = "Score : " + score;
                     bestDisplay.textContent = "Record : " + HighScores.best();
 
                     addExplosion(e.x + e.width / 2, e.y + e.height / 2);
 
                     /* ============================================================
-                       ⭐ Activation du bouclier tous les 300 points
+                       ⭐ Bouclier fiable : activation si palier franchi
                     ============================================================ */
-                    if (score % 300=== 0) {
+                    const previousTier = Math.floor(previousScore / 300);
+                    const newTier = Math.floor(score / 300);
 
-                        // Bouclier déjà actif → cumul +1
+                    if (previousTier !== newTier) {
                         if (player.shieldActive) {
-                            player.shield += 1;
-                        }
-
-                        // Bouclier inactif → activation à 10
-                        else {
-                            player.shield = 1;
+                            player.shield += 2;
+                        } else {
+                            player.shield = 2;
                             player.shieldActive = true;
                         }
-
-                        // Flash d’activation
                         player.shieldHitTimer = 10;
                     }
                 }
@@ -100,10 +137,61 @@ const Enemies = {
         });
 
         /* ============================================================
-           ⭐ Tirs ennemis équilibrés
+           BONUS ALIEN UPDATE
         ============================================================ */
+        spawnBonusAlien();
 
-        const MAX_ENEMY_BULLETS = 7; // limite dure → jouable
+        if (bonusAlien.active) {
+            bonusAlien.x += bonusAlien.speed * bonusAlien.direction;
+
+            if (bonusAlien.x < -100 || bonusAlien.x > canvas.width + 100) {
+                bonusAlien.active = false;
+            }
+
+            bullets.forEach(b => {
+                if (
+                    b.x < bonusAlien.x + bonusAlien.width &&
+                    b.x + 4 > bonusAlien.x &&
+                    b.y < bonusAlien.y + bonusAlien.height &&
+                    b.y + 10 > bonusAlien.y
+                ) {
+                    bonusAlien.active = false;
+                    b.y = -100;
+
+                    const previousScore = score;
+                    score += 50;
+
+                    scoreDisplay.textContent = "Score : " + score;
+                    bestDisplay.textContent = "Record : " + HighScores.best();
+
+                    addExplosion(
+                        bonusAlien.x + bonusAlien.width / 2,
+                        bonusAlien.y + bonusAlien.height / 2
+                    );
+
+                    /* ============================================================
+                       ⭐ Bouclier fiable pour bonus alien
+                    ============================================================ */
+                    const previousTier = Math.floor(previousScore / 300);
+                    const newTier = Math.floor(score / 300);
+
+                    if (previousTier !== newTier) {
+                        if (player.shieldActive) {
+                            player.shield += 2;
+                        } else {
+                            player.shield = 2;
+                            player.shieldActive = true;
+                        }
+                        player.shieldHitTimer = 10;
+                    }
+                }
+            });
+        }
+
+        /* ============================================================
+           Tirs ennemis
+        ============================================================ */
+        const MAX_ENEMY_BULLETS = 8;
 
         enemies.forEach(e => {
             if (!e.alive || !player.alive) return;
@@ -111,18 +199,15 @@ const Enemies = {
             e.shootCooldown--;
 
             if (e.shootCooldown <= 0) {
-
-                // ⭐ Probabilité de tir (évite le spam)
-                if (Math.random() < 0.4) { // 40% de chance de tirer
+                if (Math.random() < 0.4) {
                     if (enemyBullets.length < MAX_ENEMY_BULLETS) {
 
-                        // ⭐ Tir directionnel adouci
                         const angle = Math.atan2(
                             player.y - e.y,
                             player.x - e.x
-                        ) + (Math.random() * 0.4 - 0.2); // ± 0.2 rad de dispersion
+                        ) + (Math.random() * 0.4 - 0.2);
 
-                        const speed = 2 + Math.random() * 2; // vitesse entre 2 et 4
+                        const speed = 2 + Math.random() * 2;
 
                         enemyBullets.push({
                             x: e.x + e.width / 2 - 2,
@@ -133,12 +218,10 @@ const Enemies = {
                     }
                 }
 
-                // ⭐ Cooldown réinitialisé
                 e.shootCooldown = 50 + Math.random() * 80;
             }
         });
 
-        // Niveau suivant
         if (enemies.every(e => !e.alive)) {
             nextLevel();
         }
@@ -148,5 +231,9 @@ const Enemies = {
         enemies.forEach(e => {
             if (e.alive) drawAlien(e);
         });
+
+        if (bonusAlien.active) {
+            drawBonusAlien();
+        }
     }
 };
