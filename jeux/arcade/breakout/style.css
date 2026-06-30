@@ -124,6 +124,7 @@ body {
 /* ============================================================
    MODE PAYSAGE : BLOQUÉ
    ============================================================ */
+/*
 @media (orientation: landscape) {
     body::before {
         content: "Veuillez tourner votre appareil en mode portrait pour jouer";
@@ -149,3 +150,4 @@ body {
         display: none !important;
     }
 }
+*/
