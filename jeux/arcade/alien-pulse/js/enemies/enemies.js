@@ -1,4 +1,27 @@
 /* ============================================================
+   DIFFICULTÉ — contrôle du nombre de tirs ennemis
+   ============================================================ */
+let difficulty = "moyen"; 
+let MAX_ENEMY_BULLETS = 6; // valeur par défaut
+
+function applyDifficulty(level) {
+    difficulty = level;
+
+    if (level === "facile") {
+        MAX_ENEMY_BULLETS = 2;
+    }
+    else if (level === "moyen") {
+        MAX_ENEMY_BULLETS = 6;
+    }
+    else if (level === "difficile") {
+        MAX_ENEMY_BULLETS = 8;
+    }
+    else if (level === "cauchemar") {
+        MAX_ENEMY_BULLETS = 10;
+    }
+}
+
+/* ============================================================
    ENEMIES
    ============================================================ */
 const enemies = [];
@@ -11,10 +34,10 @@ let enemyDirection = 1;
    ============================================================ */
 let bonusAlien = {
     x: -100,
-    y: 30,              // plus bas
+    y: 30,              
     width: 40,
     height: 20,
-    speed: 2,           // moins rapide
+    speed: 2,           
     active: false,
     direction: 1
 };
@@ -22,8 +45,7 @@ let bonusAlien = {
 function spawnBonusAlien() {
     if (bonusAlien.active) return;
 
-    // apparition moins fréquente
-    if (Math.random() < 0.004) { // 0.4% par frame
+    if (Math.random() < 0.004) { 
         bonusAlien.active = true;
 
         if (Math.random() < 0.5) {
@@ -44,10 +66,9 @@ function drawBonusAlien() {
     const x = bonusAlien.x;
     const y = bonusAlien.y;
 
-    // forme arcade stylée
-    ctx.fillRect(x + 10, y, 20, 6);      // tête
-    ctx.fillRect(x + 4, y + 6, 32, 8);   // corps
-    ctx.fillRect(x + 16, y + 14, 8, 6);  // queue
+    ctx.fillRect(x + 10, y, 20, 6);
+    ctx.fillRect(x + 4, y + 6, 32, 8);
+    ctx.fillRect(x + 16, y + 14, 8, 6);
 }
 
 function drawAlien(e) {
@@ -117,9 +138,6 @@ const Enemies = {
 
                     addExplosion(e.x + e.width / 2, e.y + e.height / 2);
 
-                    /* ============================================================
-                       ⭐ Bouclier fiable : activation si palier franchi
-                    ============================================================ */
                     const previousTier = Math.floor(previousScore / 300);
                     const newTier = Math.floor(score / 300);
 
@@ -136,9 +154,7 @@ const Enemies = {
             });
         });
 
-        /* ============================================================
-           BONUS ALIEN UPDATE
-        ============================================================ */
+        /* BONUS ALIEN UPDATE */
         spawnBonusAlien();
 
         if (bonusAlien.active) {
@@ -169,9 +185,6 @@ const Enemies = {
                         bonusAlien.y + bonusAlien.height / 2
                     );
 
-                    /* ============================================================
-                       ⭐ Bouclier fiable pour bonus alien
-                    ============================================================ */
                     const previousTier = Math.floor(previousScore / 300);
                     const newTier = Math.floor(score / 300);
 
@@ -189,10 +202,8 @@ const Enemies = {
         }
 
         /* ============================================================
-           Tirs ennemis
+           Tirs ennemis — dépend de la difficulté
         ============================================================ */
-        const MAX_ENEMY_BULLETS = 8;
-
         enemies.forEach(e => {
             if (!e.alive || !player.alive) return;
 
