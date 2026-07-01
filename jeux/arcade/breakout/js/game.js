@@ -205,14 +205,9 @@ const ball = {
 function launchBall() {
     if (!ball.stuck) return;
 
-    const relative = (ball.x - paddle.x) / paddle.width;
-    const maxAngle = Math.PI / 3;
-    const angle = (relative - 0.5) * maxAngle;
-
-    const speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-
-    ball.dx = Math.sin(angle) * speed;
-    ball.dy = -Math.cos(angle) * speed;
+    // La balle descend verticalement depuis le spawn
+    ball.dx = 0;
+    ball.dy = 4;   // vitesse vers le bas
 
     ball.stuck = false;
     ball.moving = true;
