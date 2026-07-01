@@ -38,6 +38,6 @@ function handleGameOverClick(e) {
     }
 
     if (y > 410 && y < 460) {
-        window.location.href = "menu.html";
+        window.location.href = "../index.html";
     }
 }
