@@ -1,0 +1,64 @@
+body {
+    background: #000;
+    color: #0ff;
+    font-family: 'Press Start 2P', monospace;
+    text-align: center;
+}
+
+#arcade-frame {
+    margin: 20px auto;
+    width: 760px;
+}
+
+#marquee {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #0ff;
+    text-shadow: 0 0 8px #0ff;
+}
+
+#hud {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 0 20px;
+}
+
+#mode, #status {
+    font-size: 12px;
+}
+
+#difficulty {
+    background: #111;
+    color: #0ff;
+    border: 1px solid #0ff;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    text-shadow: 0 0 5px #0ff;
+}
+
+.canvas-wrapper {
+    width: 100%;
+}
+
+#controls {
+    margin-top: 20px;
+}
+
+#controls button {
+    background: #111;
+    color: #0ff;
+    border: 1px solid #0ff;
+    padding: 10px 20px;
+    font-family: 'Press Start 2P';
+    border-radius: 6px;
+    cursor: pointer;
+    text-shadow: 0 0 5px #0ff;
+}
+
+#controls button:hover {
+    background: #0ff;
+    color: #000;
+}
