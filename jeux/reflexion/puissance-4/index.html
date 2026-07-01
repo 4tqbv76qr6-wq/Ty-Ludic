@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>TY‑LUDIC — Puissance 4</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="arcade-frame">
+
+        <div id="marquee">TY‑LUDIC — PUISSANCE 4</div>
+
+        <div id="hud">
+            <div id="status">Tour : Joueur 1</div>
+
+            <div id="mode">
+                Classique —
+                <select id="difficulty">
+                    <option value="debutant">Débutant</option>
+                    <option value="intermediaire" selected>Intermédiaire</option>
+                    <option value="expert">Expert</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="bezel">
+            <div class="canvas-wrapper">
+                <canvas id="game" width="700" height="500"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="controls">
+        <button id="left">◀️</button>
+        <button id="drop">⬇️</button>
+        <button id="right">▶️</button>
+    </div>
+
+    <div id="highscores"></div>
+
+    <script src="game.js"></script>
+</body>
+</html>
