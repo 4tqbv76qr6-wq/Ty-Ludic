@@ -500,6 +500,10 @@ function update() {
     paddle.update();
     ball.update();
     updateBricks();
+
+    // ⭐ Intégration du système de cadeaux
+    maybeSpawnGift();
+    updateGift();
 }
 
 function draw() {
@@ -514,6 +518,9 @@ function draw() {
     ball.draw();
     drawBricks();
     Explosions.draw(ctx);
+
+    // ⭐ Dessin du cadeau
+    drawGift();
 }
 
 function loop() {
