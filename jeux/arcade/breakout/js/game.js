@@ -129,6 +129,9 @@ const ball = {
         if (this.y - this.radius <= 0)
             this.dy *= -1;
 
+        /* ============================================================
+           COLLISION RAQUETTE — angle + spin + correction horizontale
+        ============================================================ */
         if (
             this.x + this.radius > paddle.x &&
             this.x - this.radius < paddle.x + paddle.width &&
@@ -136,19 +139,27 @@ const ball = {
             this.y - this.radius < paddle.y + paddle.height
         ) {
             const impact = (this.x - paddle.x) / paddle.width;
-            const angle = (impact - 0.5) * (Math.PI * 5 / 6);
+
+            // angle max réduit (80°)
+            const maxAngle = Math.PI * 4 / 9;
+            const angle = (impact - 0.5) * maxAngle;
 
             const speed = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
 
             let newDx = speed * Math.sin(angle);
             let newDy = -speed * Math.cos(angle);
 
+            // spin
             const spinFactor = 0.12;
             newDx += paddle.vx * spinFactor;
 
-            const maxDx = speed * 0.75;
-            newDx = Math.max(-maxDx, Math.min(maxDx, newDx));
+            // dy minimal pour éviter les horizontales
+            const minDy = 1.5;
+            if (Math.abs(newDy) < minDy) {
+                newDy = (newDy < 0 ? -minDy : minDy);
+            }
 
+            // normalisation
             const newSpeed = Math.sqrt(newDx * newDx + newDy * newDy);
             const ratio = speed / newSpeed;
             newDx *= ratio;
@@ -158,7 +169,7 @@ const ball = {
             this.dy = newDy;
         }
 
-        // ⭐ Correction anti-vertical globale
+        // ⭐ Correction anti-vertical globale stricte
         const minDx = 1.2;
         if (!this.stuck && Math.abs(this.dx) < minDx) {
             this.dx = (this.dx < 0 ? -minDx : minDx);
