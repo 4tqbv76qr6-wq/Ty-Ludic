@@ -1,44 +1,3 @@
-
-
-
-
-/* ============================================================
-   EXPLOSIONS
-   ============================================================ */
-const explosions = [];
-
-function addExplosion(x, y) {
-    explosions.push({
-        x,
-        y,
-        frame: 0,
-        maxFrame: 8,
-        size: 10
-    });
-}
-
-function updateExplosions() {
-    for (let i = explosions.length - 1; i >= 0; i--) {
-        explosions[i].frame++;
-        if (explosions[i].frame > explosions[i].maxFrame) {
-            explosions.splice(i, 1);
-        }
-    }
-}
-
-function drawExplosions() {
-    explosions.forEach(ex => {
-        const p = ex.frame / ex.maxFrame;
-        const alpha = 1 - p;
-        const size = ex.size + p * 20;
-
-        ctx.fillStyle = `rgba(255, 200, 0, ${alpha})`;
-        ctx.beginPath();
-        ctx.arc(ex.x, ex.y, size, 0, Math.PI * 2);
-        ctx.fill();
-    });
-}
-
 /* ============================================================
    SCORE / LEVEL / RECORD
    ============================================================ */
@@ -135,7 +94,7 @@ const paddle = {
 };
 
 /* ============================================================
-   BALL — ANGLE + SPIN ADOUCI
+   BALL — ANGLE + SPIN + POSITION FIXE + ANTI-VERTICAL GLOBAL
    ============================================================ */
 const ball = {
     x: canvas.width / 2,
@@ -144,6 +103,7 @@ const ball = {
     dx: 3,
     dy: -3,
     moving: false,
+    stuck: true,
 
     reset() {
         this.x = canvas.width / 2;
@@ -151,23 +111,24 @@ const ball = {
         this.dx = 3 + level * 0.5;
         this.dy = -3 - level * 0.5;
         this.moving = false;
+        this.stuck = true;
     },
 
     update() {
-        if (!this.moving) return;
+        if (this.stuck) {
+            return;
+        }
 
         this.x += this.dx;
         this.y += this.dy;
 
-        if (this.x - this.radius <= 0 || this.x + this.radius >= canvas.width)
+        if (this.x - this.radius <= 0 || this.x + this.radius >= canvas.width) {
             this.dx *= -1;
+        }
 
         if (this.y - this.radius <= 0)
             this.dy *= -1;
 
-        /* ============================================================
-           COLLISION RAQUETTE — ANGLE + SPIN ADOUCI
-        ============================================================ */
         if (
             this.x + this.radius > paddle.x &&
             this.x - this.radius < paddle.x + paddle.width &&
@@ -182,15 +143,12 @@ const ball = {
             let newDx = speed * Math.sin(angle);
             let newDy = -speed * Math.cos(angle);
 
-            // SPIN adouci
             const spinFactor = 0.12;
             newDx += paddle.vx * spinFactor;
 
-            // Limiter l’angle horizontal
             const maxDx = speed * 0.75;
             newDx = Math.max(-maxDx, Math.min(maxDx, newDx));
 
-            // Normalisation légère
             const newSpeed = Math.sqrt(newDx * newDx + newDy * newDy);
             const ratio = speed / newSpeed;
             newDx *= ratio;
@@ -198,6 +156,12 @@ const ball = {
 
             this.dx = newDx;
             this.dy = newDy;
+        }
+
+        // ⭐ Correction anti-vertical globale
+        const minDx = 1.2;
+        if (!this.stuck && Math.abs(this.dx) < minDx) {
+            this.dx = (this.dx < 0 ? -minDx : minDx);
         }
 
         if (this.y - this.radius > canvas.height) {
@@ -223,6 +187,25 @@ const ball = {
         ctx.fill();
     }
 };
+
+/* ============================================================
+   LANCEMENT ANGULAIRE — balle fixe, raquette décalée
+   ============================================================ */
+function launchBall() {
+    if (!ball.stuck) return;
+
+    const relative = (ball.x - paddle.x) / paddle.width;
+    const maxAngle = Math.PI / 3;
+    const angle = (relative - 0.5) * maxAngle;
+
+    const speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+
+    ball.dx = Math.sin(angle) * speed;
+    ball.dy = -Math.cos(angle) * speed;
+
+    ball.stuck = false;
+    ball.moving = true;
+}
 
 /* ============================================================
    BRICKS — Collision logique + rebonds cohérents
@@ -284,7 +267,7 @@ function updateBricks() {
             score += 10;
             updateHud();
 
-            addExplosion(b.x + b.width / 2, b.y + b.height / 2);
+            Explosions.add(b.x + b.width / 2, b.y + b.height / 2);
         }
     }
 
@@ -375,6 +358,8 @@ function drawGameOver() {
 
     drawRoundedButton(BTN_REPLAY, "#022", "#0ff", "REJOUER");
     drawRoundedButton(BTN_QUIT, "#200", "#f00", "QUITTER");
+
+    Explosions.draw(ctx);
 }
 
 function restartGame() {
@@ -465,49 +450,44 @@ const Controls = {
         });
 
         fire.addEventListener("touchstart", () => {
-            if (!gameOver) ball.moving = true;
+            if (!gameOver) launchBall();
         });
         fire.addEventListener("click", () => {
-            if (!gameOver) ball.moving = true;
+            if (!gameOver) launchBall();
         });
     }
 };
 
 Controls.init();
 
-// ============================================================
-// CONTROLES CLAVIER
-// ============================================================
-
+/* ============================================================
+   CONTROLES CLAVIER
+   ============================================================ */
 window.addEventListener("keydown", (e) => {
 
-    // Déplacement
     if (e.key === "ArrowLeft") {
-        paddle.dx = -paddle.speed;
+        paddle.movingLeft = true;
     }
     if (e.key === "ArrowRight") {
-        paddle.dx = paddle.speed;
+        paddle.movingRight = true;
     }
 
-    // Lancer la balle
     if ((e.code === "Space" || e.key === "ArrowUp" || e.key === "Enter") && ball.stuck) {
-        ball.stuck = false;
+        launchBall();
     }
 });
 
 window.addEventListener("keyup", (e) => {
-    if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
-        paddle.dx = 0;
-    }
+    if (e.key === "ArrowLeft") paddle.movingLeft = false;
+    if (e.key === "ArrowRight") paddle.movingRight = false;
 });
-
 
 /* ============================================================
    GAME LOOP
    ============================================================ */
 function update() {
     updateStars();
-    updateExplosions();
+    Explosions.update();
 
     if (gameOver) return;
 
@@ -516,22 +496,18 @@ function update() {
     updateBricks();
 }
 
-
-
-
 function draw() {
     drawStars();
 
     if (gameOver) {
         drawGameOver();
-        drawExplosions();
         return;
     }
 
     paddle.draw();
     ball.draw();
     drawBricks();
-    drawExplosions();
+    Explosions.draw(ctx);
 }
 
 function loop() {
@@ -543,4 +519,3 @@ function loop() {
 initBricks();
 ball.reset();
 loop();
-
