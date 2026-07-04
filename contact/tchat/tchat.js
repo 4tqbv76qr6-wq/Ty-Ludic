@@ -1,3 +1,4 @@
+alert("debut chargé !");  // DEBUG 
 import { auth, db } from "../contact/inscription/firebase-init.js";
 import {
     collection,
@@ -10,6 +11,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
+alert("tchat.js chargé !");  // DEBUG 1
+
 const userBox = document.getElementById("user-info");
 const messagesBox = document.getElementById("tchat-messages");
 const form = document.getElementById("tchat-form");
@@ -21,13 +24,26 @@ let currentChannel = "general";
 let unsubscribe = null;
 let lastSendTime = 0;
 
-// Pseudo TY‑LUDIC
 let pseudo = localStorage.getItem("tyludic_pseudo") || "Invité";
+alert("Pseudo localStorage = " + pseudo);  // DEBUG 2
+
+// Vérifier si Firebase Auth est chargé
+alert("auth = " + auth);  // DEBUG 3
+alert("db = " + db);      // DEBUG 4
 
 // Auth Firebase
 onAuthStateChanged(auth, (user) => {
+    alert("onAuthStateChanged déclenché !");  // DEBUG 5
+
     currentUser = user || null;
-    userBox.textContent = user ? pseudo : "Non connecté";
+
+    if (user) {
+        alert("Utilisateur connecté ! UID = " + user.uid);  // DEBUG 6
+        userBox.textContent = pseudo;
+    } else {
+        alert("Aucun utilisateur connecté");  // DEBUG 7
+        userBox.textContent = "Non connecté";
+    }
 });
 
 // Format heure
@@ -42,7 +58,6 @@ function afficherMessage(data) {
     const wrapper = document.createElement("div");
     wrapper.className = "tchat-message";
 
-    // Messages envoyés par soi-même
     if (currentUser && data.uid === currentUser.uid) {
         wrapper.classList.add("self");
     }
@@ -79,6 +94,8 @@ function afficherMessage(data) {
 
 // Charger un salon
 function subscribeChannel(channel) {
+    alert("subscribeChannel : " + channel);  // DEBUG 8
+
     if (unsubscribe) unsubscribe();
 
     messagesBox.innerHTML = "";
@@ -90,6 +107,8 @@ function subscribeChannel(channel) {
     );
 
     unsubscribe = onSnapshot(q, (snapshot) => {
+        alert("onSnapshot déclenché !");  // DEBUG 9
+
         messagesBox.innerHTML = "";
         snapshot.forEach(doc => afficherMessage(doc.data()));
     });
@@ -99,6 +118,8 @@ function subscribeChannel(channel) {
 channelButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const channel = btn.dataset.channel;
+        alert("Changement de salon : " + channel);  // DEBUG 10
+
         if (channel === currentChannel) return;
 
         currentChannel = channel;
@@ -114,21 +135,33 @@ channelButtons.forEach(btn => {
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    alert("submit déclenché !");  // DEBUG 11
+
     const now = Date.now();
-    if (now - lastSendTime < 1000) return; // anti-spam 1s
+    if (now - lastSendTime < 1000) {
+        alert("Anti-spam activé");  // DEBUG 12
+        return;
+    }
     lastSendTime = now;
 
     const msg = input.value.trim();
-    if (!msg) return;
+    alert("Message tapé : " + msg);  // DEBUG 13
+
+    if (!msg) {
+        alert("Message vide");  // DEBUG 14
+        return;
+    }
 
     if (!currentUser) {
-        alert("Tu dois être connecté pour envoyer un message.");
+        alert("Tu dois être connecté pour envoyer un message.");  // DEBUG 15
         return;
     }
 
     const safeMsg = msg.replace(/[<>]/g, "");
 
     try {
+        alert("Tentative d'envoi Firebase…");  // DEBUG 16
+
         await addDoc(collection(db, "tchat_messages"), {
             pseudo,
             uid: currentUser.uid,
@@ -136,12 +169,14 @@ form.addEventListener("submit", async (e) => {
             timestamp: serverTimestamp(),
             channel: currentChannel
         });
+
+        alert("Message envoyé !");  // DEBUG 17
         input.value = "";
     } catch (err) {
-        console.error("Erreur envoi message", err);
-        alert("Impossible d'envoyer le message pour le moment.");
+        alert("Erreur Firebase : " + err);  // DEBUG 18
     }
 });
 
 // Abonnement initial
 subscribeChannel(currentChannel);
+alert("subscribeChannel initial OK");  // DEBUG 19
