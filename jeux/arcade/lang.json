@@ -2,6 +2,7 @@
   "fr": {
     "menu_home": "Accueil",
     "menu_games": "Jeux",
+    "menu_arcade": "Arcade",
 
     "arcade_title": "Arcade – TY‑LUDIC",
     "arcade_intro_title": "Bienvenue dans notre salon d'arcade",
@@ -14,6 +15,11 @@
     "arcade_breakout_title": "Breakout",
     "arcade_breakout_text": "Fracasse moi ces murs de brique.",
     "arcade_breakout_button": "C'est parti",
+
+   "arcade_neon_racer_title": "Neon Racer",
+    "arcade_neon_racer_text": "conduis le plus loin possible.",
+    "arcade_neon_racer_button": "Vas y",
+
 
     "footer_text": "© 2026 TY‑LUDIC — Studio de jeux indépendant"
   },
