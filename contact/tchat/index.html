@@ -54,10 +54,17 @@
     Tchat Ty‑Ludic – Studio indépendant en Bretagne.
 </footer>
 <!-- Firebase init déjà existant dans ton projet -->
-<script type="module" src="../inscription/firebase-init.js"></script>
+<!-- Firebase CDN -->
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js"></script>
 
-<!-- Logique du tchat -->
-<script type="module" scr="tchat.js"></script>
+<!-- Ton init Firebase -->
+<script src="firebase-init.js"></script>
+
+<!-- Ton tchat -->
+<script src="tchat.js"></script>
+
 
 </body>
 </html>

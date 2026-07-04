@@ -1,18 +1,6 @@
-alert("debut chargé !");  // DEBUG 
-import { auth, db } from "../inscription/firebase-init.js";
-import {
-    collection,
-    query,
-    where,
-    orderBy,
-    onSnapshot,
-    addDoc,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+alert("tchat.js chargé !");
 
-alert("tchat.js chargé !");  // DEBUG 1
-
+// Récupération des éléments HTML
 const userBox = document.getElementById("user-info");
 const messagesBox = document.getElementById("tchat-messages");
 const form = document.getElementById("tchat-form");
@@ -24,24 +12,25 @@ let currentChannel = "general";
 let unsubscribe = null;
 let lastSendTime = 0;
 
+// Pseudo TY-LUDIC
 let pseudo = localStorage.getItem("tyludic_pseudo") || "Invité";
-alert("Pseudo localStorage = " + pseudo);  // DEBUG 2
+alert("Pseudo = " + pseudo);
 
-// Vérifier si Firebase Auth est chargé
-alert("auth = " + auth);  // DEBUG 3
-alert("db = " + db);      // DEBUG 4
+// Vérifier si Firebase est chargé
+alert("auth = " + auth);
+alert("db = " + db);
 
 // Auth Firebase
-onAuthStateChanged(auth, (user) => {
-    alert("onAuthStateChanged déclenché !");  // DEBUG 5
+auth.onAuthStateChanged((user) => {
+    alert("onAuthStateChanged déclenché");
 
     currentUser = user || null;
 
     if (user) {
-        alert("Utilisateur connecté ! UID = " + user.uid);  // DEBUG 6
+        alert("Utilisateur connecté : " + user.uid);
         userBox.textContent = pseudo;
     } else {
-        alert("Aucun utilisateur connecté");  // DEBUG 7
+        alert("Aucun utilisateur connecté");
         userBox.textContent = "Non connecté";
     }
 });
@@ -94,20 +83,18 @@ function afficherMessage(data) {
 
 // Charger un salon
 function subscribeChannel(channel) {
-    alert("subscribeChannel : " + channel);  // DEBUG 8
+    alert("subscribeChannel : " + channel);
 
     if (unsubscribe) unsubscribe();
 
     messagesBox.innerHTML = "";
 
-    const q = query(
-        collection(db, "tchat_messages"),
-        where("channel", "==", channel),
-        orderBy("timestamp", "asc")
-    );
+    const q = db.collection("tchat_messages")
+                .where("channel", "==", channel)
+                .orderBy("timestamp", "asc");
 
-    unsubscribe = onSnapshot(q, (snapshot) => {
-        alert("onSnapshot déclenché !");  // DEBUG 9
+    unsubscribe = q.onSnapshot((snapshot) => {
+        alert("onSnapshot déclenché");
 
         messagesBox.innerHTML = "";
         snapshot.forEach(doc => afficherMessage(doc.data()));
@@ -118,7 +105,7 @@ function subscribeChannel(channel) {
 channelButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const channel = btn.dataset.channel;
-        alert("Changement de salon : " + channel);  // DEBUG 10
+        alert("Changement de salon : " + channel);
 
         if (channel === currentChannel) return;
 
@@ -135,48 +122,48 @@ channelButtons.forEach(btn => {
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    alert("submit déclenché !");  // DEBUG 11
+    alert("submit déclenché");
 
     const now = Date.now();
     if (now - lastSendTime < 1000) {
-        alert("Anti-spam activé");  // DEBUG 12
+        alert("Anti-spam");
         return;
     }
     lastSendTime = now;
 
     const msg = input.value.trim();
-    alert("Message tapé : " + msg);  // DEBUG 13
+    alert("Message : " + msg);
 
     if (!msg) {
-        alert("Message vide");  // DEBUG 14
+        alert("Message vide");
         return;
     }
 
     if (!currentUser) {
-        alert("Tu dois être connecté pour envoyer un message.");  // DEBUG 15
+        alert("Tu dois être connecté");
         return;
     }
 
     const safeMsg = msg.replace(/[<>]/g, "");
 
     try {
-        alert("Tentative d'envoi Firebase…");  // DEBUG 16
+        alert("Tentative d'envoi Firebase");
 
-        await addDoc(collection(db, "tchat_messages"), {
+        await db.collection("tchat_messages").add({
             pseudo,
             uid: currentUser.uid,
             message: safeMsg,
-            timestamp: serverTimestamp(),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             channel: currentChannel
         });
 
-        alert("Message envoyé !");  // DEBUG 17
+        alert("Message envoyé !");
         input.value = "";
     } catch (err) {
-        alert("Erreur Firebase : " + err);  // DEBUG 18
+        alert("Erreur Firebase : " + err);
     }
 });
 
 // Abonnement initial
 subscribeChannel(currentChannel);
-alert("subscribeChannel initial OK");  // DEBUG 19
+alert("subscribeChannel initial OK");
