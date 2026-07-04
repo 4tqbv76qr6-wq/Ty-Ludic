@@ -1,5 +1,5 @@
 alert("debut chargé !");  // DEBUG 
-import { auth, db } from "../contact/inscription/firebase-init.js";
+import { auth, db } from "../inscription/firebase-init.js";
 import {
     collection,
     query,
