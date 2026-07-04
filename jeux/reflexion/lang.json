@@ -2,9 +2,10 @@
   "fr": {
     "menu_home": "Accueil",
     "menu_games": "Jeux",
+    "menu_reflexion": "Réflexion",
 
     "reflexion_title": "Réflexion – TY‑LUDIC",
-    "reflexion_intro_title": "Bienvenue dans notre salon d3 réflexion",
+    "reflexion_intro_title": "Bienvenue dans notre salon de réflexion",
     "reflexion_intro_text": "Choisis ton jeu.",
 
     "reflexion_morpion_title": "Triple Strike",
