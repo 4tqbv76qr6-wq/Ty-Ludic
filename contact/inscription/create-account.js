@@ -1,5 +1,6 @@
 // ======================================================
-//  TY‑LUDIC – Création de compte
+//  TY‑LUDIC – Création de compte (version harmonisée)
+//  Compatible iPad + Koder (sans modules ES6)
 // ======================================================
 
 // -----------------------------
@@ -24,8 +25,8 @@ function validatePseudo(pseudo) {
     if (pseudo.includes("@")) return false;
 
     // Interdiction des dates
-    if (/^\d{4}$/.test(pseudo)) return false;        // 1980
-    if (/^\d{8}$/.test(pseudo)) return false;        // 01011980
+    if (/^\d{4}$/.test(pseudo)) return false;
+    if (/^\d{8}$/.test(pseudo)) return false;
     if (/^\d{2}\/\d{2}\/\d{4}$/.test(pseudo)) return false;
 
     return true;
@@ -53,21 +54,18 @@ function validatePassword(pwd) {
 // -----------------------------
 async function createAccount(pseudo, password) {
 
-    // Validation pseudo
     if (!validatePseudo(pseudo)) {
         throw new Error("Pseudo invalide.");
     }
 
-    // Validation mot de passe
     if (!validatePassword(password)) {
         throw new Error("Mot de passe invalide.");
     }
 
-    // Hash local du mot de passe
     const passwordHash = await hashPassword(password);
 
-    // Auth anonyme Firebase
-    const userCredential = await signInAnonymously(auth);
+    // Auth anonyme Firebase (version globale)
+    const userCredential = await auth.signInAnonymously();
     const uid = userCredential.user.uid;
 
     // Modèle JSON TY‑LUDIC
@@ -92,8 +90,8 @@ async function createAccount(pseudo, password) {
         }
     };
 
-    // Enregistrement Firestore
-    await setDoc(doc(db, "users", uid), userData);
+    // Enregistrement Firestore (version globale)
+    await db.collection("users").doc(uid).set(userData);
 
     return uid;
 }
@@ -113,11 +111,9 @@ document.getElementById("create-account-form").addEventListener("submit", async 
     try {
         const uid = await createAccount(pseudo, password);
 
-        // Stockage local
         localStorage.setItem("tyludic_uid", uid);
         localStorage.setItem("tyludic_pseudo", pseudo);
 
-        // Redirection
         window.location.href = "compte-ok.html";
 
     } catch (err) {

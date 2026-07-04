@@ -9,19 +9,21 @@
 
 <div class="account-wrapper">
 
-    <h1>Bienvenue dans TY‑LUDIC !</h1>
-    <p>Ton compte a été créé avec succès.</p>
+    <h1 class="title">Bienvenue dans TY‑LUDIC !</h1>
+    <p class="subtitle">Ton compte a été créé avec succès.</p>
 
-    <p><strong>Pseudo :</strong> <span id="pseudo"></span></p>
+    <div class="info-box">
+        <strong>Pseudo :</strong> 
+        <span id="pseudo" class="pseudo-display"></span>
+    </div>
 
-    <button onclick="window.location.href='../../index.html'">
+    <button class="btn-main" onclick="window.location.href='../../index.html'">
         Retour au menu principal
     </button>
 
 </div>
 
 <script>
-    // Affiche le pseudo stocké
     const pseudo = localStorage.getItem("tyludic_pseudo");
     document.getElementById("pseudo").textContent = pseudo || "Joueur";
 </script>

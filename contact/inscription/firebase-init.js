@@ -1,15 +1,9 @@
 // ======================================================
-//  TY‑LUDIC – Initialisation Firebase
+//  TY‑LUDIC – Firebase INIT (version harmonisée iPad/Koder)
+//  Sans modules ES6 – Firebase global
 // ======================================================
 
-// Import Firebase SDK v12 (modular, CDN)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
-// ------------------------------------------------------
-// 1. Configuration Firebase (tes vraies valeurs)
-// ------------------------------------------------------
+// Configuration Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDODrXEPdxUIB_trqiZEFPMF5qQcZRuMyI",
   authDomain: "ty-ludic-f37a9.firebaseapp.com",
@@ -20,18 +14,13 @@ const firebaseConfig = {
   measurementId: "G-8MBXBRGXVW"
 };
 
-// ------------------------------------------------------
-// 2. Initialisation Firebase
-// ------------------------------------------------------
-const app = initializeApp(firebaseConfig);
+// Initialisation Firebase (version globale)
+firebase.initializeApp(firebaseConfig);
 
-// ------------------------------------------------------
-// 3. Services Firebase
-// ------------------------------------------------------
-const db = getFirestore(app);
-const auth = getAuth(app);
+// Services Firebase globaux
+const db = firebase.firestore();
+const auth = firebase.auth();
 
-// ------------------------------------------------------
-// 4. Export pour les autres modules
-// ------------------------------------------------------
-export { db, auth };
+// Exposition globale pour tous les scripts
+window.db = db;
+window.auth = auth;
