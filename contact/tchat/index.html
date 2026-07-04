@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ty‑Ludic – Tchat</title>
+    <link rel="stylesheet" href="tchat.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="tl-header">
+    <div class="tl-logo">TY‑LUDIC</div>
+
+    <nav class="tl-nav">
+        <a href="../index.html">Accueil</a>
+        <a href="../jeux/index.html">Jeux</a>
+        <a href="../studio/index.html">Le studio</a>
+        <a href="../contact/index.html">Contact</a>
+        <span class="tl-nav-current">Tchat</span>
+    </nav>
+
+    <div id="user-info" class="tl-user"></div>
+</header>
+
+<main class="tchat-container">
+    <section class="tchat-header">
+        <h1>Tchat Ty‑Ludic</h1>
+        <p>Discute en temps réel avec les autres joueurs du studio.</p>
+
+        <div class="tchat-channel-bar">
+            <button class="channel-btn active" data-channel="general">Général</button>
+            <button class="channel-btn" data-channel="jeux">Jeux</button>
+            <button class="channel-btn" data-channel="studio">Studio</button>
+            <button class="channel-btn" data-channel="canal">Canal Ty‑Ludic</button>
+        </div>
+    </section>
+
+    <section class="tchat-main">
+        <div id="tchat-messages" class="tchat-messages"></div>
+
+        <form id="tchat-form" class="tchat-form" autocomplete="off">
+            <input
+                id="tchat-input"
+                type="text"
+                maxlength="200"
+                placeholder="Écris ton message…"
+            >
+            <button type="submit">Envoyer</button>
+        </form>
+    </section>
+</main>
+
+<footer class="tl-footer">
+    Tchat Ty‑Ludic – Studio indépendant en Bretagne.
+</footer>
+
+<!-- Firebase init déjà existant dans ton projet -->
+<script type="module" src="../contact/inscription/firebase-init.js"></script>
+
+<!-- Logique du tchat -->
+<script type="module" src="tchat.js"></script>
+
+</body>
+</html>
