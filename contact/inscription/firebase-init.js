@@ -1,26 +1,128 @@
-// ======================================================
-//  TY‑LUDIC – Firebase INIT (version harmonisée iPad/Koder)
-//  Sans modules ES6 – Firebase global
-// ======================================================
-
-// Configuration Firebase
+// -----------------------------
+// 0. Initialisation Firebase (version globale)
+// -----------------------------
 const firebaseConfig = {
-  apiKey: "AIzaSyDODrXEPdxUIB_trqiZEFPMF5qQcZRuMyI",
-  authDomain: "ty-ludic-f37a9.firebaseapp.com",
-  projectId: "ty-ludic-f37a9",
-  storageBucket: "ty-ludic-f37a9.firebasestorage.app",
-  messagingSenderId: "487462368828",
-  appId: "1:487462368828:web:700af454a339d3b8e7f539",
-  measurementId: "G-8MBXBRGXVW"
+    apiKey: "…",
+    authDomain: "…",
+    projectId: "…",
+    storageBucket: "…",
+    messagingSenderId: "…",
+    appId: "…"
 };
 
-// Initialisation Firebase (version globale)
 firebase.initializeApp(firebaseConfig);
 
-// Services Firebase globaux
-const db = firebase.firestore();
 const auth = firebase.auth();
+const db = firebase.firestore();
 
-// Exposition globale pour tous les scripts
-window.db = db;
-window.auth = auth;
+// -----------------------------
+// 1. Hash SHA‑256 du mot de passe
+// -----------------------------
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest("SHA-256", data);
+    return Array.from(new Uint8Array(hash))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
+}
+
+// -----------------------------
+// 2. Validation du pseudo
+// -----------------------------
+function validatePseudo(pseudo) {
+    const regex = /^[A-Za-z0-9_-]{3,16}$/;
+
+    if (!regex.test(pseudo)) return false;
+    if (pseudo.includes("@")) return false;
+
+    if (/^\d{4}$/.test(pseudo)) return false;
+    if (/^\d{8}$/.test(pseudo)) return false;
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(pseudo)) return false;
+
+    return true;
+}
+
+// -----------------------------
+// 3. Validation du mot de passe
+// -----------------------------
+function validatePassword(pwd) {
+    if (pwd.length < 6) return false;
+
+    if (/^\d{4}$/.test(pwd)) return false;
+    if (/^\d{8}$/.test(pwd)) return false;
+
+    const forbidden = ["123456", "abcdef", "azerty"];
+    if (forbidden.includes(pwd.toLowerCase())) return false;
+
+    return true;
+}
+
+// -----------------------------
+// 4. Création du compte Firebase + Firestore
+// -----------------------------
+async function createAccount(pseudo, password) {
+
+    if (!validatePseudo(pseudo)) {
+        throw new Error("Pseudo invalide.");
+    }
+
+    if (!validatePassword(password)) {
+        throw new Error("Mot de passe invalide.");
+    }
+
+    const passwordHash = await hashPassword(password);
+
+    const userCredential = await auth.signInAnonymously();
+    const uid = userCredential.user.uid;
+
+    const userData = {
+        uid: uid,
+        pseudo: pseudo,
+        auth: {
+            passwordHash: passwordHash,
+            createdAt: Date.now()
+        },
+        scores: {
+            spaceInvader: 0,
+            neonRacer: 0,
+            domino: 0
+        },
+        scoreGlobal: 0,
+        badges: [],
+        settings: {
+            sound: true,
+            music: true,
+            language: "fr"
+        }
+    };
+
+    await db.collection("users").doc(uid).set(userData);
+
+    return uid;
+}
+
+// -----------------------------
+// 5. Gestion du formulaire
+// -----------------------------
+document.getElementById("create-account-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const pseudo = document.getElementById("pseudo").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const errorBox = document.getElementById("error-msg");
+
+    errorBox.textContent = "";
+
+    try {
+        const uid = await createAccount(pseudo, password);
+
+        localStorage.setItem("tyludic_uid", uid);
+        localStorage.setItem("tyludic_pseudo", pseudo);
+
+        window.location.href = "compte-ok.html";
+
+    } catch (err) {
+        errorBox.textContent = err.message;
+    }
+});
