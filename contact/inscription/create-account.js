@@ -4,6 +4,25 @@
 // ======================================================
 
 // -----------------------------
+// 0. Initialisation Firebase (version globale)
+// -----------------------------
+const firebaseConfig = {
+    apiKey: "…",
+    authDomain: "…",
+    projectId: "…",
+    storageBucket: "…",
+    messagingSenderId: "…",
+    appId: "…"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+// Auth & Firestore global
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+
+// -----------------------------
 // 1. Hash SHA‑256 du mot de passe
 // -----------------------------
 async function hashPassword(password) {
