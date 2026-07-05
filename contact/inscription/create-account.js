@@ -1,6 +1,13 @@
 // ======================================================
-//  TY‑LUDIC – Création de compte (version harmonisée)
+//  TY‑LUDIC – Création de compte
 // ======================================================
+
+// -----------------------------
+// IMPORTS FIREBASE (obligatoires)
+// -----------------------------
+import { auth, db } from "./firebase-init.js";
+import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 // -----------------------------
 // 1. Hash SHA‑256 du mot de passe
@@ -23,6 +30,7 @@ function validatePseudo(pseudo) {
     if (!regex.test(pseudo)) return false;
     if (pseudo.includes("@")) return false;
 
+    // Interdiction des dates
     if (/^\d{4}$/.test(pseudo)) return false;
     if (/^\d{8}$/.test(pseudo)) return false;
     if (/^\d{2}\/\d{2}\/\d{4}$/.test(pseudo)) return false;
@@ -36,9 +44,11 @@ function validatePseudo(pseudo) {
 function validatePassword(pwd) {
     if (pwd.length < 6) return false;
 
+    // Interdiction des dates
     if (/^\d{4}$/.test(pwd)) return false;
     if (/^\d{8}$/.test(pwd)) return false;
 
+    // Interdiction suites simples
     const forbidden = ["123456", "abcdef", "azerty"];
     if (forbidden.includes(pwd.toLowerCase())) return false;
 
@@ -60,10 +70,11 @@ async function createAccount(pseudo, password) {
 
     const passwordHash = await hashPassword(password);
 
-    // Auth anonyme Firebase (version globale)
-    const userCredential = await auth.signInAnonymously();
+    // Auth anonyme Firebase
+    const userCredential = await signInAnonymously(auth);
     const uid = userCredential.user.uid;
 
+    // Modèle JSON TY‑LUDIC
     const userData = {
         uid: uid,
         pseudo: pseudo,
@@ -85,7 +96,8 @@ async function createAccount(pseudo, password) {
         }
     };
 
-    await db.collection("users").doc(uid).set(userData);
+    // Enregistrement Firestore
+    await setDoc(doc(db, "users", uid), userData);
 
     return uid;
 }

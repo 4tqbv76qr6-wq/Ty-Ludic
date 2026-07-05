@@ -1,8 +1,7 @@
-// ============================================================
-// Firebase INIT — Version globale (compatible iPad + Koder)
-// ============================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-// ⚠️ Mets ici TA configuration Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDODrXEPdxUIB_trqiZEFPMF5qQcZRuMyI",
   authDomain: "ty-ludic-f37a9.firebaseapp.com",
@@ -13,22 +12,8 @@ const firebaseConfig = {
   measurementId: "G-8MBXBRGXVW"
 };
 
-// ------------------------------------------------------------
-// 1) Initialisation Firebase
-// ------------------------------------------------------------
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-// ------------------------------------------------------------
-// 2) Auth & Firestore en GLOBAL
-// ------------------------------------------------------------
-// ⭐ IMPORTANT : on met sur window pour que create-account.js
-// et ton HTML puissent y accéder sans erreur.
-window.auth = firebase.auth();
-window.db = firebase.firestore();
-
-// ------------------------------------------------------------
-// 3) Vérification console (facultatif)
-// ------------------------------------------------------------
-console.log("Firebase initialisé :", firebase.apps.length);
-console.log("Auth prêt :", !!window.auth);
-console.log("Firestore prêt :", !!window.db);
+export { db, auth };
