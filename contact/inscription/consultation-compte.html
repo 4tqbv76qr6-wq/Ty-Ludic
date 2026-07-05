@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon compte – TY‑LUDIC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="account-wrapper">
+    <h1>Mon compte TY‑LUDIC</h1>
+    <p>Consultation des informations stockées dans Firestore.</p>
+
+    <div id="account-info">
+        Chargement des données…
+    </div>
+
+    <button id="logout-btn">Se déconnecter</button>
+</div>
+
+<script type="module">
+    import { auth, db } from "firebase-init.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+    const box = document.getElementById("account-info");
+
+    onAuthStateChanged(auth, async (user) => {
+
+        if (!user) {
+            box.innerHTML = "<p>Tu n’es pas connecté.</p>";
+            return;
+        }
+
+        const uid = user.uid;
+        const ref = doc(db, "users", uid);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+            box.innerHTML = "<p>Aucune donnée trouvée pour cet utilisateur.</p>";
+            return;
+        }
+
+        const data = snap.data();
+
+        box.innerHTML = `
+            <h2>Informations du compte</h2>
+            <p><strong>Pseudo :</strong> ${data.pseudo}</p>
+            <p><strong>UID :</strong> ${data.uid}</p>
+
+            <h3>Authentification</h3>
+            <p><strong>Date de création :</strong> ${new Date(data.auth.createdAt).toLocaleString()}</p>
+            <p><strong>Hash du mot de passe :</strong><br>${data.auth.passwordHash}</p>
+
+            <h3>Scores</h3>
+            <p>Space Invader : ${data.scores.spaceInvader}</p>
+            <p>Neon Racer : ${data.scores.neonRacer}</p>
+            <p>Domino : ${data.scores.domino}</p>
+            <p><strong>Score global :</strong> ${data.scoreGlobal}</p>
+
+            <h3>Badges</h3>
+            <p>${data.badges.length ? data.badges.join(", ") : "Aucun badge"}</p>
+
+            <h3>Paramètres</h3>
+            <p>Son : ${data.settings.sound ? "ON" : "OFF"}</p>
+            <p>Musique : ${data.settings.music ? "ON" : "OFF"}</p>
+            <p>Langue : ${data.settings.language}</p>
+        `;
+    });
+
+    document.getElementById("logout-btn").onclick = async () => {
+        await signOut(auth);
+        window.location.href = "index.html";
+    };
+</script>
+
+</body>
+</html>
