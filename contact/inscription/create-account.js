@@ -4,25 +4,6 @@
 // ======================================================
 
 // -----------------------------
-// 0. Initialisation Firebase (version globale)
-// -----------------------------
-const firebaseConfig = {
-    apiKey: "…",
-    authDomain: "…",
-    projectId: "…",
-    storageBucket: "…",
-    messagingSenderId: "…",
-    appId: "…"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-// Auth & Firestore global
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-
-// -----------------------------
 // 1. Hash SHA‑256 du mot de passe
 // -----------------------------
 async function hashPassword(password) {
@@ -43,7 +24,6 @@ function validatePseudo(pseudo) {
     if (!regex.test(pseudo)) return false;
     if (pseudo.includes("@")) return false;
 
-    // Interdiction des dates
     if (/^\d{4}$/.test(pseudo)) return false;
     if (/^\d{8}$/.test(pseudo)) return false;
     if (/^\d{2}\/\d{2}\/\d{4}$/.test(pseudo)) return false;
@@ -57,11 +37,9 @@ function validatePseudo(pseudo) {
 function validatePassword(pwd) {
     if (pwd.length < 6) return false;
 
-    // Interdiction des dates
     if (/^\d{4}$/.test(pwd)) return false;
     if (/^\d{8}$/.test(pwd)) return false;
 
-    // Interdiction suites simples
     const forbidden = ["123456", "abcdef", "azerty"];
     if (forbidden.includes(pwd.toLowerCase())) return false;
 
@@ -87,7 +65,6 @@ async function createAccount(pseudo, password) {
     const userCredential = await auth.signInAnonymously();
     const uid = userCredential.user.uid;
 
-    // Modèle JSON TY‑LUDIC
     const userData = {
         uid: uid,
         pseudo: pseudo,
@@ -109,7 +86,6 @@ async function createAccount(pseudo, password) {
         }
     };
 
-    // Enregistrement Firestore (version globale)
     await db.collection("users").doc(uid).set(userData);
 
     return uid;
