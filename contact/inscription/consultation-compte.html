@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<body onload="alert('PAGE CHARGÉE');">
 
 
 <div class="account-wrapper">
@@ -20,11 +19,11 @@
     <button id="logout-btn">Se déconnecter</button>
 </div>
 <script>
-alert("SCRIPT NON-MODULE OK");
 </script>
 
 <script type="module">
 import { auth, db } from "firebase-init.js";
+    alert("SCRIPT moduele 1 OK");
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
