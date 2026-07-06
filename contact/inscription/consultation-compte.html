@@ -17,62 +17,66 @@
 
     <button id="logout-btn">Se déconnecter</button>
 </div>
-
 <script type="module">
-    import { auth, db } from "firebase-init.js";
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { auth, db } from "firebase-init.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-    const box = document.getElementById("account-info");
+const box = document.getElementById("account-info");
 
-    onAuthStateChanged(auth, async (user) => {
+alert("SCRIPT CHARGÉ");
 
-        if (!user) {
-            box.innerHTML = "<p>Tu n’es pas connecté.</p>";
-            return;
-        }
+onAuthStateChanged(auth, async (user) => {
 
-        const uid = user.uid;
-        const ref = doc(db, "users", uid);
+    alert("onAuthStateChanged déclenché");
+
+    if (!user) {
+        alert("Aucun utilisateur connecté");
+        box.innerHTML = "<p>Tu n’es pas connecté.</p>";
+        return;
+    }
+
+    alert("Utilisateur connecté : " + user.uid);
+
+    const uid = user.uid;
+    const ref = doc(db, "users", uid);
+
+    alert("Référence Firestore créée : users/" + uid);
+
+    try {
         const snap = await getDoc(ref);
+        alert("getDoc exécuté");
 
         if (!snap.exists()) {
+            alert("Le document n'existe pas !");
             box.innerHTML = "<p>Aucune donnée trouvée pour cet utilisateur.</p>";
             return;
         }
 
+        alert("Document trouvé !");
+
         const data = snap.data();
+        alert("Pseudo : " + data.pseudo);
 
         box.innerHTML = `
             <h2>Informations du compte</h2>
             <p><strong>Pseudo :</strong> ${data.pseudo}</p>
             <p><strong>UID :</strong> ${data.uid}</p>
-
-            <h3>Authentification</h3>
-            <p><strong>Date de création :</strong> ${new Date(data.auth.createdAt).toLocaleString()}</p>
-            <p><strong>Hash du mot de passe :</strong><br>${data.auth.passwordHash}</p>
-
-            <h3>Scores</h3>
-            <p>Space Invader : ${data.scores.spaceInvader}</p>
-            <p>Neon Racer : ${data.scores.neonRacer}</p>
-            <p>Domino : ${data.scores.domino}</p>
-            <p><strong>Score global :</strong> ${data.scoreGlobal}</p>
-
-            <h3>Badges</h3>
-            <p>${data.badges.length ? data.badges.join(", ") : "Aucun badge"}</p>
-
-            <h3>Paramètres</h3>
-            <p>Son : ${data.settings.sound ? "ON" : "OFF"}</p>
-            <p>Musique : ${data.settings.music ? "ON" : "OFF"}</p>
-            <p>Langue : ${data.settings.language}</p>
         `;
-    });
 
-    document.getElementById("logout-btn").onclick = async () => {
-        await signOut(auth);
-        window.location.href = "index.html";
-    };
+    } catch (err) {
+        alert("ERREUR getDoc : " + err.message);
+        box.innerHTML = "<p>Erreur Firestore : " + err.message + "</p>";
+    }
+});
+
+document.getElementById("logout-btn").onclick = async () => {
+    alert("Déconnexion…");
+    await signOut(auth);
+    window.location.href = "index.html";
+};
 </script>
+
 
 </body>
 </html>
