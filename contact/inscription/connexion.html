@@ -13,6 +13,7 @@ body {
     padding:20px;
 }
 
+/* Cadre néon */
 #panel {
     max-width:400px;
     margin:40px auto;
@@ -20,14 +21,17 @@ body {
     padding:25px;
     border-radius:15px;
     border:3px solid #44f;
-    box-shadow:0 0 20px #44f;
+    box-shadow:0 0 25px #44f;
 }
 
+/* Titre */
 h1 {
     text-align:center;
     margin-bottom:20px;
+    color:#44f;
 }
 
+/* Champs */
 input {
     width:100%;
     padding:12px;
@@ -35,8 +39,11 @@ input {
     border:none;
     border-radius:8px;
     font-size:16px;
+    background:#222;
+    color:#eee;
 }
 
+/* Boutons néon */
 button {
     width:100%;
     padding:15px;
@@ -47,8 +54,14 @@ button {
     color:white;
     cursor:pointer;
     margin-top:10px;
+    box-shadow:0 0 10px #44f;
 }
 
+button:active {
+    transform:scale(0.97);
+}
+
+/* Erreur */
 #error {
     color:#f55;
     margin-top:10px;
@@ -73,17 +86,25 @@ button {
 
 <script type="module">
 import { auth, db } from "./firebase-init.js";
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+/* Hash SHA-256 */
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest("SHA-256", data);
+    return Array.from(new Uint8Array(hash))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
+}
 
 document.getElementById("login-btn").onclick = async () => {
     const pseudo = document.getElementById("pseudo").value.trim();
-    const pass = document.getElementById("password").value;
+    const password = document.getElementById("password").value.trim();
+    const errorBox = document.getElementById("error");
 
-    if (!pseudo || !pass) {
-        document.getElementById("error").textContent = "Pseudo et mot de passe requis.";
-        return;
-    }
+    errorBox.textContent = "";
 
     try {
         // 1. Chercher le pseudo dans Firestore
@@ -91,21 +112,32 @@ document.getElementById("login-btn").onclick = async () => {
         const snap = await getDocs(q);
 
         if (snap.empty) {
-            document.getElementById("error").textContent = "Pseudo introuvable.";
+            errorBox.textContent = "Pseudo introuvable.";
             return;
         }
 
         const data = snap.docs[0].data();
-        const emailInterne = data.email; // email interne TY-LUDIC
 
-        // 2. Connexion Firebase Auth
-        await signInWithEmailAndPassword(auth, emailInterne, pass);
+        // 2. Vérifier le mot de passe
+        const hash = await hashPassword(password);
 
-        // 3. Redirection
+        if (hash !== data.auth.passwordHash) {
+            errorBox.textContent = "Mot de passe incorrect.";
+            return;
+        }
+
+        // 3. Auth anonyme Firebase
+        await signInAnonymously(auth);
+
+        // 4. Stocker l’UID et pseudo localement
+        localStorage.setItem("tyludic_uid", data.uid);
+        localStorage.setItem("tyludic_pseudo", data.pseudo);
+
+        // 5. Redirection
         window.location.href = "mon-compte.html";
 
     } catch (err) {
-        document.getElementById("error").textContent = "Erreur : " + err.message;
+        errorBox.textContent = err.message;
     }
 };
 
