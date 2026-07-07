@@ -29,68 +29,6 @@ alert("MODULE CHARGÉ 2");
 </script>
 
 
-<script type="module">
-     alert("SCRIPT moduele 0 OK");
-import { auth, db } from "./firebase-init.js";
-    alert("SCRIPT moduele 1 OK");
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
-const box = document.getElementById("account-info");
-
-alert("SCRIPT CHARGÉ");
-
-onAuthStateChanged(auth, async (user) => {
-
-    alert("onAuthStateChanged déclenché");
-
-    if (!user) {
-        alert("Aucun utilisateur connecté");
-        box.innerHTML = "<p>Tu n’es pas connecté.</p>";
-        return;
-    }
-
-    alert("Utilisateur connecté : " + user.uid);
-
-    const uid = user.uid;
-    const ref = doc(db, "users", uid);
-
-    alert("Référence Firestore créée : users/" + uid);
-
-    try {
-        const snap = await getDoc(ref);
-        alert("getDoc exécuté");
-
-        if (!snap.exists()) {
-            alert("Le document n'existe pas !");
-            box.innerHTML = "<p>Aucune donnée trouvée pour cet utilisateur.</p>";
-            return;
-        }
-
-        alert("Document trouvé !");
-
-        const data = snap.data();
-        alert("Pseudo : " + data.pseudo);
-
-        box.innerHTML = `
-            <h2>Informations du compte</h2>
-            <p><strong>Pseudo :</strong> ${data.pseudo}</p>
-            <p><strong>UID :</strong> ${data.uid}</p>
-        `;
-
-    } catch (err) {
-        alert("ERREUR getDoc : " + err.message);
-        box.innerHTML = "<p>Erreur Firestore : " + err.message + "</p>";
-    }
-});
-
-document.getElementById("logout-btn").onclick = async () => {
-    alert("Déconnexion…");
-    await signOut(auth);
-    window.location.href = "index.html";
-};
-</script>
-
 
 </body>
 </html>
