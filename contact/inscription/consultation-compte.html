@@ -1,86 +1,151 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Mon compte – TY‑LUDIC</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Mon compte TY‑LUDIC</title>
+
+<style>
+body {
+    background:#0a0a0a;
+    color:#eee;
+    font-family:system-ui;
+    margin:0;
+    padding:20px;
+}
+
+#panel {
+    max-width:500px;
+    margin:0 auto;
+    background:#111;
+    padding:20px;
+    border-radius:15px;
+    border:3px solid #44f;
+    box-shadow:0 0 20px #44f;
+}
+
+h1 {
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.section {
+    background:#1a1a1a;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+    border:2px solid #333;
+}
+
+.section h2 {
+    margin-top:0;
+    color:#44f;
+}
+
+#logout {
+    width:100%;
+    padding:15px;
+    font-size:18px;
+    background:#44f;
+    border:none;
+    border-radius:10px;
+    color:white;
+    cursor:pointer;
+}
+</style>
 </head>
+
 <body>
-<body onload="alert('PAGE CHARGÉE');">
 
-
-<div class="account-wrapper">
+<div id="panel">
     <h1>Mon compte TY‑LUDIC</h1>
-    <p>Consultation des informations stockées dans Firestore.</p>
 
-    <div id="account-info">
-        Chargement des données…
+    <div class="section">
+        <h2>Informations du compte</h2>
+        <p><strong>Pseudo :</strong> <span id="pseudo">...</span></p>
+        <p><strong>UID :</strong> <span id="uid">...</span></p>
+        <p><strong>Date de création :</strong> <span id="created">...</span></p>
+        <p><strong>Dernière connexion :</strong> <span id="lastLogin">...</span></p>
     </div>
 
-    <button id="logout-btn">Se déconnecter</button>
+    <div class="section">
+        <h2>Jetons TY‑LUDIC</h2>
+        <p><strong>Jetons :</strong> <span id="coins">...</span></p>
+    </div>
+
+    <div class="section">
+        <h2>Scores des jeux</h2>
+        <p><strong>Tetris :</strong> <span id="scoreTetris">...</span></p>
+        <p><strong>Neon Racer :</strong> <span id="scoreRacer">...</span></p>
+        <p><strong>Space Invaders :</strong> <span id="scoreInvaders">...</span></p>
+        <p><strong>Match‑3 :</strong> <span id="scoreMatch3">...</span></p>
+        <p><strong>Casino :</strong> <span id="scoreCasino">...</span></p>
+    </div>
+
+    <div class="section">
+        <h2>Badges & Succès</h2>
+        <p id="badges">Chargement...</p>
+    </div>
+
+    <button id="logout">Se déconnecter</button>
 </div>
-n
 
 <script type="module">
 import { auth, db } from "./firebase-init.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-const box = document.getElementById("account-info");
+const pseudoEl = document.getElementById("pseudo");
+const uidEl = document.getElementById("uid");
+const createdEl = document.getElementById("created");
+const lastLoginEl = document.getElementById("lastLogin");
+const coinsEl = document.getElementById("coins");
+const badgesEl = document.getElementById("badges");
 
-alert("SCRIPT CHARGÉ");
+const scoreTetrisEl = document.getElementById("scoreTetris");
+const scoreRacerEl = document.getElementById("scoreRacer");
+const scoreInvadersEl = document.getElementById("scoreInvaders");
+const scoreMatch3El = document.getElementById("scoreMatch3");
+const scoreCasinoEl = document.getElementById("scoreCasino");
 
 onAuthStateChanged(auth, async (user) => {
-
-    alert("onAuthStateChanged déclenché");
-
     if (!user) {
-        alert("Aucun utilisateur connecté");
-        box.innerHTML = "<p>Tu n’es pas connecté.</p>";
+        window.location.href = "index.html";
         return;
     }
 
-    alert("Utilisateur connecté : " + user.uid);
+    uidEl.textContent = user.uid;
+    createdEl.textContent = user.metadata.creationTime;
+    lastLoginEl.textContent = user.metadata.lastSignInTime;
 
-    const uid = user.uid;
-    const ref = doc(db, "users", uid);
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
 
-    alert("Référence Firestore créée : users/" + uid);
-
-    try {
-        const snap = await getDoc(ref);
-        alert("getDoc exécuté");
-
-        if (!snap.exists()) {
-            alert("Le document n'existe pas !");
-            box.innerHTML = "<p>Aucune donnée trouvée pour cet utilisateur.</p>";
-            return;
-        }
-
-        alert("Document trouvé !");
-
-        const data = snap.data();
-        alert("Pseudo : " + data.pseudo);
-
-        box.innerHTML = `
-            <h2>Informations du compte</h2>
-            <p><strong>Pseudo :</strong> ${data.pseudo}</p>
-            <p><strong>UID :</strong> ${data.uid}</p>
-        `;
-
-    } catch (err) {
-        alert("ERREUR getDoc : " + err.message);
-        box.innerHTML = "<p>Erreur Firestore : " + err.message + "</p>";
+    if (!snap.exists()) {
+        pseudoEl.textContent = "Inconnu";
+        coinsEl.textContent = "0";
+        badgesEl.textContent = "Aucun badge";
+        return;
     }
+
+    const data = snap.data();
+
+    pseudoEl.textContent = data.pseudo || "Sans pseudo";
+    coinsEl.textContent = data.coins || 0;
+
+    scoreTetrisEl.textContent = data.scoreTetris || 0;
+    scoreRacerEl.textContent = data.scoreRacer || 0;
+    scoreInvadersEl.textContent = data.scoreInvaders || 0;
+    scoreMatch3El.textContent = data.scoreMatch3 || 0;
+    scoreCasinoEl.textContent = data.scoreCasino || 0;
+
+    badgesEl.textContent = data.badges ? data.badges.join(", ") : "Aucun badge";
 });
 
-document.getElementById("logout-btn").onclick = async () => {
-    alert("Déconnexion…");
+document.getElementById("logout").onclick = async () => {
     await signOut(auth);
     window.location.href = "index.html";
 };
 </script>
-
 
 </body>
 </html>
