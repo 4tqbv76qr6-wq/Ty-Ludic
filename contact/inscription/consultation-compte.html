@@ -24,14 +24,14 @@ alert("SCRIPT NON-MODULE OK");
 </script>
 <script type="module">
 alert("MODULE CHARGÉ 1");
-import { auth } from "firebase-init.js";
+import { auth } from "./firebase-init.js";
 alert("MODULE CHARGÉ 2");
 </script>
 
 
 <script type="module">
      alert("SCRIPT moduele 0 OK");
-import { auth, db } from "firebase-init.js";
+import { auth, db } from "./firebase-init.js";
     alert("SCRIPT moduele 1 OK");
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
