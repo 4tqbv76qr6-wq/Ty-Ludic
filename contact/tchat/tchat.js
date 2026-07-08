@@ -20,33 +20,14 @@ let currentUser = null;
 let currentChannel = "general";
 let unsubscribe = null;
 
-// Récup pseudo localStorage
 const pseudo = localStorage.getItem("tyludic_pseudo") || "Invité";
 
-/* ----------------------------------------------------
-   AUTO‑SCROLL INTELLIGENT
----------------------------------------------------- */
-function autoScroll() {
-    const nearBottom =
-        messagesBox.scrollHeight - messagesBox.scrollTop <= messagesBox.clientHeight + 40;
-
-    if (nearBottom) {
-        messagesBox.scrollTop = messagesBox.scrollHeight;
-    }
-}
-
-/* ----------------------------------------------------
-   FORMAT HEURE
----------------------------------------------------- */
 function formatTime(date) {
     const h = String(date.getHours()).padStart(2, "0");
     const m = String(date.getMinutes()).padStart(2, "0");
     return `${h}:${m}`;
 }
 
-/* ----------------------------------------------------
-   AFFICHAGE D’UN MESSAGE
----------------------------------------------------- */
 function afficherMessage(data) {
     const wrapper = document.createElement("div");
     wrapper.className = "tchat-message";
@@ -77,13 +58,9 @@ function afficherMessage(data) {
     wrapper.appendChild(textEl);
 
     messagesBox.appendChild(wrapper);
-
-    autoScroll(); // 🔥 scroll intelligent
+    messagesBox.scrollTop = messagesBox.scrollHeight;
 }
 
-/* ----------------------------------------------------
-   ABONNEMENT À UN SALON
----------------------------------------------------- */
 function subscribeChannel(channel) {
     if (unsubscribe) unsubscribe();
 
@@ -101,14 +78,9 @@ function subscribeChannel(channel) {
                 afficherMessage(change.doc.data());
             }
         });
-
-        autoScroll(); // 🔥 scroll après chargement initial
     });
 }
 
-/* ----------------------------------------------------
-   CHANGEMENT DE SALON
----------------------------------------------------- */
 channelButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const channel = btn.dataset.channel;
@@ -123,9 +95,6 @@ channelButtons.forEach(btn => {
     });
 });
 
-/* ----------------------------------------------------
-   ENVOI DE MESSAGE
----------------------------------------------------- */
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -149,27 +118,27 @@ form.addEventListener("submit", async (e) => {
         });
 
         input.value = "";
-        autoScroll(); // 🔥 scroll après envoi
+        messagesBox.scrollTop = messagesBox.scrollHeight;
     } catch (err) {
         console.error("Erreur envoi message", err);
         alert("Impossible d'envoyer le message pour le moment.");
     }
 });
 
-/* ----------------------------------------------------
-   LANCEMENT DU TCHAT QUAND AUTH EST PRÊT
----------------------------------------------------- */
 onAuthStateChanged(auth, (user) => {
     currentUser = user || null;
 
     if (user && pseudo) {
         userBox.textContent = pseudo;
-
-        subscribeChannel(currentChannel);
-
-        // 🔥 petit délai pour laisser Firestore envoyer le snapshot
-        setTimeout(autoScroll, 80);
     } else {
         userBox.textContent = "Non connecté";
     }
+});
+
+// abonnement initial
+subscribeChannel(currentChannel);
+
+// réabonnement quand tu reviens sur la page (Safari / iPad)
+window.addEventListener("pageshow", () => {
+    subscribeChannel(currentChannel);
 });
