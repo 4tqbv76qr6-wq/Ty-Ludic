@@ -22,12 +22,14 @@ let unsubscribe = null;
 
 const pseudo = localStorage.getItem("tyludic_pseudo") || "Invité";
 
+// Format heure HH:MM
 function formatTime(date) {
     const h = String(date.getHours()).padStart(2, "0");
     const m = String(date.getMinutes()).padStart(2, "0");
     return `${h}:${m}`;
 }
 
+// Affichage d’un message
 function afficherMessage(data) {
     const wrapper = document.createElement("div");
     wrapper.className = "tchat-message";
@@ -61,6 +63,7 @@ function afficherMessage(data) {
     messagesBox.scrollTop = messagesBox.scrollHeight;
 }
 
+// Abonnement à un salon
 function subscribeChannel(channel) {
     if (unsubscribe) unsubscribe();
 
@@ -81,6 +84,7 @@ function subscribeChannel(channel) {
     });
 }
 
+// Changement de salon
 channelButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const channel = btn.dataset.channel;
@@ -95,6 +99,7 @@ channelButtons.forEach(btn => {
     });
 });
 
+// Envoi d’un message
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -125,6 +130,7 @@ form.addEventListener("submit", async (e) => {
     }
 });
 
+// Auth → affichage pseudo
 onAuthStateChanged(auth, (user) => {
     currentUser = user || null;
 
@@ -135,10 +141,13 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// abonnement initial
+// Abonnement initial
 subscribeChannel(currentChannel);
 
-// réabonnement quand tu reviens sur la page (Safari / iPad)
-window.addEventListener("pageshow", () => {
-    subscribeChannel(currentChannel);
+// 🔥 Correction Safari iPad : recréer un listener propre quand la page redevient visible
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        if (unsubscribe) unsubscribe();   // on détruit le listener gelé
+        subscribeChannel(currentChannel); // on recrée un listener neuf
+    }
 });
