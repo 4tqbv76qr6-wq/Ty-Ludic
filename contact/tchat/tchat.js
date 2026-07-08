@@ -1,6 +1,15 @@
-alert("tchat.js chargé !");
+import { auth, db } from "../inscription/firebase-init.js";
+import {
+    collection,
+    query,
+    where,
+    orderBy,
+    onSnapshot,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-// Récupération des éléments HTML
 const userBox = document.getElementById("user-info");
 const messagesBox = document.getElementById("tchat-messages");
 const form = document.getElementById("tchat-form");
@@ -10,46 +19,32 @@ const channelButtons = document.querySelectorAll(".channel-btn");
 let currentUser = null;
 let currentChannel = "general";
 let unsubscribe = null;
-let lastSendTime = 0;
 
-// Pseudo TY-LUDIC
-let pseudo = localStorage.getItem("tyludic_pseudo") || "Invité";
-alert("Pseudo = " + pseudo);
+// Récup pseudo localStorage
+const pseudo = localStorage.getItem("tyludic_pseudo") || "Invité";
 
-// Vérifier si Firebase est chargé
-alert("auth = " + auth);
-alert("db = " + db);
-
-// Auth Firebase
-auth.onAuthStateChanged((user) => {
-    alert("onAuthStateChanged déclenché");
-
+// Affichage pseudo dans le header
+onAuthStateChanged(auth, (user) => {
     currentUser = user || null;
 
-    if (user) {
-        alert("Utilisateur connecté : " + user.uid);
+    if (user && pseudo) {
         userBox.textContent = pseudo;
     } else {
-        alert("Aucun utilisateur connecté");
         userBox.textContent = "Non connecté";
     }
 });
 
-// Format heure
+// Format heure HH:MM
 function formatTime(date) {
     const h = String(date.getHours()).padStart(2, "0");
     const m = String(date.getMinutes()).padStart(2, "0");
     return `${h}:${m}`;
 }
 
-// Affichage message
+// Affichage d’un message
 function afficherMessage(data) {
     const wrapper = document.createElement("div");
     wrapper.className = "tchat-message";
-
-    if (currentUser && data.uid === currentUser.uid) {
-        wrapper.classList.add("self");
-    }
 
     const meta = document.createElement("div");
     meta.className = "tchat-meta";
@@ -60,7 +55,6 @@ function afficherMessage(data) {
 
     const timeEl = document.createElement("span");
     timeEl.className = "tchat-time";
-
     if (data.timestamp?.toDate) {
         timeEl.textContent = formatTime(data.timestamp.toDate());
     } else {
@@ -81,23 +75,24 @@ function afficherMessage(data) {
     messagesBox.scrollTop = messagesBox.scrollHeight;
 }
 
-// Charger un salon
+// Abonnement à un salon
 function subscribeChannel(channel) {
-    alert("subscribeChannel : " + channel);
-
     if (unsubscribe) unsubscribe();
 
     messagesBox.innerHTML = "";
 
-    const q = db.collection("tchat_messages")
-                .where("channel", "==", channel)
-                .orderBy("timestamp", "asc");
+    const q = query(
+        collection(db, "tchat_messages"),
+        where("channel", "==", channel),
+        orderBy("timestamp", "asc")
+    );
 
-    unsubscribe = q.onSnapshot((snapshot) => {
-        alert("onSnapshot déclenché");
-
-        messagesBox.innerHTML = "";
-        snapshot.forEach(doc => afficherMessage(doc.data()));
+    unsubscribe = onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach(change => {
+            if (change.type === "added") {
+                afficherMessage(change.doc.data());
+            }
+        });
     });
 }
 
@@ -105,8 +100,6 @@ function subscribeChannel(channel) {
 channelButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const channel = btn.dataset.channel;
-        alert("Changement de salon : " + channel);
-
         if (channel === currentChannel) return;
 
         currentChannel = channel;
@@ -118,52 +111,36 @@ channelButtons.forEach(btn => {
     });
 });
 
-// Envoi message
+// Envoi d’un message
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    alert("submit déclenché");
-
-    const now = Date.now();
-    if (now - lastSendTime < 1000) {
-        alert("Anti-spam");
-        return;
-    }
-    lastSendTime = now;
-
     const msg = input.value.trim();
-    alert("Message : " + msg);
-
-    if (!msg) {
-        alert("Message vide");
-        return;
-    }
+    if (!msg) return;
 
     if (!currentUser) {
-        alert("Tu dois être connecté");
+        alert("Tu dois être connecté pour envoyer un message.");
         return;
     }
 
+    // Anti-injection HTML
     const safeMsg = msg.replace(/[<>]/g, "");
 
     try {
-        alert("Tentative d'envoi Firebase");
-
-        await db.collection("tchat_messages").add({
-            pseudo,
+        await addDoc(collection(db, "tchat_messages"), {
+            pseudo: pseudo,
             uid: currentUser.uid,
             message: safeMsg,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            timestamp: serverTimestamp(),
             channel: currentChannel
         });
 
-        alert("Message envoyé !");
         input.value = "";
     } catch (err) {
-        alert("Erreur Firebase : " + err);
+        console.error("Erreur envoi message", err);
+        alert("Impossible d'envoyer le message pour le moment.");
     }
 });
 
 // Abonnement initial
 subscribeChannel(currentChannel);
-alert("subscribeChannel initial OK");
