@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un compte – TY‑LUDIC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="account-wrapper">
+
+    <h1>Créer un compte TY‑LUDIC</h1>
+    <p>Choisis un pseudo et un mot de passe pour commencer l’aventure.</p>
+
+    <form id="create-account-form">
+
+        <label for="pseudo">Pseudo</label>
+        <input type="text" id="pseudo" maxlength="16" autocomplete="off" required>
+
+        <small class="hint">
+            3–16 caractères, lettres/chiffres, _ et -.  
+            Interdit : @, dates (1980, 01011980…)
+        </small>
+
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" minlength="6" required>
+
+        <small class="hint">
+            Minimum 6 caractères.  
+            Interdit : dates, suites simples (123456, abcdef…)
+        </small>
+
+        <div id="error-msg"></div>
+
+        <button type="submit" id="create-btn">Créer mon compte</button>
+
+    </form>
+
+</div>
+
+<!-- ⭐ IMPORTANT : modules ES -->
+<script type="module" src="firebase-init.js"></script>
+<script type="module" src="create-account.js"></script>
+
+<script type="module">
+import { auth } from "./firebase-init.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+const errorBox = document.getElementById("error-msg");
+
+// Si un utilisateur est déjà connecté → on bloque la création
+if (auth.currentUser) {
+    errorBox.textContent = "Tu es déjà connecté. Déconnecte-toi pour créer un nouveau compte.";
+
+    // On désactive le formulaire
+    document.getElementById("create-account-form").style.display = "none";
+
+    // On ajoute un bouton de déconnexion
+    const btn = document.createElement("button");
+    btn.textContent = "Se déconnecter";
+    btn.onclick = async () => {
+        await signOut(auth);
+        window.location.reload();
+    };
+
+    errorBox.appendChild(btn);
+}
+</script>
+
+
+</body>
+</html>
