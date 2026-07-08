@@ -1,28 +1,18 @@
 // ======================================================
-//  TY‑LUDIC – Création de compte
+//  TY‑LUDIC – Création de compte (version email interne)
 // ======================================================
 
 // -----------------------------
-// IMPORTS FIREBASE (obligatoires)
+// IMPORTS FIREBASE
 // -----------------------------
 import { auth, db } from "./firebase-init.js";
-import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { createUserWithEmailAndPassword } 
+    from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { doc, setDoc } 
+    from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 // -----------------------------
-// 1. Hash SHA‑256 du mot de passe
-// -----------------------------
-async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hash = await crypto.subtle.digest("SHA-256", data);
-    return Array.from(new Uint8Array(hash))
-        .map(b => b.toString(16).padStart(2, "0"))
-        .join("");
-}
-
-// -----------------------------
-// 2. Validation du pseudo
+// Validation du pseudo
 // -----------------------------
 function validatePseudo(pseudo) {
     const regex = /^[A-Za-z0-9_-]{3,16}$/;
@@ -30,25 +20,15 @@ function validatePseudo(pseudo) {
     if (!regex.test(pseudo)) return false;
     if (pseudo.includes("@")) return false;
 
-    // Interdiction des dates
-    if (/^\d{4}$/.test(pseudo)) return false;
-    if (/^\d{8}$/.test(pseudo)) return false;
-    if (/^\d{2}\/\d{2}\/\d{4}$/.test(pseudo)) return false;
-
     return true;
 }
 
 // -----------------------------
-// 3. Validation du mot de passe
+// Validation du mot de passe
 // -----------------------------
 function validatePassword(pwd) {
     if (pwd.length < 6) return false;
 
-    // Interdiction des dates
-    if (/^\d{4}$/.test(pwd)) return false;
-    if (/^\d{8}$/.test(pwd)) return false;
-
-    // Interdiction suites simples
     const forbidden = ["123456", "abcdef", "azerty"];
     if (forbidden.includes(pwd.toLowerCase())) return false;
 
@@ -56,7 +36,7 @@ function validatePassword(pwd) {
 }
 
 // -----------------------------
-// 4. Création du compte Firebase + Firestore
+// Création du compte TY‑LUDIC
 // -----------------------------
 async function createAccount(pseudo, password) {
 
@@ -68,20 +48,18 @@ async function createAccount(pseudo, password) {
         throw new Error("Mot de passe invalide.");
     }
 
-    const passwordHash = await hashPassword(password);
+    // 1. Générer l’email interne TY‑LUDIC
+    const emailInterne = pseudo.toLowerCase() + "@tyludic.local";
 
-    // Auth anonyme Firebase
-    const userCredential = await signInAnonymously(auth);
-    const uid = userCredential.user.uid;
+    // 2. Créer le compte Firebase Auth
+    const userCred = await createUserWithEmailAndPassword(auth, emailInterne, password);
+    const uid = userCred.user.uid;
 
-    // Modèle JSON TY‑LUDIC
-    const userData = {
+    // 3. Créer le document Firestore
+    await setDoc(doc(db, "users", uid), {
         uid: uid,
         pseudo: pseudo,
-        auth: {
-            passwordHash: passwordHash,
-            createdAt: Date.now()
-        },
+        email: emailInterne,
         scores: {
             spaceInvader: 0,
             neonRacer: 0,
@@ -94,16 +72,13 @@ async function createAccount(pseudo, password) {
             music: true,
             language: "fr"
         }
-    };
-
-    // Enregistrement Firestore
-    await setDoc(doc(db, "users", uid), userData);
+    });
 
     return uid;
 }
 
 // -----------------------------
-// 5. Gestion du formulaire
+// Gestion du formulaire
 // -----------------------------
 document.getElementById("create-account-form").addEventListener("submit", async (e) => {
     e.preventDefault();
