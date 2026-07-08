@@ -23,17 +23,6 @@ let unsubscribe = null;
 // Récup pseudo localStorage
 const pseudo = localStorage.getItem("tyludic_pseudo") || "Invité";
 
-// Affichage pseudo dans le header
-onAuthStateChanged(auth, (user) => {
-    currentUser = user || null;
-
-    if (user && pseudo) {
-        userBox.textContent = pseudo;
-    } else {
-        userBox.textContent = "Non connecté";
-    }
-});
-
 // Format heure HH:MM
 function formatTime(date) {
     const h = String(date.getHours()).padStart(2, "0");
@@ -142,5 +131,14 @@ form.addEventListener("submit", async (e) => {
     }
 });
 
-// Abonnement initial
-subscribeChannel(currentChannel);
+// 🔥 Abonnement initial déclenché SEULEMENT quand Auth est prêt
+onAuthStateChanged(auth, (user) => {
+    currentUser = user || null;
+
+    if (user && pseudo) {
+        userBox.textContent = pseudo;
+        subscribeChannel(currentChannel);   // 🔥 Correction ici
+    } else {
+        userBox.textContent = "Non connecté";
+    }
+});
