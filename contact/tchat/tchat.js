@@ -6,7 +6,8 @@ import {
     orderBy,
     onSnapshot,
     addDoc,
-    serverTimestamp
+    serverTimestamp,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
@@ -63,8 +64,9 @@ function afficherMessage(data) {
     messagesBox.scrollTop = messagesBox.scrollHeight;
 }
 
-// Abonnement à un salon
-function subscribeChannel(channel) {
+// Recharge complet + listener temps réel pour un canal
+async function loadChannelWithRealtime(channel) {
+    // On coupe l’ancien listener s’il existe
     if (unsubscribe) unsubscribe();
 
     messagesBox.innerHTML = "";
@@ -75,8 +77,13 @@ function subscribeChannel(channel) {
         orderBy("timestamp", "asc")
     );
 
-    unsubscribe = onSnapshot(q, (snapshot) => {
-        snapshot.docChanges().forEach(change => {
+    // 1. Snapshot complet (historique)
+    const snapshot = await getDocs(q);
+    snapshot.forEach(doc => afficherMessage(doc.data()));
+
+    // 2. Listener temps réel
+    unsubscribe = onSnapshot(q, (snap) => {
+        snap.docChanges().forEach(change => {
             if (change.type === "added") {
                 afficherMessage(change.doc.data());
             }
@@ -95,7 +102,7 @@ channelButtons.forEach(btn => {
         channelButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
 
-        subscribeChannel(currentChannel);
+        loadChannelWithRealtime(currentChannel);
     });
 });
 
@@ -141,13 +148,12 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Abonnement initial
-subscribeChannel(currentChannel);
+// Abonnement initial + historique complet
+loadChannelWithRealtime(currentChannel);
 
-// 🔥 Correction Safari iPad : recréer un listener propre quand la page redevient visible
+// Stabilisation : quand la page redevient visible (iPad / Safari)
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-        if (unsubscribe) unsubscribe();   // on détruit le listener gelé
-        subscribeChannel(currentChannel); // on recrée un listener neuf
+        loadChannelWithRealtime(currentChannel);
     }
 });
