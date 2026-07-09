@@ -1,153 +1,154 @@
-import { auth, db } from "../inscription/firebase-init.js";
-import {
-    collection,
-    query,
-    where,
-    orderBy,
-    onSnapshot,
-    addDoc,
-    serverTimestamp,
-    getDocs
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+// 🔒 Empêche le double chargement du tchat
+if (window.__tchat_initialized__) {
+    // Le module peut être chargé deux fois, mais on n'exécute le tchat qu'une seule fois
+    console.log("Tchat déjà initialisé → on ignore ce chargement");
+} else {
+    window.__tchat_initialized__ = true;
 
-const userBox = document.getElementById("user-info");
-const messagesBox = document.getElementById("tchat-messages");
-const form = document.getElementById("tchat-form");
-const input = document.getElementById("tchat-input");
-const channelButtons = document.querySelectorAll(".channel-btn");
+    // Tout ton tchat est encapsulé ici
+    (function () {
 
-let currentUser = null;
-let currentChannel = "general";
-let unsubscribe = null;
+        import { auth, db } from "../inscription/firebase-init.js";
+        import {
+            collection,
+            query,
+            where,
+            orderBy,
+            onSnapshot,
+            addDoc,
+            serverTimestamp,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-const pseudo = localStorage.getItem("tyludic_pseudo") || "Invité";
+        const userBox = document.getElementById("user-info");
+        const messagesBox = document.getElementById("tchat-messages");
+        const form = document.getElementById("tchat-form");
+        const input = document.getElementById("tchat-input");
+        const channelButtons = document.querySelectorAll(".channel-btn");
 
-// Format heure HH:MM
-function formatTime(date) {
-    const h = String(date.getHours()).padStart(2, "0");
-    const m = String(date.getMinutes()).padStart(2, "0");
-    return `${h}:${m}`;
-}
+        let currentUser = null;
+        let currentChannel = "general";
+        let unsubscribe = null;
 
-// Affichage d’un message
-function afficherMessage(data) {
-    const wrapper = document.createElement("div");
-    wrapper.className = "tchat-message";
+        const pseudo = localStorage.getItem("tyludic_pseudo") || "Invité";
 
-    const meta = document.createElement("div");
-    meta.className = "tchat-meta";
+        function formatTime(date) {
+            const h = String(date.getHours()).padStart(2, "0");
+            const m = String(date.getMinutes()).padStart(2, "0");
+            return `${h}:${m}`;
+        }
 
-    const pseudoEl = document.createElement("span");
-    pseudoEl.className = "tchat-pseudo";
-    pseudoEl.textContent = data.pseudo || "Anonyme";
+        function afficherMessage(data) {
+            const wrapper = document.createElement("div");
+            wrapper.className = "tchat-message";
 
-    const timeEl = document.createElement("span");
-    timeEl.className = "tchat-time";
-    if (data.timestamp?.toDate) {
-        timeEl.textContent = formatTime(data.timestamp.toDate());
-    } else {
-        timeEl.textContent = "--:--";
-    }
+            const meta = document.createElement("div");
+            meta.className = "tchat-meta";
 
-    meta.appendChild(pseudoEl);
-    meta.appendChild(timeEl);
+            const pseudoEl = document.createElement("span");
+            pseudoEl.className = "tchat-pseudo";
+            pseudoEl.textContent = data.pseudo || "Anonyme";
 
-    const textEl = document.createElement("div");
-    textEl.className = "tchat-text";
-    textEl.textContent = data.message || "";
+            const timeEl = document.createElement("span");
+            timeEl.className = "tchat-time";
+            if (data.timestamp?.toDate) {
+                timeEl.textContent = formatTime(data.timestamp.toDate());
+            } else {
+                timeEl.textContent = "--:--";
+            }
 
-    wrapper.appendChild(meta);
-    wrapper.appendChild(textEl);
+            meta.appendChild(pseudoEl);
+            meta.appendChild(timeEl);
 
-    messagesBox.appendChild(wrapper);
-    messagesBox.scrollTop = messagesBox.scrollHeight;
-}
+            const textEl = document.createElement("div");
+            textEl.className = "tchat-text";
+            textEl.textContent = data.message || "";
 
-// Recharge complet + listener temps réel
-async function loadChannelWithRealtime(channel) {
+            wrapper.appendChild(meta);
+            wrapper.appendChild(textEl);
 
-    // 🔥 Empêche les doublons : on supprime le listener précédent
-    if (unsubscribe) unsubscribe();
+            messagesBox.appendChild(wrapper);
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+        }
 
-    // 🔥 Empêche les doublons : on vide l’affichage avant de recharger
-    messagesBox.innerHTML = "";
+        async function loadChannelWithRealtime(channel) {
 
-    const q = query(
-        collection(db, "tchat_messages"),
-        where("channel", "==", channel),
-        orderBy("timestamp", "asc")
-    );
+            if (unsubscribe) unsubscribe();
+            messagesBox.innerHTML = "";
 
-    // Historique complet
-    const snapshot = await getDocs(q);
-    snapshot.forEach(doc => afficherMessage(doc.data()));
+            const q = query(
+                collection(db, "tchat_messages"),
+                where("channel", "==", channel),
+                orderBy("timestamp", "asc")
+            );
 
-    // Temps réel
-    unsubscribe = onSnapshot(q, (snap) => {
-        snap.docChanges().forEach(change => {
-            if (change.type === "added") {
-                afficherMessage(change.doc.data());
+            const snapshot = await getDocs(q);
+            snapshot.forEach(doc => afficherMessage(doc.data()));
+
+            unsubscribe = onSnapshot(q, (snap) => {
+                snap.docChanges().forEach(change => {
+                    if (change.type === "added") {
+                        afficherMessage(change.doc.data());
+                    }
+                });
+            });
+        }
+
+        channelButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const channel = btn.dataset.channel;
+                if (channel === currentChannel) return;
+
+                currentChannel = channel;
+
+                channelButtons.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+
+                loadChannelWithRealtime(currentChannel);
+            });
+        });
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            if (!currentUser) {
+                alert("Tu dois être connecté pour envoyer un message.");
+                return;
+            }
+
+            const safeMsg = msg.replace(/[<>]/g, "");
+
+            try {
+                await addDoc(collection(db, "tchat_messages"), {
+                    pseudo: pseudo,
+                    uid: currentUser.uid,
+                    message: safeMsg,
+                    timestamp: serverTimestamp(),
+                    channel: currentChannel
+                });
+
+                input.value = "";
+                messagesBox.scrollTop = messagesBox.scrollHeight;
+            } catch (err) {
+                alert("Impossible d'envoyer le message.");
             }
         });
-    });
-}
 
-// Changement de salon
-channelButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const channel = btn.dataset.channel;
-        if (channel === currentChannel) return;
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user || null;
 
-        currentChannel = channel;
-
-        channelButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        loadChannelWithRealtime(currentChannel);
-    });
-});
-
-// Envoi d’un message
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const msg = input.value.trim();
-    if (!msg) return;
-
-    if (!currentUser) {
-        alert("Tu dois être connecté pour envoyer un message.");
-        return;
-    }
-
-    const safeMsg = msg.replace(/[<>]/g, "");
-
-    try {
-        await addDoc(collection(db, "tchat_messages"), {
-            pseudo: pseudo,
-            uid: currentUser.uid,
-            message: safeMsg,
-            timestamp: serverTimestamp(),
-            channel: currentChannel
+            if (user && pseudo) {
+                userBox.textContent = pseudo;
+            } else {
+                userBox.textContent = "Non connecté";
+            }
         });
 
-        input.value = "";
-        messagesBox.scrollTop = messagesBox.scrollHeight;
-    } catch (err) {
-        alert("Impossible d'envoyer le message.");
-    }
-});
+        loadChannelWithRealtime(currentChannel);
 
-// Auth → affichage pseudo
-onAuthStateChanged(auth, (user) => {
-    currentUser = user || null;
-
-    if (user && pseudo) {
-        userBox.textContent = pseudo;
-    } else {
-        userBox.textContent = "Non connecté";
-    }
-});
-
-// Abonnement initial
-loadChannelWithRealtime(currentChannel);
+    })();
+}
