@@ -1,9 +1,3 @@
-// 🔒 Empêche le double chargement du tchat
-if (window.__tchat_loaded__) {
-    return;
-}
-window.__tchat_loaded__ = true;
-
 import { auth, db } from "../inscription/firebase-init.js";
 import {
     collection,
@@ -73,7 +67,10 @@ function afficherMessage(data) {
 // Recharge complet + listener temps réel
 async function loadChannelWithRealtime(channel) {
 
+    // 🔥 Empêche les doublons : on supprime le listener précédent
     if (unsubscribe) unsubscribe();
+
+    // 🔥 Empêche les doublons : on vide l’affichage avant de recharger
     messagesBox.innerHTML = "";
 
     const q = query(
