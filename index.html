@@ -60,16 +60,23 @@
             <a href="contact/index.html" class="hub-button" data-i18n="card_channel_button"></a>
         </article>
 
+        <!-- RSL -->
+        <article class="hub-card hub-rpg">
+            <div class="hub-icon">⚔️</div>
+            <h2 data-i18n="card_rsl_title"></h2>
+            <p data-i18n="card_rsl_text"></p>
+            <a href="rsl/index.html" class="hub-button" data-i18n="card_rsl_button"></a>
+        </article>
+
     </section>
 </main>
 
 <footer class="tl-footer" data-i18n="footer_text"></footer>
 
+<!-- Multilingue -->
 <script>
-    // Langue courante (FR par défaut)
     const currentLang = localStorage.getItem("lang") || "fr";
 
-    // Chargement du JSON multilingue
     fetch("lang.json")
         .then(r => r.json())
         .then(data => {
@@ -80,30 +87,17 @@
             });
         });
 
-    // Activation visuelle de la langue sélectionnée
     document.querySelectorAll(".lang-item").forEach(el => {
         if (el.textContent.includes(currentLang.toUpperCase())) {
             el.classList.add("active");
         }
     });
 </script>
-<!-- Firebase ES Modules -->
+
+<!-- Firebase unifié -->
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyDODrXEPdxUIB_trqiZEFPMF5qQcZRuMyI",
-        authDomain: "ty-ludic-f37a9.firebaseapp.com",
-        projectId: "ty-ludic-f37a9",
-        storageBucket: "ty-ludic-f37a9.firebasestorage.app",
-        messagingSenderId: "487462368828",
-        appId: "1:487462368828:web:700af454a339d3b8e7f539",
-        measurementId: "G-8MBXBRGXVW"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    import { auth } from "contact/inscription/firebase-init.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
     const userBox = document.getElementById("user-info");
     const pseudo = localStorage.getItem("tyludic_pseudo");
@@ -116,9 +110,6 @@
         }
     });
 </script>
-
-
-
 
 </body>
 </html>
