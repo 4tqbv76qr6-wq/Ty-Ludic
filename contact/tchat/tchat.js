@@ -66,36 +66,59 @@ function afficherMessage(data) {
 
 // Recharge complet + listener temps réel
 async function loadChannelWithRealtime(channel) {
-    if (unsubscribe) unsubscribe();
+
+    alert("🔵 CHARGEMENT CANAL : " + channel);
+
+    if (unsubscribe) {
+        alert("🟡 Listener précédent supprimé");
+        unsubscribe();
+    }
 
     messagesBox.innerHTML = "";
 
     const q = query(
         collection(db, "tchat_messages"),
         where("channel", "==", channel),
-        where("timestamp", "!=", null),   // 🔥 CORRECTION ESSENTIELLE
         orderBy("timestamp", "asc")
     );
 
+    alert("📡 Requête Firestore prête");
+
     // Historique complet
     const snapshot = await getDocs(q);
-    snapshot.forEach(doc => afficherMessage(doc.data()));
+
+    alert("📘 Messages trouvés dans l'historique : " + snapshot.size);
+
+    snapshot.forEach(doc => {
+        afficherMessage(doc.data());
+    });
 
     // Temps réel
     unsubscribe = onSnapshot(q, (snap) => {
+
+        alert("🔔 Listener actif — changements : " + snap.docChanges().length);
+
         snap.docChanges().forEach(change => {
             if (change.type === "added") {
                 afficherMessage(change.doc.data());
             }
         });
     });
+
+    alert("🟢 Listener temps réel installé");
 }
 
 // Changement de salon
 channelButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const channel = btn.dataset.channel;
-        if (channel === currentChannel) return;
+
+        alert("🟣 CHANGEMENT DE SALON → " + channel);
+
+        if (channel === currentChannel) {
+            alert("⚪ Canal identique, rien à faire");
+            return;
+        }
 
         currentChannel = channel;
 
@@ -111,14 +134,19 @@ form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const msg = input.value.trim();
-    if (!msg) return;
+    if (!msg) {
+        alert("⚪ Message vide, ignoré");
+        return;
+    }
 
     if (!currentUser) {
-        alert("Tu dois être connecté pour envoyer un message.");
+        alert("🔴 Pas connecté → envoi impossible");
         return;
     }
 
     const safeMsg = msg.replace(/[<>]/g, "");
+
+    alert("🟢 Envoi du message : " + safeMsg);
 
     try {
         await addDoc(collection(db, "tchat_messages"), {
@@ -129,11 +157,12 @@ form.addEventListener("submit", async (e) => {
             channel: currentChannel
         });
 
+        alert("🟢 Message envoyé");
+
         input.value = "";
         messagesBox.scrollTop = messagesBox.scrollHeight;
     } catch (err) {
-        console.error("Erreur envoi message", err);
-        alert("Impossible d'envoyer le message pour le moment.");
+        alert("🔴 Erreur envoi message");
     }
 });
 
@@ -146,14 +175,10 @@ onAuthStateChanged(auth, (user) => {
     } else {
         userBox.textContent = "Non connecté";
     }
+
+    alert("👤 Auth changé : " + (user ? "connecté" : "non connecté"));
 });
 
 // Abonnement initial
+alert("🚀 ARRIVÉE SUR LE TCHAT — canal : " + currentChannel);
 loadChannelWithRealtime(currentChannel);
-
-// Reload léger iPad / Safari (optionnel)
-document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-        window.location.reload();
-    }
-});
