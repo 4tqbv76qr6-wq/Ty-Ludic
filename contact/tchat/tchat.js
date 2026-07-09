@@ -64,9 +64,8 @@ function afficherMessage(data) {
     messagesBox.scrollTop = messagesBox.scrollHeight;
 }
 
-// Recharge complet + listener temps réel pour un canal
+// Recharge complet + listener temps réel
 async function loadChannelWithRealtime(channel) {
-    // On coupe l’ancien listener s’il existe
     if (unsubscribe) unsubscribe();
 
     messagesBox.innerHTML = "";
@@ -77,11 +76,11 @@ async function loadChannelWithRealtime(channel) {
         orderBy("timestamp", "asc")
     );
 
-    // 1. Snapshot complet (historique)
+    // Historique complet
     const snapshot = await getDocs(q);
     snapshot.forEach(doc => afficherMessage(doc.data()));
 
-    // 2. Listener temps réel
+    // Temps réel
     unsubscribe = onSnapshot(q, (snap) => {
         snap.docChanges().forEach(change => {
             if (change.type === "added") {
@@ -148,12 +147,12 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Abonnement initial + historique complet
+// Abonnement initial
 loadChannelWithRealtime(currentChannel);
 
-// Stabilisation : quand la page redevient visible (iPad / Safari)
+// 🔥 Reload léger iPad / Safari : relance Firestore et recharge l’historique
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-        loadChannelWithRealtime(currentChannel);
+        window.location.reload(); // 🔥 solution 100% fiable sur iPad
     }
 });
