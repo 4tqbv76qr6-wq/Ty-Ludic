@@ -73,6 +73,7 @@ async function loadChannelWithRealtime(channel) {
     const q = query(
         collection(db, "tchat_messages"),
         where("channel", "==", channel),
+        where("timestamp", "!=", null),   // 🔥 CORRECTION ESSENTIELLE
         orderBy("timestamp", "asc")
     );
 
@@ -150,9 +151,9 @@ onAuthStateChanged(auth, (user) => {
 // Abonnement initial
 loadChannelWithRealtime(currentChannel);
 
-// 🔥 Reload léger iPad / Safari : relance Firestore et recharge l’historique
+// Reload léger iPad / Safari (optionnel)
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-        window.location.reload(); // 🔥 solution 100% fiable sur iPad
+        window.location.reload();
     }
 });
