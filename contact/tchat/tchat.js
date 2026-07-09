@@ -67,14 +67,17 @@ function afficherMessage(data) {
 // Recharge complet + listener temps réel
 async function loadChannelWithRealtime(channel) {
 
-    alert("🔵 CHARGEMENT CANAL : " + channel);
+    alert("1 - Début loadChannelWithRealtime, canal = " + channel);
 
     if (unsubscribe) {
-        alert("🟡 Listener précédent supprimé");
+        alert("2 - Suppression ancien listener");
         unsubscribe();
     }
 
+    alert("3 - Nettoyage messagesBox");
     messagesBox.innerHTML = "";
+
+    alert("4 - Construction de la requête Firestore");
 
     const q = query(
         collection(db, "tchat_messages"),
@@ -82,30 +85,40 @@ async function loadChannelWithRealtime(channel) {
         orderBy("timestamp", "asc")
     );
 
-    alert("📡 Requête Firestore prête");
+    alert("5 - Requête construite, lancement getDocs");
 
-    // Historique complet
-    const snapshot = await getDocs(q);
+    let snapshot;
+    try {
+        snapshot = await getDocs(q);
+        alert("6 - getDocs OK");
+    } catch (err) {
+        alert("ERREUR getDocs : " + err);
+        return;
+    }
 
-    alert("📘 Messages trouvés dans l'historique : " + snapshot.size);
+    alert("7 - Snapshot size = " + snapshot.size);
 
     snapshot.forEach(doc => {
+        alert("8 - Message historique affiché");
         afficherMessage(doc.data());
     });
 
-    // Temps réel
-    unsubscribe = onSnapshot(q, (snap) => {
+    alert("9 - Installation listener temps réel");
 
-        alert("🔔 Listener actif — changements : " + snap.docChanges().length);
-
-        snap.docChanges().forEach(change => {
-            if (change.type === "added") {
-                afficherMessage(change.doc.data());
-            }
+    try {
+        unsubscribe = onSnapshot(q, (snap) => {
+            alert("10 - Listener déclenché, changements = " + snap.docChanges().length);
+            snap.docChanges().forEach(change => {
+                if (change.type === "added") {
+                    afficherMessage(change.doc.data());
+                }
+            });
         });
-    });
+    } catch (err) {
+        alert("ERREUR listener : " + err);
+    }
 
-    alert("🟢 Listener temps réel installé");
+    alert("11 - Listener installé");
 }
 
 // Changement de salon
@@ -113,10 +126,10 @@ channelButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const channel = btn.dataset.channel;
 
-        alert("🟣 CHANGEMENT DE SALON → " + channel);
+        alert("CHANGEMENT DE SALON → " + channel);
 
         if (channel === currentChannel) {
-            alert("⚪ Canal identique, rien à faire");
+            alert("Canal identique, rien à faire");
             return;
         }
 
@@ -135,18 +148,18 @@ form.addEventListener("submit", async (e) => {
 
     const msg = input.value.trim();
     if (!msg) {
-        alert("⚪ Message vide, ignoré");
+        alert("Message vide, ignoré");
         return;
     }
 
     if (!currentUser) {
-        alert("🔴 Pas connecté → envoi impossible");
+        alert("Pas connecté → envoi impossible");
         return;
     }
 
     const safeMsg = msg.replace(/[<>]/g, "");
 
-    alert("🟢 Envoi du message : " + safeMsg);
+    alert("Envoi du message : " + safeMsg);
 
     try {
         await addDoc(collection(db, "tchat_messages"), {
@@ -157,12 +170,12 @@ form.addEventListener("submit", async (e) => {
             channel: currentChannel
         });
 
-        alert("🟢 Message envoyé");
+        alert("Message envoyé");
 
         input.value = "";
         messagesBox.scrollTop = messagesBox.scrollHeight;
     } catch (err) {
-        alert("🔴 Erreur envoi message");
+        alert("Erreur envoi message");
     }
 });
 
@@ -170,15 +183,15 @@ form.addEventListener("submit", async (e) => {
 onAuthStateChanged(auth, (user) => {
     currentUser = user || null;
 
+    alert("Auth changé : " + (user ? "connecté" : "non connecté"));
+
     if (user && pseudo) {
         userBox.textContent = pseudo;
     } else {
         userBox.textContent = "Non connecté";
     }
-
-    alert("👤 Auth changé : " + (user ? "connecté" : "non connecté"));
 });
 
 // Abonnement initial
-alert("🚀 ARRIVÉE SUR LE TCHAT — canal : " + currentChannel);
+alert("ARRIVÉE SUR LE TCHAT — canal : " + currentChannel);
 loadChannelWithRealtime(currentChannel);
