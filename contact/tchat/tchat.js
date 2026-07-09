@@ -67,17 +67,11 @@ function afficherMessage(data) {
 // Recharge complet + listener temps réel
 async function loadChannelWithRealtime(channel) {
 
-    alert("1 - Début loadChannelWithRealtime, canal = " + channel);
+    // 🔥 Empêche les doublons : on supprime le listener précédent
+    if (unsubscribe) unsubscribe();
 
-    if (unsubscribe) {
-        alert("2 - Suppression ancien listener");
-        unsubscribe();
-    }
-
-    alert("3 - Nettoyage messagesBox");
+    // 🔥 Empêche les doublons : on vide l’affichage avant de recharger
     messagesBox.innerHTML = "";
-
-    alert("4 - Construction de la requête Firestore");
 
     const q = query(
         collection(db, "tchat_messages"),
@@ -85,53 +79,25 @@ async function loadChannelWithRealtime(channel) {
         orderBy("timestamp", "asc")
     );
 
-    alert("5 - Requête construite, lancement getDocs");
+    // Historique complet
+    const snapshot = await getDocs(q);
+    snapshot.forEach(doc => afficherMessage(doc.data()));
 
-    let snapshot;
-    try {
-        snapshot = await getDocs(q);
-        alert("6 - getDocs OK");
-    } catch (err) {
-        alert("ERREUR getDocs : " + err);
-        return;
-    }
-
-    alert("7 - Snapshot size = " + snapshot.size);
-
-    snapshot.forEach(doc => {
-        alert("8 - Message historique affiché");
-        afficherMessage(doc.data());
-    });
-
-    alert("9 - Installation listener temps réel");
-
-    try {
-        unsubscribe = onSnapshot(q, (snap) => {
-            alert("10 - Listener déclenché, changements = " + snap.docChanges().length);
-            snap.docChanges().forEach(change => {
-                if (change.type === "added") {
-                    afficherMessage(change.doc.data());
-                }
-            });
+    // Temps réel
+    unsubscribe = onSnapshot(q, (snap) => {
+        snap.docChanges().forEach(change => {
+            if (change.type === "added") {
+                afficherMessage(change.doc.data());
+            }
         });
-    } catch (err) {
-        alert("ERREUR listener : " + err);
-    }
-
-    alert("11 - Listener installé");
+    });
 }
 
 // Changement de salon
 channelButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const channel = btn.dataset.channel;
-
-        alert("CHANGEMENT DE SALON → " + channel);
-
-        if (channel === currentChannel) {
-            alert("Canal identique, rien à faire");
-            return;
-        }
+        if (channel === currentChannel) return;
 
         currentChannel = channel;
 
@@ -147,19 +113,14 @@ form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const msg = input.value.trim();
-    if (!msg) {
-        alert("Message vide, ignoré");
-        return;
-    }
+    if (!msg) return;
 
     if (!currentUser) {
-        alert("Pas connecté → envoi impossible");
+        alert("Tu dois être connecté pour envoyer un message.");
         return;
     }
 
     const safeMsg = msg.replace(/[<>]/g, "");
-
-    alert("Envoi du message : " + safeMsg);
 
     try {
         await addDoc(collection(db, "tchat_messages"), {
@@ -170,20 +131,16 @@ form.addEventListener("submit", async (e) => {
             channel: currentChannel
         });
 
-        alert("Message envoyé");
-
         input.value = "";
         messagesBox.scrollTop = messagesBox.scrollHeight;
     } catch (err) {
-        alert("Erreur envoi message");
+        alert("Impossible d'envoyer le message.");
     }
 });
 
 // Auth → affichage pseudo
 onAuthStateChanged(auth, (user) => {
     currentUser = user || null;
-
-    alert("Auth changé : " + (user ? "connecté" : "non connecté"));
 
     if (user && pseudo) {
         userBox.textContent = pseudo;
@@ -193,5 +150,4 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // Abonnement initial
-alert("ARRIVÉE SUR LE TCHAT — canal : " + currentChannel);
 loadChannelWithRealtime(currentChannel);
