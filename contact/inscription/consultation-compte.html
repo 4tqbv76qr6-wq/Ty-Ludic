@@ -41,15 +41,19 @@ h1 {
     color:#44f;
 }
 
-#logout {
+#back {
     width:100%;
     padding:15px;
     font-size:18px;
-    background:#44f;
+    background:#333;
     border:none;
     border-radius:10px;
     color:white;
     cursor:pointer;
+    margin-top:10px;
+}
+#back:hover {
+    background:#444;
 }
 </style>
 </head>
@@ -86,13 +90,13 @@ h1 {
         <p id="badges">Chargement...</p>
     </div>
 
-    <button id="logout">Se déconnecter</button>
+    <button id="back">Retour au menu</button>
 </div>
 
 <script type="module">
 import { auth, db } from "./firebase-init.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
 const pseudoEl = document.getElementById("pseudo");
 const uidEl = document.getElementById("uid");
@@ -141,9 +145,8 @@ onAuthStateChanged(auth, async (user) => {
     badgesEl.textContent = data.badges ? data.badges.join(", ") : "Aucun badge";
 });
 
-document.getElementById("logout").onclick = async () => {
-    await signOut(auth);
-    window.location.href = "index.html";
+document.getElementById("back").onclick = () => {
+    window.location.href = "../index.html"; // 🔥 Mets ici ton vrai menu
 };
 </script>
 
