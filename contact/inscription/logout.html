@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Déconnexion – TY‑LUDIC</title>
+    <link rel="stylesheet" href="../../css/hub-menu.css">
+
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Press Start 2P', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .logout-box {
+            width: 90%;
+            max-width: 420px;
+            padding: 30px;
+            border: 3px solid #00aaff;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 25px #00aaff;
+            text-align: center;
+        }
+
+        .logout-box h1 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #00aaff;
+        }
+
+        .logout-box p {
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .logout-btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #00aaff;
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #0088cc;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="logout-box">
+    <h1>Déconnexion</h1>
+    <p>Tu vas être déconnecté de ton compte TY‑LUDIC.<br>
+       Merci d’avoir joué avec nous !</p>
+
+    <button id="logout-btn" class="logout-btn">Se déconnecter</button>
+</div>
+
+<script type="module">
+    import { auth } from "./firebase-init.js";
+    import { signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+    const btn = document.getElementById("logout-btn");
+
+    btn.addEventListener("click", () => {
+        signOut(auth).then(() => {
+            localStorage.removeItem("tyludic_pseudo");
+            window.location.href = "../index.html";
+        });
+    });
+</script>
+
+</body>
+</html>
