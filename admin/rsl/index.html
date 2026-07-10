@@ -25,6 +25,22 @@
     import { db } from "../../contact/inscription/firebase-init.js";
     import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
+
+const rslDocRef = doc(db, "config", "rsl_players");
+
+async function ensureDocumentExists() {
+    const snap = await getDoc(rslDocRef);
+    if (!snap.exists()) {
+        await setDoc(rslDocRef, { players: [] });
+        console.log("Document créé automatiquement.");
+    }
+}
+
+await ensureDocumentExists();
+
+
+
+
     const pseudoInput = document.getElementById("pseudo-input");
     const addBtn = document.getElementById("add-btn");
     const rslList = document.getElementById("rsl-list");
