@@ -26,7 +26,7 @@
 
     <section class="hub-grid">
         <!-- Jeux -->
-        <article class="hub-card hub-arcade" id="card-inscription">
+        <article class="hub-card hub-arcade" id="card-guest">
             <div class="hub-icon">🧾</div>
             <h2>Inscription</h2>
             <p>Crée un compte pour rentrer dans les high scores tous joueurs confondus, gagner des skins,bonus, badges</p>
@@ -36,7 +36,7 @@
 
 
      <!-- Login-->
-        <article class="hub-card hub-arcade" id="card-login">
+        <article class="hub-card hub-arcade" id="card-guest">
             <div class="hub-icon">🧾</div>
             <h2>Connexion</h2>
             <p>connecte toi à ton compte</p>
@@ -44,7 +44,7 @@
         </article>
 
       <!-- Logout-->
-        <article class="hub-card hub-arcade" id="card-logout">
+        <article class="hub-card hub-arcade" id="card-member">
             <div class="hub-icon">🧾</div>
             <h2>Déconnexion</h2>
             <p>Déconnecte toi de ton compte</p>
@@ -55,7 +55,7 @@
 
 
         <!-- Mon compte-->
-        <article class="hub-card hub-arcade">
+        <article class="hub-card hub-arcade" id="card-member">
             <div class="hub-icon">🧾</div>
             <h2>Mon Compte</h2>
             <p>Consultation du compte</p>
@@ -66,7 +66,7 @@
 
         <!-- tchat-->
 
-<article class="hub-card hub-reflexion" id="card-tchat">
+<article class="hub-card hub-reflexion" id="card-member">
     <div class="hub-icon">🎤</div>
     <h2>Tchat</h2>
     <p>Discute avec les autres joueurs</p>
@@ -79,7 +79,7 @@
 
 
         <!--Contact-->
-        <article class="hub-card hub-rpg">
+        <article class="hub-card hub-rpg" id="card-member">
             <div class="hub-icon">📩</div>
             <h2>Contact Ty-Ludic</h2>
             <p>Tu as des questions, un problème de jeu, contacte nous </p>
@@ -96,25 +96,22 @@
     import { auth } from "./inscription/firebase-init.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-    const cardTchat = document.getElementById("card-tchat");
-    const cardInscription = document.getElementById("card-inscription");
-    const cardLogin = document.getElementById("card-login");
-    const cardLogout = document.getElementById("card-logout");
+    const cardGuest = document.getElementById("card-guest");
+    const cardMember = document.getElementById("card-member");
+ 
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // Utilisateur connecté → tchat visible
-            cardTchat.style.display = "block";
-            cardInscription.style.display = "none";
-            cardLogin.style.display = "none";
-            cardLogout.style.display = "block";
+            cardMember.style.display = "block";
+            cardGuest.style.display = "none";
+        
 
         } else {
             // Utilisateur non connecté → tchat caché
-            cardTchat.style.display = "none";
-            cardInscription.style.display = "block";
-            cardLogin.style.display = "block";
-            cardLogout.style.display = "none";
+            cardMember.style.display = "none";
+            cardGuest.style.display = "block";
+            
         }
     });
 </script>
