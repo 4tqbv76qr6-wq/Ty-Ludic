@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion RSL – TY‑LUDIC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="rsl-manager.css">
+</head>
+
+<body>
+
+<h1>Gestion des joueurs RSL</h1>
+
+<div class="rsl-box">
+
+    <input type="text" id="pseudo-input" placeholder="Pseudo RSL à ajouter…">
+    <button id="add-btn">Ajouter le pseudo</button>
+
+    <h2 style="color:#00aaff; margin-top:20px;">Liste des joueurs RSL</h2>
+    <ul id="rsl-list"></ul>
+
+</div>
+
+<script type="module">
+    import { db } from "../../contact/inscription/firebase-init.js";
+    import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+    const pseudoInput = document.getElementById("pseudo-input");
+    const addBtn = document.getElementById("add-btn");
+    const rslList = document.getElementById("rsl-list");
+
+    const rslDocRef = doc(db, "config", "rsl_players");
+
+    async function loadRslPlayers() {
+        const snap = await getDoc(rslDocRef);
+        const players = snap.data().players || [];
+
+        rslList.innerHTML = "";
+
+        players.forEach(pseudo => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <span>${pseudo}</span>
+                <button class="delete-btn" data-pseudo="${pseudo}">Supprimer</button>
+            `;
+            rslList.appendChild(li);
+        });
+    }
+
+    addBtn.addEventListener("click", async () => {
+        const newPseudo = pseudoInput.value.trim();
+
+        if (!newPseudo) return;
+
+        const snap = await getDoc(rslDocRef);
+        const players = snap.data().players || [];
+
+        if (!players.includes(newPseudo)) {
+            players.push(newPseudo);
+            await updateDoc(rslDocRef, { players });
+            pseudoInput.value = "";
+            loadRslPlayers();
+        }
+    });
+
+    rslList.addEventListener("click", async (e) => {
+        if (e.target.classList.contains("delete-btn")) {
+            const pseudoToDelete = e.target.dataset.pseudo;
+
+            const snap = await getDoc(rslDocRef);
+            let players = snap.data().players || [];
+
+            players = players.filter(p => p !== pseudoToDelete);
+
+            await updateDoc(rslDocRef, { players });
+            loadRslPlayers();
+        }
+    });
+
+    loadRslPlayers();
+</script>
+
+</body>
+</html>
