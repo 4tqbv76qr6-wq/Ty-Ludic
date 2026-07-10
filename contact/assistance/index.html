@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ty‑Ludic – Tchat</title>
+    <link rel="stylesheet" href="assistance.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="tl-header">
+    <div class="tl-logo">TY‑LUDIC</div>
+
+    <nav class="tl-nav">
+      
+        <a href="../index.html">Contact</a>
+        <span class="tl-nav-current">Assistance</span>
+    </nav>
+
+    <div id="user-info" class="tl-user"></div>
+</header>
+
+<main class="tchat-container">
+    <section class="tchat-header">
+        <h1>Assistance Ty‑Ludic</h1>
+        <p>Si tu as des questions tu peux les poser ici. Nous te répondrons dans la mesure du possible </p>
+
+        <div class="tchat-channel-bar">
+            <button class="channel-btn active" data-channel="assistance">Assistance</button>
+          
+        </div>
+    </section>
+
+    <section class="tchat-main">
+        <div id="tchat-messages" class="tchat-messages"></div>
+
+        <form id="tchat-form" class="tchat-form" autocomplete="off">
+            <input
+                id="tchat-input"
+                type="text"
+                maxlength="200"
+                placeholder="Écris ton message…"
+            >
+            <button type="submit">Envoyer</button>
+        </form>
+    </section>
+</main>
+
+<footer class="tl-footer">
+    Assistance Ty‑Ludic – Studio indépendant en Bretagne.
+</footer>
+
+<!-- Firebase init déjà existant dans ton projet -->
+<script type="module" src="../inscription/firebase-init.js"></script>
+
+<!-- Logique du tchat -->
+<script type="module" src="assistance.js"></script>
+
+</body>
+</html>
