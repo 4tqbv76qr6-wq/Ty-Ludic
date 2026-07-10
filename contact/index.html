@@ -26,7 +26,7 @@
 
     <section class="hub-grid">
         <!-- Jeux -->
-        <article class="hub-card hub-arcade">
+        <article class="hub-card hub-arcade" id="card-inscription">
             <div class="hub-icon">🧾</div>
             <h2>Inscription</h2>
             <p>Crée un compte pour rentrer dans les high scores tous joueurs confondus, gagner des skins,bonus, badges</p>
@@ -87,14 +87,18 @@
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
     const cardTchat = document.getElementById("card-tchat");
+    const cardInscription = document.getElementById("card-inscription");
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // Utilisateur connecté → tchat visible
             cardTchat.style.display = "block";
+            cardInscription.style.display = "none";
+
         } else {
             // Utilisateur non connecté → tchat caché
             cardTchat.style.display = "none";
+            cardInscription.style.display = "block";
         }
     });
 </script>
