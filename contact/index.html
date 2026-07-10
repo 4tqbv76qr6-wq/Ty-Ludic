@@ -36,7 +36,7 @@
 
 
      <!-- Mon compte-->
-        <article class="hub-card hub-arcade">
+        <article class="hub-card hub-arcade" id="card-login">
             <div class="hub-icon">🧾</div>
             <h2>Connexion</h2>
             <p>connecte toi à ton compte</p>
@@ -88,17 +88,20 @@
 
     const cardTchat = document.getElementById("card-tchat");
     const cardInscription = document.getElementById("card-inscription");
+    const cardLogin = document.getElementById("card-login");
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // Utilisateur connecté → tchat visible
             cardTchat.style.display = "block";
             cardInscription.style.display = "none";
+            cardLogin.style.display = "none";
 
         } else {
             // Utilisateur non connecté → tchat caché
             cardTchat.style.display = "none";
             cardInscription.style.display = "block";
+            cardLogin.style.display = "block";
         }
     });
 </script>
