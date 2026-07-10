@@ -20,6 +20,15 @@
     "card_channel_text": "Deviens membre ty-ludic, accède au tchat, contacte l'équipe ty-ludic.",
     "card_channel_button": "On cause",
 
+     "card_rsl_title": "Raid Shadow Legends",
+    "card_rsl_text": "Espace dédié aux joueurs du goupe Chill Clan Cool Guys.",
+    "card_rsl_button": "Bienvenue",
+
+        "card_admin_title": "Administration du site",
+    "card_admin_text": "Espace administration et gestion du site.",
+    "card_admin_button": "Entrer",
+
+
     "footer_text": "© 2026 TY‑LUDIC — Studio de jeux indépendant"
   },
 
