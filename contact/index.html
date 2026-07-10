@@ -12,7 +12,7 @@
     <div class="tl-logo">TY‑LUDIC</div>
     <nav class="tl-nav">
         <a href="../index.html" class="active">Accueil</a>
-        <a href="jeux/index.html" >Jeux</a>
+        <a href="jeux/index.html">Jeux</a>
         <a href="studio/index.html">Le Studio</a>
         <a href="contact/index.html">Contact</a>
     </nav>
@@ -25,66 +25,55 @@
     </section>
 
     <section class="hub-grid">
-        <!-- Jeux -->
-        <article class="hub-card hub-arcade" id="card-guest">
+
+        <!-- Inscription (guest) -->
+        <article class="hub-card hub-arcade card-guest">
             <div class="hub-icon">🧾</div>
             <h2>Inscription</h2>
-            <p>Crée un compte pour rentrer dans les high scores tous joueurs confondus, gagner des skins,bonus, badges</p>
+            <p>Crée un compte pour rentrer dans les high scores, gagner des skins, bonus, badges</p>
             <a href="inscription/index.html" class="hub-button">Création</a>
         </article>
 
-
-
-     <!-- Login-->
-        <article class="hub-card hub-arcade" id="card-guest">
+        <!-- Connexion (guest) -->
+        <article class="hub-card hub-arcade card-guest">
             <div class="hub-icon">🧾</div>
             <h2>Connexion</h2>
-            <p>connecte toi à ton compte</p>
+            <p>Connecte toi à ton compte</p>
             <a href="inscription/login.html" class="hub-button">Connexion</a>
         </article>
 
-      <!-- Logout-->
-        <article class="hub-card hub-arcade" id="card-member">
+        <!-- Déconnexion (member) -->
+        <article class="hub-card hub-arcade card-member">
             <div class="hub-icon">🧾</div>
             <h2>Déconnexion</h2>
             <p>Déconnecte toi de ton compte</p>
             <a href="inscription/logout.html" class="hub-button">Déconnexion</a>
         </article>
 
-
-
-
-        <!-- Mon compte-->
-        <article class="hub-card hub-arcade" id="card-member">
+        <!-- Mon compte (member) -->
+        <article class="hub-card hub-arcade card-member">
             <div class="hub-icon">🧾</div>
             <h2>Mon Compte</h2>
             <p>Consultation du compte</p>
             <a href="inscription/consultation-compte.html" class="hub-button">Consultation</a>
         </article>
 
+        <!-- Tchat (member) -->
+        <article class="hub-card hub-reflexion card-member">
+            <div class="hub-icon">🎤</div>
+            <h2>Tchat</h2>
+            <p>Discute avec les autres joueurs</p>
+            <a href="tchat/index.html" class="hub-button">Tchat</a>
+        </article>
 
-
-        <!-- tchat-->
-
-<article class="hub-card hub-reflexion" id="card-member">
-    <div class="hub-icon">🎤</div>
-    <h2>Tchat</h2>
-    <p>Discute avec les autres joueurs</p>
-    <a href="tchat/index.html" class="hub-button">Tchat</a>
-</article>
-
-
-
-
-
-
-        <!--Contact-->
-        <article class="hub-card hub-rpg" id="card-member">
+        <!-- Contact (member) -->
+        <article class="hub-card hub-rpg card-member">
             <div class="hub-icon">📩</div>
             <h2>Contact Ty-Ludic</h2>
-            <p>Tu as des questions, un problème de jeu, contacte nous </p>
+            <p>Tu as des questions, un problème de jeu, contacte nous</p>
             <a href="rpg/index.html" class="hub-button">On t'écoute</a>
         </article>
+
     </section>
 </main>
 
@@ -96,27 +85,19 @@
     import { auth } from "./inscription/firebase-init.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-    const cardGuest = document.getElementById("card-guest");
-    const cardMember = document.getElementById("card-member");
- 
+    const cardsGuest = document.querySelectorAll(".card-guest");
+    const cardsMember = document.querySelectorAll(".card-member");
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // Utilisateur connecté → tchat visible
-            cardMember.style.display = "block";
-            cardGuest.style.display = "none";
-        
-
+            cardsMember.forEach(el => el.style.display = "block");
+            cardsGuest.forEach(el => el.style.display = "none");
         } else {
-            // Utilisateur non connecté → tchat caché
-            cardMember.style.display = "none";
-            cardGuest.style.display = "block";
-            
+            cardsMember.forEach(el => el.style.display = "none");
+            cardsGuest.forEach(el => el.style.display = "block");
         }
     });
 </script>
-
-
 
 </body>
 </html>
