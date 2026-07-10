@@ -35,13 +35,23 @@
 
 
 
-     <!-- Mon compte-->
+     <!-- Login-->
         <article class="hub-card hub-arcade" id="card-login">
             <div class="hub-icon">🧾</div>
             <h2>Connexion</h2>
             <p>connecte toi à ton compte</p>
             <a href="inscription/login.html" class="hub-button">Connexion</a>
         </article>
+
+      <!-- Logout-->
+        <article class="hub-card hub-arcade" id="card-logout">
+            <div class="hub-icon">🧾</div>
+            <h2>Déconnexion</h2>
+            <p>Déconnecte toi de ton compte</p>
+            <a href="inscription/logout.html" class="hub-button">Déconnexion</a>
+        </article>
+
+
 
 
         <!-- Mon compte-->
@@ -89,6 +99,7 @@
     const cardTchat = document.getElementById("card-tchat");
     const cardInscription = document.getElementById("card-inscription");
     const cardLogin = document.getElementById("card-login");
+    const cardLogout = document.getElementById("card-logout");
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -96,12 +107,14 @@
             cardTchat.style.display = "block";
             cardInscription.style.display = "none";
             cardLogin.style.display = "none";
+            cardLogout.style.display = "block";
 
         } else {
             // Utilisateur non connecté → tchat caché
             cardTchat.style.display = "none";
             cardInscription.style.display = "block";
             cardLogin.style.display = "block";
+            cardLogout.style.display = "none";
         }
     });
 </script>
