@@ -2,202 +2,107 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Gestion RSL – Debug</title>
+    <title>Administration RSL – TY‑LUDIC</title>
     <link rel="stylesheet" href="rsl-manager.css">
 </head>
 
 <body>
 
-<h1>Gestion des joueurs RSL (DEBUG)</h1>
+    <h1>Gestion des joueurs RSL</h1>
 
-<div class="rsl-box">
+    <section class="admin-section">
 
-    <input type="text" id="pseudo-input" placeholder="Pseudo RSL à ajouter…">
-    <button id="add-btn">Ajouter le pseudo </button>
+        <!-- Formulaire d'ajout -->
+        <div class="form-group">
+            <label for="pseudo-input">Ajouter un joueur RSL</label>
+            <input type="text" id="pseudo-input" placeholder="Pseudo RSL…">
+            <button id="add-btn">Ajouter</button>
+        </div>
 
-    <h2>Liste des joueurs RSL</h2>
-    <ul id="rsl-list"></ul>
+        <!-- Liste des joueurs -->
+        <h2>Liste des joueurs</h2>
+        <ul id="rsl-list" class="rsl-list"></ul>
 
-</div>
+    </section>
 
-<script type="module">
-
-    alert("[DEBUG] Script chargé.");
-
-    // --- IMPORT FIREBASE ---
-    try {
-        alert("[DEBUG] Import firebase-init.js…");
-        import("../../contact/inscription/firebase-init.js")
-            .then(module => {
-                const db = module.db;
-                alert("[DEBUG] db importé : " + db);
-
-                startRslManager(db);
-            })
-            .catch(err => {
-                alert("[ERREUR] Impossible d'importer firebase-init.js : " + err);
-            });
-
-    } catch (err) {
-        alert("[ERREUR] Exception lors de l'import firebase-init.js : " + err);
-    }
-
-
-    // --- FONCTION PRINCIPALE ---
-    async function startRslManager(db) {
-
-        alert("[DEBUG] startRslManager() lancé.");
-
-        // Import Firestore
-        const {
+    <script type="module">
+        import { db } from "../../contact/inscription/firebase-init.js";
+        import {
             doc,
             getDoc,
             setDoc,
             updateDoc
-        } = await import("https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js");
-
-        alert("[DEBUG] Firestore importé.");
+        } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
         const pseudoInput = document.getElementById("pseudo-input");
         const addBtn = document.getElementById("add-btn");
         const rslList = document.getElementById("rsl-list");
 
         const rslDocRef = doc(db, "config", "rsl_players");
-        alert("[DEBUG] rslDocRef créé : " + JSON.stringify(rslDocRef));
 
-        // --- Vérifier / créer document ---
+        // Assurer l'existence du document
         async function ensureDocumentExists() {
-            alert("[DEBUG] Vérification du document…");
-
-            try {
-                const snap = await getDoc(rslDocRef);
-
-                if (!snap.exists()) {
-                    alert("[DEBUG] Document inexistant → création…");
-                    await setDoc(rslDocRef, { players: [] });
-                    alert("[DEBUG] Document créé avec players: []");
-                } else {
-                    alert("[DEBUG] Document existant.");
-                }
-
-            } catch (err) {
-                alert("[ERREUR] ensureDocumentExists : " + err);
+            const snap = await getDoc(rslDocRef);
+            if (!snap.exists()) {
+                await setDoc(rslDocRef, { players: [] });
             }
         }
 
-        // --- Charger liste ---
+        // Charger la liste
         async function loadRslPlayers() {
-            alert("[DEBUG] Chargement des joueurs…");
+            const snap = await getDoc(rslDocRef);
+            if (!snap.exists()) return;
 
-            try {
-                const snap = await getDoc(rslDocRef);
+            const players = snap.data().players || [];
+            rslList.innerHTML = "";
 
-                if (!snap.exists()) {
-                    alert("[ERREUR] Document introuvable lors du chargement.");
-                    return;
-                }
-
-                const data = snap.data();
-                alert("[DEBUG] Données reçues : " + JSON.stringify(data));
-
-                const players = data.players || [];
-                alert("[DEBUG] Liste des joueurs : " + players.join(", "));
-
-                rslList.innerHTML = "";
-
-                players.forEach(pseudo => {
-                    const li = document.createElement("li");
-                    li.innerHTML = `
-                        <span>${pseudo}</span>
-                        <button class="delete-btn" data-pseudo="${pseudo}">Supprimer</button>
-                    `;
-                    rslList.appendChild(li);
-                });
-
-            } catch (err) {
-                alert("[ERREUR] loadRslPlayers : " + err);
-            }
+            players.forEach(pseudo => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <span>${pseudo}</span>
+                    <button class="delete-btn" data-pseudo="${pseudo}">Supprimer</button>
+                `;
+                rslList.appendChild(li);
+            });
         }
 
-        // --- Ajouter pseudo ---
+        // Ajouter un pseudo
         addBtn.addEventListener("click", async () => {
             const newPseudo = pseudoInput.value.trim();
-            alert("[DEBUG] Clic Ajouter → pseudo = " + newPseudo);
+            if (!newPseudo) return;
 
-            if (!newPseudo) {
-                alert("[ERREUR] Aucun pseudo saisi.");
-                return;
-            }
+            const snap = await getDoc(rslDocRef);
+            const players = snap.data().players || [];
 
-            try {
-                const snap = await getDoc(rslDocRef);
-
-                if (!snap.exists()) {
-                    alert("[ERREUR] Document introuvable lors de l'ajout.");
-                    return;
-                }
-
-                let players = snap.data().players || [];
-                alert("[DEBUG] Liste actuelle : " + players.join(", "));
-
-                if (players.includes(newPseudo)) {
-                    alert("[ERREUR] Pseudo déjà présent.");
-                    return;
-                }
-
+            if (!players.includes(newPseudo)) {
                 players.push(newPseudo);
-                alert("[DEBUG] Nouvelle liste : " + players.join(", "));
-
                 await updateDoc(rslDocRef, { players });
-                alert("[DEBUG] Pseudo ajouté : " + newPseudo);
-
                 pseudoInput.value = "";
                 loadRslPlayers();
-
-            } catch (err) {
-                alert("[ERREUR] Ajout pseudo : " + err);
             }
         });
 
-        // --- Suppression pseudo ---
+        // Supprimer un pseudo
         rslList.addEventListener("click", async (e) => {
             if (!e.target.classList.contains("delete-btn")) return;
 
             const pseudoToDelete = e.target.dataset.pseudo;
-            alert("[DEBUG] Suppression demandée pour : " + pseudoToDelete);
 
-            try {
-                const snap = await getDoc(rslDocRef);
+            const snap = await getDoc(rslDocRef);
+            let players = snap.data().players || [];
 
-                if (!snap.exists()) {
-                    alert("[ERREUR] Document introuvable lors de la suppression.");
-                    return;
-                }
+            players = players.filter(p => p !== pseudoToDelete);
+            await updateDoc(rslDocRef, { players });
 
-                let players = snap.data().players || [];
-                alert("[DEBUG] Liste avant suppression : " + players.join(", "));
-
-                players = players.filter(p => p !== pseudoToDelete);
-                alert("[DEBUG] Liste après suppression : " + players.join(", "));
-
-                await updateDoc(rslDocRef, { players });
-                alert("[DEBUG] Pseudo supprimé : " + pseudoToDelete);
-
-                loadRslPlayers();
-
-            } catch (err) {
-                alert("[ERREUR] Suppression pseudo : " + err);
-            }
+            loadRslPlayers();
         });
 
-        // --- Initialisation ---
-        alert("[DEBUG] Initialisation…");
-        await ensureDocumentExists();
-        await loadRslPlayers();
-        alert("[DEBUG] Initialisation terminée.");
-    }
-
-</script>
+        // Initialisation
+        (async () => {
+            await ensureDocumentExists();
+            await loadRslPlayers();
+        })();
+    </script>
 
 </body>
 </html>
