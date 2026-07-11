@@ -60,15 +60,15 @@
             <a href="contact/index.html" class="hub-button" data-i18n="card_channel_button"></a>
         </article>
 
-        <!-- RSL -->
-        <article class="hub-card hub-rpg">
+        <!-- RSL (contrôlé par rôle) -->
+        <article class="hub-card hub-rpg role-rsl">
             <div class="hub-icon">⚔️</div>
             <h2 data-i18n="card_rsl_title"></h2>
             <p data-i18n="card_rsl_text"></p>
             <a href="rsl/index.html" class="hub-button" data-i18n="card_rsl_button"></a>
         </article>
 
-        <!-- Admin-->
+        <!-- Admin (pas encore de gestion de droits) -->
         <article class="hub-card hub-rpg">
             <div class="hub-icon">⚙️</div>
             <h2 data-i18n="card_admin_title"></h2>
@@ -102,19 +102,48 @@
     });
 </script>
 
-<!-- Firebase unifié -->
+<!-- Firebase + RSL -->
 <script type="module">
-    import { auth, analytics } from "./contact/inscription/firebase-init.js";
+    import { auth, db } from "./contact/inscription/firebase-init.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
-
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
     const userBox = document.getElementById("user-info");
     const pseudo = localStorage.getItem("tyludic_pseudo");
 
-    onAuthStateChanged(auth, (user) => {
+    // Masquer les cartes RSL par défaut
+    document.querySelectorAll(".role-rsl").forEach(card => {
+        card.style.display = "none";
+    });
+
+    // Fonction pour afficher les cartes RSL
+    function showRslCards() {
+        document.querySelectorAll(".role-rsl").forEach(card => {
+            card.style.display = "block";
+        });
+    }
+
+    // Vérifier si le pseudo est membre RSL
+    async function checkRslRole(pseudo) {
+        const rslDocRef = doc(db, "config", "rsl_players");
+        const snap = await getDoc(rslDocRef);
+
+        if (!snap.exists()) return false;
+
+        const players = snap.data().players || [];
+        return players.includes(pseudo);
+    }
+
+    onAuthStateChanged(auth, async (user) => {
         if (user && pseudo) {
             userBox.textContent = "👤 " + pseudo;
+
+            // Vérifier rôle RSL
+            const isRsl = await checkRslRole(pseudo);
+            if (isRsl) {
+                showRslCards();
+            }
+
         } else {
             userBox.textContent = "👤 Non connecté";
         }
