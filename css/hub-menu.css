@@ -298,3 +298,8 @@ body {
     margin-right: 20px;
     white-space: nowrap;
 }
+
+/* Cartes réservées aux membres RSL */
+.role-rsl {
+    display: none;
+}
