@@ -1,45 +1,4 @@
 /* ============================================================
-   CANVAS DIMENSIONS OPTIMISÉES
-   ============================================================ */
-const COLS = 10;
-const ROWS = 20;
-const BLOCK = 36;   // blocs agrandis
-
-// Canvas ajusté pour iPad — ⭐ hauteur légèrement augmentée
-const canvas = document.getElementById("game");
-canvas.width  = COLS * BLOCK + 40;     // marge latérale
-canvas.height = ROWS * BLOCK + 60;     // ⭐ marge basse augmentée (20 → 60)
-
-const ctx = canvas.getContext("2d");
-
-/* ============================================================
-   CENTRAGE AUTOMATIQUE
-   ============================================================ */
-const offsetX = (canvas.width  - COLS * BLOCK) / 2;
-const offsetY = 30;   // ⭐ marge haute légèrement augmentée (20 → 30)
-
-/* ============================================================
-   RESPONSIVE OPTIMISÉ
-   ============================================================ */
-function resizeGame() {
-    const wrapper = document.querySelector(".canvas-wrapper");
-    const width = wrapper.clientWidth;
-
-    const ratio = canvas.width / canvas.height;
-    let height = width / ratio;
-
-    const maxHeight = 560;   // ⭐ hauteur max augmentée (520 → 560)
-    height = Math.min(height, maxHeight);
-
-    canvas.style.width = width + "px";
-    canvas.style.height = height + "px";
-}
-
-window.addEventListener("resize", resizeGame);
-window.addEventListener("orientationchange", resizeGame);
-window.addEventListener("load", resizeGame);
-
-/* ============================================================
    SCORE & LEVEL
    ============================================================ */
 let score = 0;
@@ -86,10 +45,7 @@ displayHighScores();
 /* ============================================================
    GRILLE
    ============================================================ */
-const grid = [];
-for (let r = 0; r < ROWS; r++) {
-    grid[r] = new Array(COLS).fill(0);
-}
+Grille.init();
 
 /* ============================================================
    TETROMINOS
@@ -131,50 +87,21 @@ let current = randomTetromino();
    COLLISIONS
    ============================================================ */
 function collides(shape, offsetX2, offsetY2) {
-    for (let r = 0; r < shape.length; r++) {
-        for (let c = 0; c < shape[r].length; c++) {
-            if (!shape[r][c]) continue;
-
-            const x = c + offsetX2;
-            const y = r + offsetY2;
-
-            if (x < 0 || x >= COLS || y >= ROWS) return true;
-            if (y >= 0 && grid[y][x]) return true;
-        }
-    }
-    return false;
+    return Grille.collides(shape, offsetX2, offsetY2);
 }
 
 /* ============================================================
    FIXER LA PIECE
    ============================================================ */
 function mergePiece() {
-    const shape = current.shape;
-    for (let r = 0; r < shape.length; r++) {
-        for (let c = 0; c < shape[r].length; c++) {
-            if (!shape[r][c]) continue;
-            const x = current.x + c;
-            const y = current.y + r;
-            if (y >= 0 && y < ROWS && x >= 0 && x < COLS) {
-                grid[y][x] = current.color;
-            }
-        }
-    }
+    Grille.mergePiece(current);
 }
 
 /* ============================================================
    LIGNES
    ============================================================ */
 function clearLines() {
-    let lines = 0;
-    for (let r = ROWS - 1; r >= 0; r--) {
-        if (grid[r].every(cell => cell !== 0)) {
-            grid.splice(r, 1);
-            grid.unshift(new Array(COLS).fill(0));
-            lines++;
-            r++;
-        }
-    }
+    const lines = Grille.clearLines();
 
     if (lines > 0) {
         const points = [0, 40, 100, 300, 1200][lines] || 0;
@@ -183,7 +110,7 @@ function clearLines() {
 
         scoreDisplay.textContent = "Score : " + score;
 
-        if (linesCleared >= 10) {
+        if (linesCleared >= 4) {
             level++;
             linesCleared = 0;
             dropInterval = Math.max(150, dropInterval - 80);
@@ -236,22 +163,57 @@ function softDrop() {
     }
 }
 
+function hardDrop() {
+    while (!collides(current.shape, current.x, current.y + 1)) {
+        current.y++;
+    }
+
+    mergePiece();
+    clearLines();
+    current = randomTetromino();
+
+    if (collides(current.shape, current.x, current.y)) {
+        endGame();
+    }
+}
+
+function drawNeonBorder(x, y, w, h) {
+    const r = 20; // coins arrondis
+
+    ctx.strokeStyle = "#0ff";
+    ctx.lineWidth = 4;
+
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+    ctx.stroke();
+}
+
+
+
 /* ============================================================
-   DESSIN — CENTRÉ + AGRANDI + HAUTEUR AJUSTÉE
+   DESSIN
    ============================================================ */
 function drawGrid() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Bordure centrée
     ctx.strokeStyle = "#00ffff";
     ctx.lineWidth = 3;
-    ctx.strokeRect(offsetX, offsetY, COLS * BLOCK, ROWS * BLOCK);
+    //ctx.strokeRect(offsetX, offsetY, COLS * BLOCK, ROWS * BLOCK);
+    drawNeonBorder(offsetX - 4, offsetY - 4, COLS * BLOCK + 8, ROWS * BLOCK + 8);
 
-    // Grille interne
+
     for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
-            const cell = grid[r][c];
+            const cell = Grille.grid[r][c];
             if (cell) {
                 drawBlock(c, r, cell);
             } else {
@@ -290,34 +252,112 @@ function drawPiece() {
 }
 
 /* ============================================================
-   GAME OVER
+   GAME OVER — VERSION PROPRE AVEC BOUTONS
    ============================================================ */
+
 function showGameOverScreen() {
-    ctx.fillStyle = "rgba(0,0,0,0.8)";
+    // Fond noir transparent
+    ctx.fillStyle = "rgba(0,0,0,0.85)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "#0ff";
-    ctx.font = "24px 'Press Start 2P'";
-    ctx.fillText("GAME OVER", 80, 200);
+    // Cadre centré
+    const frameW = 360;
+    const frameH = 520;
+    const frameX = (canvas.width - frameW) / 2;
+    const frameY = (canvas.height - frameH) / 2;
 
-    ctx.font = "14px 'Press Start 2P'";
-    ctx.fillText("Score : " + score, 120, 260);
-    ctx.fillText("Niveau : " + level, 120, 300);
-    ctx.fillText("Touchez pour rejouer", 40, 380);
+    ctx.strokeStyle = "#00ffff";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(frameX, frameY, frameW, frameH);
+
+    // Titre
+    ctx.fillStyle = "#00ffff";
+    ctx.font = "28px 'Press Start 2P'";
+    ctx.fillText("GAME OVER", frameX + 60, frameY + 60);
+
+    // Score + niveau
+    ctx.font = "16px 'Press Start 2P'";
+    ctx.fillText("Score : " + score, frameX + 40, frameY + 120);
+    ctx.fillText("Niveau : " + level, frameX + 40, frameY + 150);
+
+    // TOP 10 — AU-DESSUS DES BOUTONS
+    ctx.font = "16px 'Press Start 2P'";
+    ctx.fillText("TOP 10", frameX + 40, frameY + 190);
+
+    const list = HighScores.load();
+    let y = frameY + 220;
+
+    for (let i = 0; i < list.length && i < 10; i++) {
+        const s = list[i];
+        ctx.fillText(`${s.score} pts (Niv ${s.level})`, frameX + 40, y);
+        y += 25;
+    }
+
+    // Bouton REJOUER
+    ctx.fillStyle = "#003344";
+    ctx.fillRect(frameX + 40, frameY + frameH - 120, 280, 45);
+    ctx.strokeStyle = "#00ffff";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(frameX + 40, frameY + frameH - 120, 280, 45);
+
+    ctx.fillStyle = "#00ffff";
+    ctx.font = "20px 'Press Start 2P'";
+    ctx.fillText("REJOUER", frameX + 100, frameY + frameH - 90);
+
+    // Bouton QUITTER
+    ctx.fillStyle = "#003344";
+    ctx.fillRect(frameX + 40, frameY + frameH - 60, 280, 45);
+    ctx.strokeStyle = "#00ffff";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(frameX + 40, frameY + frameH - 60, 280, 45);
+
+    ctx.fillStyle = "#00ffff";
+    ctx.font = "20px 'Press Start 2P'";
+    ctx.fillText("QUITTER", frameX + 100, frameY + frameH - 30);
+
+
+
+
+    // Zones cliquables
+    window._goButtons = [
+        { x: frameX + 40, y: frameY + frameH - 120, w: 280, h: 45, action: "replay" },
+        { x: frameX + 40, y: frameY + frameH - 60,  w: 280, h: 45, action: "quit" }
+    ];
 }
+
+
 
 function endGame() {
     if (gameOver) return;
     gameOver = true;
 
-    const name = prompt("Bravo ! Entre ton nom pour enregistrer ton score :");
-    if (name) HighScores.add(name, score, level);
+    // Enregistrement automatique du score
+    HighScores.add("Joueur", score, level);
     displayHighScores();
 
-    canvas.addEventListener("click", () => {
-        document.location.reload();
-    }, { once: true });
+    // Activation du clic sur les boutons
+    canvas.addEventListener("click", handleGameOverClick, { once: true });
 }
+
+function handleGameOverClick(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+    for (const b of window._goButtons) {
+        if (x >= b.x && x <= b.x + b.w &&
+            y >= b.y && y <= b.y + b.h) {
+
+            if (b.action === "replay") {
+                document.location.reload();
+            }
+            if (b.action === "quit") {
+                window.location.href = "index.html";
+            }
+        }
+    }
+}
+
 
 /* ============================================================
    CONTROLES TACTILES
@@ -327,10 +367,12 @@ const Controls = {
         const left = document.getElementById("left");
         const right = document.getElementById("right");
         const rotateBtn = document.getElementById("rotate");
+        const dropBtn = document.getElementById("drop");
 
         left.addEventListener("touchstart", () => move(-1));
         right.addEventListener("touchstart", () => move(1));
         rotateBtn.addEventListener("touchstart", () => tryRotate());
+        dropBtn.addEventListener("touchstart", () => hardDrop());
     }
 };
 
@@ -370,6 +412,7 @@ function draw() {
         showGameOverScreen();
     }
 }
+
 
 function loop(timestamp) {
     update(timestamp);

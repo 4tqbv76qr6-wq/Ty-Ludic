@@ -1,14 +1,26 @@
+/* ============================================================
+   STYLE TY‑LUDIC — VERSION STABLE POUR TETRIS
+   ============================================================ */
+
 body {
-    margin: 0;
-    background: radial-gradient(circle at center, #000, #050505, #000);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background: #000;
+    color: #00ffff;
     font-family: 'Press Start 2P', monospace;
+    text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
-/* Cadre puzzle */
+/* ------------------------------------------------------------
+   CADRE ARCADE
+------------------------------------------------------------ */
+
 #arcade-frame {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+}
+#tl-arcade-frame {
     background: #111;
     padding: 20px;
     border: 8px solid #444;
@@ -17,118 +29,100 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    max-width: 520px;
+    width: 500px;
+    margin: 20px auto;
 }
 
-/* Marquee */
+
+/* ------------------------------------------------------------
+   MARQUEE
+------------------------------------------------------------ */
+
 #marquee {
     font-size: 18px;
-    color: #0ff;
-    margin-bottom: 10px;
-    text-shadow: 0 0 10px #0ff;
+    padding: 20px 0;
 }
 
-/* HUD */
+/* ------------------------------------------------------------
+   HUD
+------------------------------------------------------------ */
+
 #hud {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    padding: 0 10px;
+    padding: 10px 20px;
+    font-size: 14px;
 }
 
-#score, #level {
-    color: white;
-    font-size: 12px;
+/* ------------------------------------------------------------
+   BEZEL + CANVAS WRAPPER
+------------------------------------------------------------ */
+
+#bezel {
+    border: 4px solid #00ffff;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.canvas-wrapper {
+    width: 100%;
+    /* ⭐ NE PAS imposer de hauteur */
 }
 
 /* Bezel */
-#bezel {
-    width: 100%;
-    background: radial-gradient(circle, #111, #000);
+#tl-bezel {
+    background: radial-gradient(circle, #222, #000);
     border: 6px solid #333;
     border-radius: 10px;
     box-shadow: 0 0 20px #0ff inset;
     padding: 10px;
+    width: 500px;
 }
 
-/* Canvas responsive */
-.canvas-wrapper {
+/* Canvas wrapper */
+.tl-canvas-wrapper {
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-#game {
+
+/* ------------------------------------------------------------
+   CANVAS — VERSION STABLE
+------------------------------------------------------------ */
+
+canvas {
     width: 100%;
     height: auto;
-    image-rendering: pixelated;
-    border: 2px solid white;
+    max-height: 480px;   /* ⭐ limite l'affichage du canvas */
+    display: block;
+    margin: 0 auto;
 }
 
-/* Contrôles tactiles */
+/* ------------------------------------------------------------
+   CONTROLS
+------------------------------------------------------------ */
+
 #controls {
-    margin-top: 15px;
     display: flex;
-    gap: 20px;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
 }
 
 #controls button {
-    width: 70px;
-    height: 70px;
-    font-size: 28px;
-    border-radius: 10px;
-    border: none;
-    background: #333;
-    color: white;
-    box-shadow: 0 0 10px #0ff;
+    font-size: 24px;
+    padding: 10px 20px;
+    background: #003344;
+    border: 2px solid #00ffff;
+    color: #00ffff;
+    font-family: 'Press Start 2P';
 }
 
-/* High Scores */
+/* ------------------------------------------------------------
+   HIGH SCORES (désactivé)
+------------------------------------------------------------ */
+
 #highscores {
-    margin-top: 20px;
-    color: white;
-    font-size: 12px;
-    text-align: center;
-}
-
-/* Orientation paysage : message portrait obligatoire */
-@media (orientation: landscape) {
-    body::before {
-        content: "Veuillez tourner votre appareil en mode portrait pour jouer à Tetris";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: #000;
-        color: #0ff;
-        font-family: 'Press Start 2P', monospace;
-        font-size: 18px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
-        z-index: 9999;
-        text-shadow: 0 0 10px #0ff;
-    }
-
-    #arcade-frame,
-    #controls,
-    #highscores {
-        display: none !important;
-    }
-}
-
-/* Empêche le copier-coller, le zoom, la sélection, etc. */
-#controls button {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: none;
-}
-
-body {
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: manipulation;
+    display: none; /* ⭐ On désactive totalement */
 }
