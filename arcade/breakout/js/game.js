@@ -346,7 +346,7 @@ function handleReplayTap(clientX, clientY) {
         y > BTN_QUIT.y &&
         y < BTN_QUIT.y + BTN_QUIT.h
     ) {
-        window.location.href = "../index.html";
+        window.location.href = "../../hub/hub-arcade.html";
     }
 }
 
