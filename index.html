@@ -41,7 +41,7 @@
             <div class="hub-icon">🕹️</div>
             <h2 data-i18n="card_games_title"></h2>
             <p data-i18n="card_games_text"></p>
-            <a href="jeux/index.html" class="hub-button" data-i18n="card_games_button"></a>
+            <a href="hub/hub-jeux.html" class="hub-button" data-i18n="card_games_button"></a>
         </article>
 
         <!-- Studio -->
@@ -57,7 +57,7 @@
             <div class="hub-icon">📡</div>
             <h2 data-i18n="card_channel_title"></h2>
             <p data-i18n="card_channel_text"></p>
-            <a href="contact/index.html" class="hub-button" data-i18n="card_channel_button"></a>
+            <a href="hub/hub-contact.html" class="hub-button" data-i18n="card_channel_button"></a>
         </article>
 
         <!-- RSL (contrôlé par rôle) -->
@@ -73,7 +73,7 @@
             <div class="hub-icon">⚙️</div>
             <h2 data-i18n="card_admin_title"></h2>
             <p data-i18n="card_admin_text"></p>
-            <a href="admin/rsl/index.html" class="hub-button" data-i18n="card_admin_button"></a>
+            <a href="hub/hub-admin.html" class="hub-button" data-i18n="card_admin_button"></a>
         </article>
 
     </section>
@@ -85,7 +85,7 @@
 <script>
     const currentLang = localStorage.getItem("lang") || "fr";
 
-    fetch("lang.json")
+    fetch("lang/hub.json")
         .then(r => r.json())
         .then(data => {
             document.querySelectorAll("[data-i18n]").forEach(el => {
