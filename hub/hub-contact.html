@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Les jeux du studio – TY‑LUDIC</title>
+    <link rel="stylesheet" href="../css/hub-menu.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="tl-header">
+    <div class="tl-logo">TY‑LUDIC</div>
+    <nav class="tl-nav">
+        <a href="../index.html" class="active">Accueil</a>
+        <a href="jeux/index.html">Jeux</a>
+        <a href="studio/index.html">Le Studio</a>
+        <a href="contact/index.html">Contact</a>
+    </nav>
+</header>
+
+<main class="hub-container">
+    <section class="hub-intro">
+        <h1>Ty-Ludic</h1>
+        <p>Studio de jeux indépendant, en Bretagne. Rien à télécharger, tout est en ligne et totalement gratuit.</p>
+    </section>
+
+    <section class="hub-grid">
+
+        <!-- Inscription (guest) -->
+        <article class="hub-card hub-arcade card-guest">
+            <div class="hub-icon">🧾</div>
+            <h2>Inscription</h2>
+            <p>Crée un compte pour rentrer dans les high scores, gagner des skins, bonus, badges</p>
+            <a href="../contact/inscription/create-account.html" class="hub-button">Création</a>
+        </article>
+
+        <!-- Connexion (guest) -->
+        <article class="hub-card hub-arcade card-guest">
+            <div class="hub-icon">🧾</div>
+            <h2>Connexion</h2>
+            <p>Connecte toi à ton compte</p>
+            <a href="../contact/inscription/login.html" class="hub-button">Connexion</a>
+        </article>
+
+        <!-- Déconnexion (member) -->
+        <article class="hub-card hub-arcade card-member">
+            <div class="hub-icon">🧾</div>
+            <h2>Déconnexion</h2>
+            <p>Déconnecte toi de ton compte</p>
+            <a href="../contact/inscription/logout.html" class="hub-button">Déconnexion</a>
+        </article>
+
+        <!-- Mon compte (member) -->
+        <article class="hub-card hub-arcade card-member">
+            <div class="hub-icon">🧾</div>
+            <h2>Mon Compte</h2>
+            <p>Consultation du compte</p>
+            <a href="../contact/inscription/consultation-compte.html" class="hub-button">Consultation</a>
+        </article>
+
+        <!-- Tchat (member) -->
+        <article class="hub-card hub-reflexion card-member">
+            <div class="hub-icon">🎤</div>
+            <h2>Tchat</h2>
+            <p>Discute avec les autres joueurs</p>
+            <a href="../contact/tchat/index.html" class="hub-button">Tchat</a>
+        </article>
+
+        <!-- Contact (member) -->
+        <article class="hub-card hub-rpg card-member">
+            <div class="hub-icon">📩</div>
+            <h2>Assistance Ty-Ludic</h2>
+            <p>Tu as des questions, un problème de jeu, contacte nous</p>
+            <a href="../contact/assistance/index.html" class="hub-button">On t'écoute</a>
+        </article>
+
+    </section>
+</main>
+
+<footer class="tl-footer">
+    © 2026 TY‑LUDIC — Studio de jeux indépendant
+</footer>
+
+<script type="module">
+    import { auth } from "./inscription/firebase-init.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+    const cardsGuest = document.querySelectorAll(".card-guest");
+    const cardsMember = document.querySelectorAll(".card-member");
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            cardsMember.forEach(el => el.style.display = "block");
+            cardsGuest.forEach(el => el.style.display = "none");
+        } else {
+            cardsMember.forEach(el => el.style.display = "none");
+            cardsGuest.forEach(el => el.style.display = "block");
+        }
+    });
+</script>
+
+</body>
+</html>
