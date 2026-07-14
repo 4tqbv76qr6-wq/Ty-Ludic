@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>TY‑LUDIC — Tetris</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="tl-arcade-frame">
+
+        <div id="marquee">TY‑LUDIC — FALLING BLOCKS</div>
+
+        <div id="hud">
+            <div id="score">Score : 0</div>
+            <div id="level">Niveau : 1</div>
+        </div>
+        <!--cadre du jeu -->
+        <div id="tl-bezel">
+            <div class="canvas-wrapper">
+              <canvas id="game" width="500" height="800"></canvas>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="controls">
+        <button id="drop">⬇️</button>
+        <button id="rotate">⟳</button>
+        <button id="left">◀️</button>
+        <button id="right">▶️</button>
+    </div>
+
+    <div id="highscores"></div>
+    <script src="canvas.js"></script>
+    <script src="grille.js"></script>
+  
+
+    <script src="game.js"></script>
+</body>
+</html>
