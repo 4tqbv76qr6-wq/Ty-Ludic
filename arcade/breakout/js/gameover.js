@@ -48,13 +48,13 @@ function drawGameOver() {
     ctx.fillText("Score : " + score, 70, 130);
     ctx.fillText("Niveau : " + level, 70, 155);
 
-    const list = HighScores.load();
-    ctx.fillText("TOP 10", 70, 200);
+    //const list = HighScores.load();
+    //ctx.fillText("TOP 10", 70, 200);
 
-    list.forEach((s, i) => {
-        ctx.fillStyle = (i === newScoreIndex) ? "#0ff" : "white";
-        ctx.fillText(`${s.score} pts (Niv ${s.level})`, 70, 230 + i * 18);
-    });
+    //list.forEach((s, i) => {
+        //ctx.fillStyle = (i === newScoreIndex) ? "#0ff" : "white";
+        //ctx.fillText(`${s.score} pts (Niv ${s.level})`, 70, 230 + i * 18);
+    //});
 
     drawRoundedButton(BTN_REPLAY, "#022", "#0ff", "REJOUER");
     drawRoundedButton(BTN_QUIT, "#200", "#f00", "QUITTER");

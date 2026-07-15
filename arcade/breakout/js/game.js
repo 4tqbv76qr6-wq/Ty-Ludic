@@ -207,6 +207,10 @@ const ball = {
     }
 };
 
+/* ============================================================
+    NIVEAU SUIVANT
+   ============================================================ */
+
 function nextLevel() {
     level++;
     updateHud();
@@ -218,6 +222,7 @@ function nextLevel() {
     ball.stuck = true;
     ball.moving = false;
 }
+
 
 /* ============================================================
    LANCEMENT ANGULAIRE — balle fixe, raquette décalée
