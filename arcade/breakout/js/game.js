@@ -13,43 +13,46 @@ const bestDisplay = document.getElementById("best");
 /* ============================================================
    HIGH SCORES
    ============================================================ */
-const HighScores = {
-    load() {
-        return JSON.parse(localStorage.getItem("breakout_scores") || "[]");
+const HighScore = {
+    async load() {
+        const doc = await firebase.firestore()
+            .collection("breakout_meta")
+            .doc("highscore")
+            .get();
+
+        if (!doc.exists) return { score: 0, date: null };
+        return doc.data();
     },
 
-    save(list) {
-        localStorage.setItem("breakout_scores", JSON.stringify(list));
-    },
-        add(name, score, level) {
-    const list = this.load();
+    async update(score) {
+        const current = await this.load();
 
-    // Date JJ/MM/AAAA
-    const now = new Date();
-    const date = now.toLocaleDateString("fr-FR");
+        if (score > current.score) {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, "0");
+            const month = String(now.getMonth() + 1).padStart(2, "0");
+            const year = String(now.getFullYear()).slice(-2);
+            const date = `${day}/${month}/${year}`;
 
-    list.push({ name, score, level, date });
-    
-        list.sort((a, b) => b.score - a.score);
-        const trimmed = list.slice(0, 10);
-        this.save(trimmed);
-        return trimmed.findIndex(s => s.score === score && s.level === level);
-    },
+            await firebase.firestore()
+                .collection("breakout_meta")
+                .doc("highscore")
+                .set({ score, date });
 
+            return true; // ⭐ nouveau record
+        }
 
-
-
-    best() {
-        const list = this.load();
-        return list.length ? list[0].score : 0;
+        return false; // pas de record
     }
 };
 
-function updateHud() {
+async function updateHud() {
+    const hs = await HighScore.load();
     scoreDisplay.textContent = "Score : " + score;
     levelDisplay.textContent = "Niveau : " + level;
-    bestDisplay.textContent = "Record : " + HighScores.best();
+    bestDisplay.textContent = "Record : " + hs.score + " (" + hs.date + ")";
 }
+
 
 /* ============================================================
    PADDLE — Capsule néon + SPIN
@@ -316,12 +319,16 @@ function drawBricks() {
     });
 }
 
-function endGame() {
+let gameOverNewRecord = false;
+
+async function endGame() {
     ball.moving = false;
     gameOver = true;
-    newScoreIndex = HighScores.add("player", score, level);
+
+    gameOverNewRecord = await HighScore.update(score);
     updateHud();
 }
+
 
 
 function restartGame() {
