@@ -1,0 +1,36 @@
+/* ============================================================
+   CONTROLS — Version ergonomique
+   ============================================================ */
+
+#controls {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+#move-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+#fire {
+    margin-left: 10px;
+}
+
+#controls button {
+    width: 70px;
+    height: 70px;
+    font-size: 28px;
+    border-radius: 10px;
+    border: none;
+    background: #333;
+    color: white;
+    box-shadow: 0 0 10px #0ff;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
+}

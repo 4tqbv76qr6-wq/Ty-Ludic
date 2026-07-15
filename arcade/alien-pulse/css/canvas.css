@@ -1,0 +1,23 @@
+/* ============================================================
+   CANVAS + BEZEL
+   ============================================================ */
+
+#bezel {
+    width: 100%;
+    background: radial-gradient(circle, #222, #000);
+    border: 6px solid #333;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #0ff inset;
+    padding: 10px;
+}
+
+.canvas-wrapper {
+    width: 100%;
+}
+
+#game {
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    border: 2px solid white;
+}

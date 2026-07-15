@@ -1,0 +1,15 @@
+/* ============================================================
+   HUD
+   ============================================================ */
+
+#hud {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 10px;
+}
+
+#score, #level, #best {
+    color: white;
+    font-size: 14px;
+}

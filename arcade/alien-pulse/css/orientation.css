@@ -1,0 +1,47 @@
+/* ============================================================
+   MODE PAYSAGE — MESSAGE BLOQUANT
+   ============================================================ */
+
+@media (orientation: landscape) {
+    body {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    #arcade-frame {
+        max-width: 700px;
+    }
+
+    #controls {
+        flex-direction: column;
+        margin-left: 20px;
+    }
+}
+
+@media (orientation: landscape) {
+    body::before {
+        content: "Veuillez tourner votre appareil en mode portrait pour jouer à Alien Pulse";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        color: #0ff;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        z-index: 9999;
+        text-shadow: 0 0 10px #0ff;
+    }
+
+    #arcade-frame,
+    #controls,
+    #highscores {
+        display: none !important;
+    }
+}
