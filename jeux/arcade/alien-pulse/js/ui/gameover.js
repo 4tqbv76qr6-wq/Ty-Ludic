@@ -12,7 +12,6 @@ function showGameOverScreen() {
     ctx.font = "16px 'Press Start 2P'";
     ctx.fillText("Score : " + score, 120, 260);
     ctx.fillText("Niveau : " + level, 120, 300);
-
     ctx.fillText("▶ Rejouer", 120, 380);
     ctx.fillText("◀ Menu", 120, 430);
 }
@@ -23,9 +22,7 @@ function endGame() {
 
     player.alive = false;
 
-    const index = HighScores.add(score, level);
-
-    showHighScores(index);
+    
 
     canvas.addEventListener("click", handleGameOverClick);
 }
@@ -38,6 +35,6 @@ function handleGameOverClick(e) {
     }
 
     if (y > 410 && y < 460) {
-        window.location.href = "../index.html";
+        window.location.href = "../../hub/hub-arcade.html";
     }
 }
