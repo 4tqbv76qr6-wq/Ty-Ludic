@@ -31,16 +31,16 @@ const HighScores = {
     }
 };
 
-function displayHighScores() {
-    const div = document.getElementById("highscores");
-    const list = HighScores.load();
+//function displayHighScores() {
+    //const div = document.getElementById("highscores");
+    //const list = HighScores.load();
 
-    div.innerHTML =
-        "<h3>Meilleurs Scores Tetris (Local)</h3>" +
-        list.map(s => `<div>${s.name} — ${s.score} pts (Niv ${s.level})</div>`).join("");
-}
+    //div.innerHTML =
+       // "<h3>Meilleurs Scores Tetris (Local)</h3>" +
+        //list.map(s => `<div>${s.name} — ${s.score} pts (Niv ${s.level})</div>`).join("");
+//}
 
-displayHighScores();
+//displayHighScores();
 
 /* ============================================================
    GRILLE
@@ -280,18 +280,7 @@ function showGameOverScreen() {
     ctx.fillText("Score : " + score, frameX + 40, frameY + 120);
     ctx.fillText("Niveau : " + level, frameX + 40, frameY + 150);
 
-    // TOP 10 — AU-DESSUS DES BOUTONS
-    ctx.font = "16px 'Press Start 2P'";
-    ctx.fillText("TOP 10", frameX + 40, frameY + 190);
-
-    const list = HighScores.load();
-    let y = frameY + 220;
-
-    for (let i = 0; i < list.length && i < 10; i++) {
-        const s = list[i];
-        ctx.fillText(`${s.score} pts (Niv ${s.level})`, frameX + 40, y);
-        y += 25;
-    }
+    
 
     // Bouton REJOUER
     ctx.fillStyle = "#003344";
@@ -331,9 +320,7 @@ function endGame() {
     if (gameOver) return;
     gameOver = true;
 
-    // Enregistrement automatique du score
-    HighScores.add("Joueur", score, level);
-    displayHighScores();
+    
 
     // Activation du clic sur les boutons
     canvas.addEventListener("click", handleGameOverClick, { once: true });
