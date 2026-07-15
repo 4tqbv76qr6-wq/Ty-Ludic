@@ -207,6 +207,18 @@ const ball = {
     }
 };
 
+function nextLevel() {
+    level++;
+    updateHud();
+
+    ball.reset();      // nouvelle vitesse selon le niveau
+    initBricks();      // recrée les briques du nouveau niveau
+
+    // On remet la balle en mode "stuck" pour attendre le lancement
+    ball.stuck = true;
+    ball.moving = false;
+}
+
 /* ============================================================
    LANCEMENT ANGULAIRE — balle fixe, raquette décalée
    ============================================================ */
