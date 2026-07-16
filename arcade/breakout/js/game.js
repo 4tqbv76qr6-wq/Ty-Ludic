@@ -18,10 +18,12 @@ const bestDisplay = document.getElementById("best");
    ============================================================ */
 const HighScore = {
     async load() {
-        const doc = await firebase.firestore()
-            .collection("breakout_meta")
-            .doc("highscore")
-            .get();
+        const ref = doc(db, "breakout_meta", "highscore");
+const snap = await getDoc(ref);
+
+if (!snap.exists()) return { score: 0, date: null };
+return snap.data();
+
 
         if (!doc.exists) return { score: 0, date: null };
         return doc.data();
@@ -37,10 +39,9 @@ const HighScore = {
             const year = String(now.getFullYear()).slice(-2);
             const date = `${day}/${month}/${year}`;
 
-            await firebase.firestore()
-                .collection("breakout_meta")
-                .doc("highscore")
-                .set({ score, date });
+            const ref = doc(db, "breakout_meta", "highscore");
+await setDoc(ref, { score, date });
+
 
             return true; // ⭐ nouveau record
         }
