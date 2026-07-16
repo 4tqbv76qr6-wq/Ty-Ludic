@@ -19,14 +19,10 @@ const bestDisplay = document.getElementById("best");
 const HighScore = {
     async load() {
         const ref = doc(db, "breakout_meta", "highscore");
-const snap = await getDoc(ref);
+        const snap = await getDoc(ref);
 
-if (!snap.exists()) return { score: 0, date: null };
-return snap.data();
-
-
-        if (!doc.exists) return { score: 0, date: null };
-        return doc.data();
+        if (!snap.exists()) return { score: 0, date: null };
+        return snap.data();
     },
 
     async update(score) {
@@ -40,15 +36,15 @@ return snap.data();
             const date = `${day}/${month}/${year}`;
 
             const ref = doc(db, "breakout_meta", "highscore");
-await setDoc(ref, { score, date });
+            await setDoc(ref, { score, date });
 
-
-            return true; // ⭐ nouveau record
+            return true;
         }
 
-        return false; // pas de record
+        return false;
     }
 };
+
 
 function updateHud() {
     scoreDisplay.textContent = "Score : " + score;
