@@ -16,9 +16,14 @@ const bestDisplay = document.getElementById("best");
 /* ============================================================
    HIGH SCORES
    ============================================================ */
+
+
 const HighScore = {
     async load() {
-        const ref = doc(db, "breakout_meta", "highscore");
+        const user = auth.currentUser;
+        if (!user) return { score: 0, date: null };
+
+        const ref = doc(db, "users", user.uid, "breakout", "highscore");
         const snap = await getDoc(ref);
 
         if (!snap.exists()) return { score: 0, date: null };
@@ -26,6 +31,9 @@ const HighScore = {
     },
 
     async update(score) {
+        const user = auth.currentUser;
+        if (!user) return false;
+
         const current = await this.load();
 
         if (score > current.score) {
@@ -35,7 +43,7 @@ const HighScore = {
             const year = String(now.getFullYear()).slice(-2);
             const date = `${day}/${month}/${year}`;
 
-            const ref = doc(db, "breakout_meta", "highscore");
+            const ref = doc(db, "users", user.uid, "breakout", "highscore");
             await setDoc(ref, { score, date });
 
             return true;
@@ -49,8 +57,15 @@ const HighScore = {
 function updateHud() {
     scoreDisplay.textContent = "Score : " + score;
     levelDisplay.textContent = "Niveau : " + level;
-    bestDisplay.textContent = "Record : " + highScoreValue + " (" + highScoreDate + ")";
+
+    // ⭐ Record personnel du joueur connecté
+    if (highScoreDate) {
+        bestDisplay.textContent = "Record : " + highScoreValue + " (" + highScoreDate + ")";
+    } else {
+        bestDisplay.textContent = "Record : " + highScoreValue;
+    }
 }
+
 
 
 
@@ -227,6 +242,7 @@ HighScore.load().then(hs => {
 });
 
 
+
     // On remet la balle en mode "stuck" pour attendre le lancement
     ball.stuck = true;
     ball.moving = false;
@@ -349,7 +365,6 @@ async function endGame() {
 
     updateHud();
 }
-
 
 
 function restartGame() {
