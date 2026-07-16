@@ -18,12 +18,15 @@ const bestDisplay = document.getElementById("best");
    ============================================================ */
 
 
+
+
+
 const HighScore = {
     async load() {
         const user = auth.currentUser;
         if (!user) return { score: 0, date: null };
 
-        const ref = doc(db, "users", user.uid, "breakout", "highscore");
+        const ref = doc(db, "breakout_meta", user.uid);
         const snap = await getDoc(ref);
 
         if (!snap.exists()) return { score: 0, date: null };
@@ -43,8 +46,13 @@ const HighScore = {
             const year = String(now.getFullYear()).slice(-2);
             const date = `${day}/${month}/${year}`;
 
-            const ref = doc(db, "users", user.uid, "breakout", "highscore");
-            await setDoc(ref, { score, date });
+            const ref = doc(db, "breakout_meta", user.uid);
+            await setDoc(ref, {
+                score,
+                date,
+                uid: user.uid,
+                pseudo: user.email   // ou displayName si tu l’as
+            });
 
             return true;
         }
@@ -58,13 +66,13 @@ function updateHud() {
     scoreDisplay.textContent = "Score : " + score;
     levelDisplay.textContent = "Niveau : " + level;
 
-    // ⭐ Record personnel du joueur connecté
     if (highScoreDate) {
         bestDisplay.textContent = "Record : " + highScoreValue + " (" + highScoreDate + ")";
     } else {
         bestDisplay.textContent = "Record : " + highScoreValue;
     }
 }
+
 
 
 
