@@ -48,16 +48,14 @@ function drawGameOver() {
     ctx.fillText("Score : " + score, 70, 130);
     ctx.fillText("Niveau : " + level, 70, 155);
 
-    // ⭐ Affichage du record Firestore
-    HighScore.load().then(hs => {
-        ctx.fillText("Record : " + hs.score + " (" + hs.date + ")", 70, 180);
+    // ⭐ Affichage du record Firestore (déjà chargé dans highScoreValue / highScoreDate)
+    ctx.fillText("Record : " + highScoreValue + " (" + highScoreDate + ")", 70, 180);
 
-        // ⭐ Message spécial si nouveau record
-        if (gameOverNewRecord) {
-            ctx.fillStyle = "#ff0";
-            ctx.fillText("NOUVEAU RECORD !", 70, 210);
-        }
-    });
+    // ⭐ Message spécial si nouveau record
+    if (gameOverNewRecord) {
+        ctx.fillStyle = "#ff0";
+        ctx.fillText("NOUVEAU RECORD !", 70, 210);
+    }
 
     drawRoundedButton(BTN_REPLAY, "#022", "#0ff", "REJOUER");
     drawRoundedButton(BTN_QUIT, "#200", "#f00", "QUITTER");

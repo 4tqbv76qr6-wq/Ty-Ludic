@@ -5,6 +5,9 @@ let score = 0;
 let level = 1;
 let gameOver = false;
 let newScoreIndex = -1;
+let highScoreValue = 0;
+let highScoreDate = null;
+
 
 const scoreDisplay = document.getElementById("score");
 const levelDisplay = document.getElementById("level");
@@ -46,12 +49,12 @@ const HighScore = {
     }
 };
 
-async function updateHud() {
-    const hs = await HighScore.load();
+function updateHud() {
     scoreDisplay.textContent = "Score : " + score;
     levelDisplay.textContent = "Niveau : " + level;
-    bestDisplay.textContent = "Record : " + hs.score + " (" + hs.date + ")";
+    bestDisplay.textContent = "Record : " + highScoreValue + " (" + highScoreDate + ")";
 }
+
 
 
 /* ============================================================
@@ -220,6 +223,12 @@ function nextLevel() {
 
     ball.reset();      // nouvelle vitesse selon le niveau
     initBricks();      // recrée les briques du nouveau niveau
+HighScore.load().then(hs => {
+    highScoreValue = hs.score;
+    highScoreDate = hs.date;
+    updateHud();
+});
+
 
     // On remet la balle en mode "stuck" pour attendre le lancement
     ball.stuck = true;
@@ -325,7 +334,22 @@ async function endGame() {
     ball.moving = false;
     gameOver = true;
 
-    gameOverNewRecord = await HighScore.update(score);
+    const isNew = await HighScore.update(score);
+
+    if (isNew) {
+        highScoreValue = score;
+
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, "0");
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const year = String(now.getFullYear()).slice(-2);
+        highScoreDate = `${day}/${month}/${year}`;
+
+        gameOverNewRecord = true;
+    } else {
+        gameOverNewRecord = false;
+    }
+
     updateHud();
 }
 
