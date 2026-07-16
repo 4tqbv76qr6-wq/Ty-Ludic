@@ -29,19 +29,36 @@
 <main class="hub-container">
 
     <section class="hub-intro">
-        <h1 data-i18n="admin_title"></h1>
-        <p data-i18n="admin_subtitle"></p>
+        <h1 data-i18n="profile_title"></h1>
+        <p data-i18n="profile_subtitle"></p>
     </section>
 
     <section class="hub-grid">
 
-        <!-- profils -->
+        <!-- profils rsl-->
         <article class="hub-card hub-arcade">
             <div class="hub-icon">👤</div>
-            <h2 data-i18n="admin_profile_title"></h2>
-            <p data-i18n="admin_profile_text"></p>
-            <a href="hub-profiles.html" class="hub-button" data-i18n="admin_profile_button"></a>
+            <h2 data-i18n="profile_rsl_title"></h2>
+            <p data-i18n="profile_rsl_text"></p>
+            <a href="../admin/profile/rsl.html" class="hub-button" data-i18n="profile_rsl_button"></a>
         </article>
+
+<!-- profils admin-->
+        <article class="hub-card hub-arcade">
+            <div class="hub-icon">👤</div>
+            <h2 data-i18n="profile_admin_title"></h2>
+            <p data-i18n="profile_admin_text"></p>
+            <a href="../admin/profile/admin.html" class="hub-button" data-i18n="profile_admin_button"></a>
+        </article>
+
+<!-- profils beta testeurs-->
+        <article class="hub-card hub-arcade">
+            <div class="hub-icon">👤</div>
+            <h2 data-i18n="profile_test_title"></h2>
+            <p data-i18n="profile_test_text"></p>
+            <a href="../admin/profile/test.html" class="hub-button" data-i18n="profile_test_button"></a>
+        </article>
+
 
         
         
@@ -56,7 +73,7 @@
     const currentLang = localStorage.getItem("lang") || "fr";
 
     // Chargement du JSON multilingue
-    fetch("../lang/hub-admin.json")
+    fetch("../lang/hub-profiles.json")
         .then(r => r.json())
         .then(data => {
             document.querySelectorAll("[data-i18n]").forEach(el => {
