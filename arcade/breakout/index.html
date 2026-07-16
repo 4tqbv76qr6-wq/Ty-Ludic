@@ -53,16 +53,16 @@
     <script src="../components/starfield.js"></script>
     <script src="js/explosions.js"></script>
     <script src="js/gift.js"></script>
-    <script type="module">
-    import { db, auth } from "../../firebase/firebase-init.js";
+ <script type="module">
+    import { db } from "../../firebase/firebase-init.js";
     import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-    // On expose db et les fonctions Firestore au reste du jeu
     window.db = db;
     window.doc = doc;
     window.getDoc = getDoc;
     window.setDoc = setDoc;
 </script>
+
 
 
     <script src="js/gameover.js"></script>
