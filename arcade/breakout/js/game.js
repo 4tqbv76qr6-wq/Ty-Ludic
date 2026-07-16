@@ -34,34 +34,32 @@ const HighScore = {
     },
 
     async update(score) {
-    const user = auth.currentUser;
+        const user = auth.currentUser;
+        if (!user) return false;
 
-    alert("USER = " + (user ? user.uid : "NULL"));
+        const current = await this.load();
 
-    if (!user) {
-        alert("Pas d'utilisateur → écriture impossible");
+        if (score > current.score) {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, "0");
+            const month = String(now.getMonth() + 1).padStart(2, "0");
+            const year = String(now.getFullYear()).slice(-2);
+            const date = `${day}/${month}/${year}`;
+
+            const ref = doc(db, "breakout_meta", user.uid);
+            await setDoc(ref, {
+                score,
+                date,
+                uid: user.uid,
+                pseudo: user.email   // ou displayName si tu l’as
+            });
+
+            return true;
+        }
+
         return false;
     }
-
-    alert("Tentative d’écriture dans breakout_meta/" + user.uid);
-
-    const ref = doc(db, "breakout_meta", user.uid);
-
-    try {
-        await setDoc(ref, {
-            score: score,
-            date: "TEST",
-            uid: user.uid
-        });
-
-        alert("ÉCRITURE OK !");
-        return true;
-
-    } catch (e) {
-        alert("ERREUR FIRESTORE : " + e);
-        return false;
-    }
-}
+};
 
 
 function updateHud() {
