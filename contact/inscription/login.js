@@ -29,7 +29,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
         localStorage.setItem("tyludic_uid", uid);
         localStorage.setItem("tyludic_pseudo", pseudo);
 
-        window.location.href = "compte-ok.html";
+        window.location.href = "login-ok.html";
 
     } catch (err) {
         errorBox.textContent = "Pseudo ou mot de passe incorrect.";
