@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test ScoreManager</title>
+</head>
+<body>
+
+<h2>Test ScoreManager</h2>
+
+<label>Nom du jeu :</label>
+<input id="game" value="breakout"><br><br>
+
+<label>Pseudo :</label>
+<input id="pseudo" value="Jean"><br><br>
+
+<label>Score :</label>
+<input id="score" type="number" value="123"><br><br>
+
+<button id="btn">Tester l’écriture</button>
+
+<script type="module">
+    import { saveScore } from "./ScoreManager.js";
+    import { auth } from "../firebase/firebase-init.js";
+
+    document.getElementById("btn").onclick = async () => {
+        const game = document.getElementById("game").value;
+        const pseudo = document.getElementById("pseudo").value;
+        const score = parseInt(document.getElementById("score").value);
+
+        if (!auth.currentUser) {
+            alert("Connecte-toi d'abord !");
+            return;
+        }
+
+        await saveScore(game, score, pseudo);
+    };
+</script>
+
+</body>
+</html>
