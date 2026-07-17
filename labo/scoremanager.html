@@ -11,15 +11,22 @@
 <button id="btn">Tester</button>
 
 <script type="module">
-    alert("SCRIPT CHARGÉ");
-
-    alert("Avant import");
     import { saveScore } from "./scoremanager.js";
-    alert("Après import");
+import { auth } from "../firebase/firebase-init.js";
 
-    document.getElementById("btn").onclick = () => {
-        alert("BOUTON OK");
-    };
+document.getElementById("btn").onclick = async () => {
+    const game = document.getElementById("game").value;
+    const pseudo = document.getElementById("pseudo").value;
+    const score = parseInt(document.getElementById("score").value);
+
+    if (!auth.currentUser) {
+        alert("Connecte-toi d'abord !");
+        return;
+    }
+
+    await saveScore(game, score, pseudo);
+};
+
 </script>
 
 </body>
