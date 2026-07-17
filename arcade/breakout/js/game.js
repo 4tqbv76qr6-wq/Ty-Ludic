@@ -388,10 +388,14 @@ function drawBricks() {
 let gameOverNewRecord = false;
 
 async function endGame() {
+alert("endGame appelé");
+
     ball.moving = false;
     gameOver = true;
+alert("Appel HighScore.update");
+const isNew = await HighScore.update(score);
+alert("Retour HighScore.update = " + isNew);
 
-    const isNew = await HighScore.update(score);
 
     if (isNew) {
         highScoreValue = score;
