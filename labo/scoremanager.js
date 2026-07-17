@@ -29,7 +29,7 @@
  * ---------------------------------------------------------
  */
 
-import { auth, db } from "./firebase-init.js";
+import { auth, db } from "../firebase/firebase-init.js";
 import { doc, setDoc } 
     from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
