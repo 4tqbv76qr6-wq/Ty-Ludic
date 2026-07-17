@@ -8,25 +8,57 @@
 
 <h2>Test ScoreManager</h2>
 
-<button id="btn">Tester</button>
+<label>Nom du jeu :</label>
+<input id="game" value="breakout"><br><br>
+
+<label>Pseudo :</label>
+<input id="pseudo" value="Jean"><br><br>
+
+<label>Score :</label>
+<input id="score" type="number" value="123"><br><br>
+
+<button id="btn">Tester l’écriture</button>
 
 <script type="module">
-    import { saveScore } from "./scoremanager.js";
-import { auth } from "../firebase/firebase-init.js";
+    /* --- DIAGNOSTIC : script chargé --- */
+    alert("SCRIPT CHARGÉ");
 
-document.getElementById("btn").onclick = async () => {
-    const game = document.getElementById("game").value;
-    const pseudo = document.getElementById("pseudo").value;
-    const score = parseInt(document.getElementById("score").value);
+    /* --- Imports --- */
+    alert("Avant import");
+    import { saveScore } from "./scoremanager.js";   // ⚠️ nom en minuscules
+    import { auth } from "./firebase-init.js";
+    alert("Après import");
 
-    if (!auth.currentUser) {
-        alert("Connecte-toi d'abord !");
-        return;
-    }
+    /* --- Vérification des imports --- */
+    alert("saveScore = " + saveScore);
+    alert("auth = " + auth);
 
-    await saveScore(game, score, pseudo);
-};
+    /* --- Bouton relié --- */
+    document.getElementById("btn").onclick = async () => {
+        alert("BOUTON OK");
 
+        const game = document.getElementById("game").value;
+        const pseudo = document.getElementById("pseudo").value;
+        const score = parseInt(document.getElementById("score").value);
+
+        /* --- Vérification utilisateur --- */
+        alert("auth.currentUser = " + auth.currentUser);
+
+        if (!auth.currentUser) {
+            alert("Connecte-toi d'abord !");
+            return;
+        }
+
+        /* --- Appel Firestore --- */
+        alert("Appel saveScore");
+        const ok = await saveScore(game, score, pseudo);
+
+        if (ok) {
+            alert("Écriture Firestore OK !");
+        } else {
+            alert("Échec écriture Firestore");
+        }
+    };
 </script>
 
 </body>
