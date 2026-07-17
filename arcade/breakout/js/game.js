@@ -32,8 +32,7 @@ const HighScore = {
         if (!snap.exists()) return { score: 0, date: null };
         return snap.data();
     },
-
-    async update(score) {
+async update(score) {
         const user = auth.currentUser;
         alert("USER = " + (user ? user.uid : "NULL"));
         //if (!user) return false;
@@ -66,35 +65,8 @@ if (!user) {
         return false;
     }
 };
-/*async update(score) {
-    const user = auth.currentUser;
 
-    alert("USER = " + (user ? user.uid : "NULL"));
-
-    if (!user) {
-        alert("Pas d'utilisateur → écriture impossible");
-        return false;
-    }
-
-    alert("Tentative d’écriture dans breakout_meta/" + user.uid);
-
-    const ref = doc(db, "breakout_meta", user.uid);
-
-    try {
-        await setDoc(ref, {
-            score: score,
-            date: "TEST",
-            uid: user.uid
-        });
-
-        alert("ÉCRITURE OK !");
-        return true;
-
-    } catch (e) {
-        alert("ERREUR FIRESTORE : " + e);
-        return false;
-    }
-}*/
+     
 
 
 
@@ -388,13 +360,11 @@ function drawBricks() {
 let gameOverNewRecord = false;
 
 async function endGame() {
-alert("endGame appelé");
+
 
     ball.moving = false;
     gameOver = true;
-alert("Appel HighScore.update");
 const isNew = await HighScore.update(score);
-alert("Retour HighScore.update = " + isNew);
 
 
     if (isNew) {
