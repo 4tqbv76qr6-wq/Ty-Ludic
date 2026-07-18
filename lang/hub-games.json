@@ -19,6 +19,8 @@
   },
 
   "en": {
+      "menu_home": "Home",
+    "menu_games": "Games",
     "games_title": "Studio Games",
     "games_subtitle": "Choose your universe: retro arcade, puzzle, or narrative RPG.",
 
@@ -36,6 +38,8 @@
   },
 
   "es": {
+      "menu_home": "Inicio",
+    "menu_games": "Juegos",
     "games_title": "Juegos del estudio",
     "games_subtitle": "Elige tu universo: arcade retro, rompecabezas o RPG narrativo.",
 

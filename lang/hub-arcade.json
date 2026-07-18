@@ -27,6 +27,7 @@
   "en": {
     "menu_home": "Home",
     "menu_games": "Games",
+    "menu_arcade": "Arcade",
 
     "arcade_title": "Arcade – TY‑LUDIC",
     "arcade_intro_title": "Welcome to our arcade room",
@@ -46,6 +47,7 @@
   "es": {
     "menu_home": "Inicio",
     "menu_games": "Juegos",
+    "menu_arcade": "Arcade",
 
     "arcade_title": "Arcade – TY‑LUDIC",
     "arcade_intro_title": "Bienvenido a nuestra sala arcade",
