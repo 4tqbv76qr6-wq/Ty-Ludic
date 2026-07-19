@@ -1,0 +1,23 @@
+{
+  "fr": {
+    "create_account_title": "Créer un compte – TY‑LUDIC",
+    "create_account_text": "Choisis un pseudo et un mot de passe pour commencer l’aventure.",
+    "create_account_pseudo": "Pseudo",
+    "create_account_pseudo_control": "–16 caractères, lettres/chiffres, _ et -.    Interdit : @, dates (1980, 01011980…)"
+
+  },
+
+  "en": {
+    "breakout_title": "TY‑LUDIC Breakout",
+    "breakout_score_label": "Score: 0",
+    "breakout_record_label": "Best: 0",
+    "breakout_level_label": "Level: 1"
+  },
+
+  "es": {
+    "breakout_title": "TY‑LUDIC Breakout",
+    "breakout_score_label": "Puntuación: 0",
+    "breakout_record_label": "Récord: 0",
+    "breakout_level_label": "Nivel: 1"
+  }
+}
