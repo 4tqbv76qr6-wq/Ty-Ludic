@@ -16,7 +16,8 @@
     </nav>
 
     <!-- Bloc utilisateur -->
-    <div id="user-info" class="tl-user"></div>
+    <div id="user-info" class="tl-user" data-i18n="user_status"></div>
+
 
     <div class="lang-switch">
         <a href="index.html" onclick="localStorage.setItem('lang','fr')" class="lang-item">🇫🇷 <span>FR</span></a>
@@ -135,22 +136,21 @@
     }
 
     onAuthStateChanged(auth, async (user) => {
-        if (user && pseudo) {
-            userBox.textContent = "👤 " + pseudo;
+    if (user && pseudo) {
+        userBox.textContent = "👤 " + pseudo;   // ici c’est normal, pseudo = dynamique
+    } else {
+        userBox.setAttribute("data-i18n", "user_not_connected");
 
-            // Vérifier rôle RSL
-            const isRsl = await checkRslRole(pseudo);
-            if (isRsl) {
-                showRslCards();
-            }
+        // Re-appliquer la traduction
+        fetch("lang/hub.json")
+            .then(r => r.json())
+            .then(data => {
+                const text = data[currentLang]["user_not_connected"];
+                userBox.textContent = text;
+            });
+    }
+});
 
-        } else {
-             userBox.textContent = "👤 Non connecté";
-            
-
-           
-        }
-    });
 </script>
 
 </body>
