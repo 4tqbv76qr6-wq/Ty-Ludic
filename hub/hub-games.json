@@ -1,0 +1,58 @@
+{
+  "fr": {
+    "menu_home": "Accueil",
+    "menu_games": "Jeux",
+    "games_title": "Les jeux du studio",
+    "games_subtitle": "Choisis ton univers : arcade rétro, réflexion, ou RPG narratif.",
+
+    "games_arcade_title": "Jeux d’arcade",
+    "games_arcade_text": "Jeux rapides, vintage, inspirés des bornes d’arcade.",
+    "games_arcade_button": "Viens te défouler",
+
+    "games_puzzle_title": "Jeux de réflexion",
+    "games_puzzle_text": "Puzzles, logique, mini‑casse‑têtes pour faire travailler les neurones.",
+    "games_puzzle_button": "Triture toi les méninges",
+
+    "games_rpg_title": "Jeux RPG",
+    "games_rpg_text": "Exploration, combats, univers narratifs et prototypes de moteur RPG.",
+    "games_rpg_button": "Explore l’univers RPG"
+  },
+
+  "en": {
+      "menu_home": "Home",
+    "menu_games": "Games",
+    "games_title": "Studio Games",
+    "games_subtitle": "Choose your universe: retro arcade, puzzle, or narrative RPG.",
+
+    "games_arcade_title": "Arcade Games",
+    "games_arcade_text": "Fast, vintage games inspired by classic arcade machines.",
+    "games_arcade_button": "Release some steam",
+
+    "games_puzzle_title": "Puzzle Games",
+    "games_puzzle_text": "Puzzles, logic challenges, and mini brain‑teasers.",
+    "games_puzzle_button": "Challenge your mind",
+
+    "games_rpg_title": "RPG Games",
+    "games_rpg_text": "Exploration, combat, narrative worlds, and RPG engine prototypes.",
+    "games_rpg_button": "Explore the RPG universe"
+  },
+
+  "es": {
+      "menu_home": "Inicio",
+    "menu_games": "Juegos",
+    "games_title": "Juegos del estudio",
+    "games_subtitle": "Elige tu universo: arcade retro, rompecabezas o RPG narrativo.",
+
+    "games_arcade_title": "Juegos arcade",
+    "games_arcade_text": "Juegos rápidos y vintage inspirados en las máquinas arcade.",
+    "games_arcade_button": "Desahógate",
+
+    "games_puzzle_title": "Juegos de rompecabezas",
+    "games_puzzle_text": "Puzles, lógica y mini desafíos para activar tus neuronas.",
+    "games_puzzle_button": "Pon tu mente a prueba",
+
+    "games_rpg_title": "Juegos RPG",
+    "games_rpg_text": "Exploración, combate, mundos narrativos y prototipos de motor RPG.",
+    "games_rpg_button": "Explora el universo RPG"
+  }
+}
