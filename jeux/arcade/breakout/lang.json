@@ -1,0 +1,22 @@
+{
+  "fr": {
+    "breakout_title": "TY‑LUDIC Breakout",
+    "breakout_score_label": "Score : 0",
+    "breakout_record_label": "Record : 0",
+    "breakout_level_label": "Niveau : 1"
+  },
+
+  "en": {
+    "breakout_title": "TY‑LUDIC Breakout",
+    "breakout_score_label": "Score: 0",
+    "breakout_record_label": "Best: 0",
+    "breakout_level_label": "Level: 1"
+  },
+
+  "es": {
+    "breakout_title": "TY‑LUDIC Breakout",
+    "breakout_score_label": "Puntuación: 0",
+    "breakout_record_label": "Récord: 0",
+    "breakout_level_label": "Nivel: 1"
+  }
+}

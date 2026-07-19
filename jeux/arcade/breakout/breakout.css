@@ -1,0 +1,79 @@
+/* ============================================================
+   GLOBAL
+   ============================================================ */
+body {
+    margin: 0;
+    background: radial-gradient(circle at center, #000, #050505, #000);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Press Start 2P', monospace;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+/* ============================================================
+   WRAPPER GLOBAL (scalé par JS)
+   ============================================================ */
+#game-wrapper {
+    width: 500px;
+    transform-origin: top left;
+    position: relative;
+}
+
+
+
+/* ============================================================
+   HUD (Score / Record / Niveau)
+   ============================================================ */
+
+
+#score, #best, #level {
+    color: white;
+    font-size: 16px;
+}
+
+/* ============================================================
+   BEZEL
+   ============================================================ */
+#bezel {
+    background: radial-gradient(circle, #222, #000);
+    border: 6px solid #333;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #0ff inset;
+    padding: 10px;
+    width: 500px;
+}
+
+/* ============================================================
+   CANVAS WRAPPER
+   ============================================================ */
+.canvas-wrapper {
+    width: 500px;
+    height: 600px;
+}
+
+/* ============================================================
+   CANVAS (fixe, scale via wrapper)
+   ============================================================ */
+#game {
+    width: 500px;
+    height: 600px;
+    image-rendering: pixelated;
+    border: 2px solid white;
+}
+
+/* ============================================================
+   TOUCH CONTROLS
+   ============================================================ */
+#controls {
+    margin-top: 15px;
+    display: flex;
+    gap: 20px;
+    width: 500px;
+    justify-content: center;
+}
+
+
+

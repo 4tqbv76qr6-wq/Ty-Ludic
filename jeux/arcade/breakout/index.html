@@ -5,48 +5,65 @@
     <title data-i18n="breakout_title">TY‑LUDIC Breakout</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+
+    <!-- CSS global + CSS du jeu + composant Arcade Frame -->
+    <link rel="stylesheet" href="../arcade.css">
+    <link rel="stylesheet" href="breakout.css">
+    <link rel="stylesheet" href="../components/arcade-frame.css">
 </head>
 <body>
 
-    <!-- ⭐ WRAPPER GLOBAL (scalé par JS) -->
+    <!-- ⭐ Wrapper global (scalé par JS) -->
     <div id="game-wrapper">
 
-        <div id="arcade-frame">
+        <!-- ⭐ Composant Arcade Frame -->
+        <div class="tl-arcade-frame">
 
-            <div id="marquee">TY‑LUDIC BREAKOUT</div>
+            <!-- Marquee -->
+            <div class="tl-marquee">BREAKOUT</div>
 
-            <!-- ⭐ HUD simplifié : Score / Record / Niveau -->
-            <div id="hud">
+            <!-- HUD : Score / Record / Niveau -->
+            <div class="tl-hud">
                 <div id="score" data-i18n="breakout_score_label"></div>
                 <div id="best" data-i18n="breakout_record_label"></div>
                 <div id="level" data-i18n="breakout_level_label"></div>
             </div>
 
+            <!-- Bezel + Canvas -->
             <div id="bezel">
                 <div class="canvas-wrapper">
                     <canvas id="game" width="500" height="600"></canvas>
                 </div>
             </div>
+
         </div>
 
-        <!-- ⭐ Contrôles tactiles -->
-        <div id="controls">
-            <button id="left">◀️</button>
+        <!-- ⭐ Contrôles tactiles du jeu Breakout -->
+        <div class="tl-controls">
             <button id="fire">🎬</button>
+            <button id="left">◀️</button>
             <button id="right">▶️</button>
         </div>
 
     </div> <!-- fin game-wrapper -->
 
-<script src="js/responsive.js"></script>
-<script src="js/canvas.js"></script>
-<script src="js/starfield.js"></script>
-<script src="js/explosions.js"></script>
-<script src="js/gift.js"></script>
-<script src="js/game.js"></script>
+    <!-- JS du jeu Breakout -->
+    <script src="js/responsive.js"></script>
+    <script src="../components/canvas.js"></script>
+    <script src="../components/starfield.js"></script>
+    <script src="js/explosions.js"></script>
+    <script src="js/gift.js"></script>
+ <script type="module">
+    import { auth, db } from "../../firebase/firebase-init.js";
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+</script>
 
 
+
+    <script src="js/gameover.js"></script>
+    <script src="js/game.js"></script>
+
+    <!-- i18n -->
     <script>
         const currentLang = localStorage.getItem("lang") || "fr";
 
