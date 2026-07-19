@@ -1,0 +1,59 @@
+{
+  "fr": {
+    "menu_home": "Accueil",
+    "menu_contact": "Contact",
+    "contact_title": "Contact",
+    "contact_subtitle": "Etre un membre Ty-ludic c'est entièrement gratuit et te permet de bénéficier de fonctionnalités supplémentaires sur le site.",
+
+    "contact_inscription_title": "Inscription",
+    "contact_inscription_text": "Crée un compte pour mémoriser tes scores et rentrer dans les high scores.",
+    "contact_inscription_button": "Crée ton compte",
+
+    "contact_connexion_title": "Connexion",
+    "contact_connexion_text": "Connecte toi à ton compte.",
+    "contact_connexion_button": "Connecte toi",
+
+    "contact_tchat_title": "Tchat",
+    "contact_tchat_text": "Discute avec les autres joueurs.",
+    "contact_tchat_button": "Tchat"
+  },
+
+"en": {
+  "menu_home": "Home",
+  "menu_contact": "Contact",
+  "contact_title": "Contact",
+  "contact_subtitle": "Being a Ty‑ludic member is completely free and gives you access to additional features on the site.",
+
+  "contact_inscription_title": "Sign Up",
+  "contact_inscription_text": "Create an account to save your scores and enter the high scores.",
+  "contact_inscription_button": "Create your account",
+
+  "contact_connexion_title": "Login",
+  "contact_connexion_text": "Log in to your account.",
+  "contact_connexion_button": "Log in",
+
+  "contact_tchat_title": "Chat",
+  "contact_tchat_text": "Chat with other players.",
+  "contact_tchat_button": "Chat"
+},
+
+"es": {
+  "menu_home": "Inicio",
+  "menu_contact": "Contacto",
+  "contact_title": "Contacto",
+  "contact_subtitle": "Ser miembro de Ty‑ludic es completamente gratuito y te permite disfrutar de funciones adicionales en el sitio.",
+
+  "contact_inscription_title": "Registro",
+  "contact_inscription_text": "Crea una cuenta para guardar tus puntuaciones y entrar en los récords.",
+  "contact_inscription_button": "Crea tu cuenta",
+
+  "contact_connexion_title": "Conexión",
+  "contact_connexion_text": "Conéctate a tu cuenta.",
+  "contact_connexion_button": "Conéctate",
+
+  "contact_tchat_title": "Chat",
+  "contact_tchat_text": "Habla con otros jugadores.",
+  "contact_tchat_button": "Chat"
+}
+
+}
