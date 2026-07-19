@@ -139,13 +139,13 @@
     if (user && pseudo) {
         userBox.textContent = "👤 " + pseudo;   // ici c’est normal, pseudo = dynamique
     } else {
-        userBox.setAttribute("data-i18n", "user_not_connected");
+        userBox.setAttribute("data-i18n", "user_status");
 
         // Re-appliquer la traduction
         fetch("lang/hub.json")
             .then(r => r.json())
             .then(data => {
-                const text = data[currentLang]["user_not_connected"];
+                const text = data[currentLang]["user_status"];
                 userBox.textContent = text;
             });
     }
