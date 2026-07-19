@@ -3,7 +3,10 @@
     "create_account_title": "Créer un compte – TY‑LUDIC",
     "create_account_text": "Choisis un pseudo et un mot de passe pour commencer l’aventure.",
     "create_account_pseudo": "Pseudo",
-    "create_account_pseudo_control": "–16 caractères, lettres/chiffres, _ et -.    Interdit : @, dates (1980, 01011980…)"
+    "create_account_pseudo_control": "–16 caractères, lettres/chiffres, _ et -.    Interdit : @, dates (1980, 01011980…)",
+ "create_account_passwd": "Mot de passe",
+  "create_account_passwd_control": "Minimum 6 caractères.  Interdit : dates, suites simples (123456, abcdef…)",
+"create_account_button": "Créer mon compte"
 
   },
 

@@ -14,25 +14,21 @@
 
     <form id="create-account-form">
 
-        <label for="pseudo">Pseudo</label>
+        <label for="pseudo" data-i18n="create_account_pseudo"></label>
         <input type="text" id="pseudo" maxlength="16" autocomplete="off" required>
 
-        <small class="hint">
-            3–16 caractères, lettres/chiffres, _ et -.  
-            Interdit : @, dates (1980, 01011980…)
+        <small class="hint" data-i18n="create_account_pseudo_control">
         </small>
 
-        <label for="password">Mot de passe</label>
+        <label for="password" data-i18n="create_account_passwd"> </label>
         <input type="password" id="password" minlength="6" required>
 
-        <small class="hint">
-            Minimum 6 caractères.  
-            Interdit : dates, suites simples (123456, abcdef…)
+        <small class="hint" data-i18n="create_account_passwd_control">
         </small>
 
         <div id="error-msg"></div>
 
-        <button type="submit" id="create-btn">Créer mon compte</button>
+        <button type="submit" id="create-btn" data-i18n="create_account_button"></button>
 
     </form>
 
