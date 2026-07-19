@@ -30,3 +30,5 @@
   "create_account_passwd_control": "Mínimo 6 caracteres. Prohibido: fechas, secuencias simples (123456, abcdef…)",
   "create_account_button": "Crear mi cuenta"
 }
+
+}
