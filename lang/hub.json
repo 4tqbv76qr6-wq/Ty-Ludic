@@ -7,7 +7,7 @@
 
     "home_title": "Ty-Ludic",
     "home_subtitle": "Studio de jeux indépendant, en Bretagne. Rien à télécharger, tout est en ligne et totalement gratuit.",
-    "home_status" : "Non connecté",
+    "user_status" : "👤 Non connecté",
 
     "card_games_title": "Jeux",
     "card_games_text": "Jeux d'arcade, de réflexion, RPG",
@@ -43,6 +43,7 @@
     "home_title": "Ty-Ludic",
     "home_subtitle": "Independent game studio based in Brittany. Nothing to download — everything is online and completely free.",
 
+"user_status" : "👤 Not connected",
     "card_games_title": "Games",
     "card_games_text": "Arcade, puzzle, RPG",
     "card_games_button": "Play now",
@@ -66,6 +67,7 @@
 
     "home_title": "Ty-Ludic",
     "home_subtitle": "Estudio de juegos independiente en Bretaña. Nada que descargar — todo está en línea y completamente gratis.",
+"user_status" : "👤 No conectado",
 
     "card_games_title": "Juegos",
     "card_games_text": "Juegos arcade, rompecabezas, RPG",
