@@ -7,6 +7,7 @@
 
     "home_title": "Ty-Ludic",
     "home_subtitle": "Studio de jeux indépendant, en Bretagne. Rien à télécharger, tout est en ligne et totalement gratuit.",
+    "home_status" : "Non connecté",
 
     "card_games_title": "Jeux",
     "card_games_text": "Jeux d'arcade, de réflexion, RPG",
@@ -30,6 +31,7 @@
 
 
     "footer_text": "© 2026 TY‑LUDIC — Studio de jeux indépendant"
+
   },
 
   "en": {
