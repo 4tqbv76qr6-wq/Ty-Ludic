@@ -10,17 +10,23 @@
 
   },
 
-  "en": {
-    "breakout_title": "TY‑LUDIC Breakout",
-    "breakout_score_label": "Score: 0",
-    "breakout_record_label": "Best: 0",
-    "breakout_level_label": "Level: 1"
-  },
+"en": {
+  "create_account_title": "Create an Account – TY‑LUDIC",
+  "create_account_text": "Choose a username and a password to begin the adventure.",
+  "create_account_pseudo": "Username",
+  "create_account_pseudo_control": "Up to 16 characters, letters/numbers, _ and -. Forbidden: @, dates (1980, 01011980…)",
+  "create_account_passwd": "Password",
+  "create_account_passwd_control": "Minimum 6 characters. Forbidden: dates, simple sequences (123456, abcdef…)",
+  "create_account_button": "Create my account"
+},
 
-  "es": {
-    "breakout_title": "TY‑LUDIC Breakout",
-    "breakout_score_label": "Puntuación: 0",
-    "breakout_record_label": "Récord: 0",
-    "breakout_level_label": "Nivel: 1"
-  }
+
+"es": {
+  "create_account_title": "Crear una cuenta – TY‑LUDIC",
+  "create_account_text": "Elige un seudónimo y una contraseña para comenzar la aventura.",
+  "create_account_pseudo": "Seudónimo",
+  "create_account_pseudo_control": "Hasta 16 caracteres, letras/números, _ y -. Prohibido: @, fechas (1980, 01011980…)",
+  "create_account_passwd": "Contraseña",
+  "create_account_passwd_control": "Mínimo 6 caracteres. Prohibido: fechas, secuencias simples (123456, abcdef…)",
+  "create_account_button": "Crear mi cuenta"
 }
