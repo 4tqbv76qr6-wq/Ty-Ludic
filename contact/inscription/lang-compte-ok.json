@@ -1,0 +1,27 @@
+{
+  "fr": {
+    "compte_ok_title": "Bienvenue dans TY‑LUDIC !",
+    "compte_ok_text": "Ton compte a été créé avec succès .",
+    "compte_ok_pseudo": "Pseudo : ",
+"compte_ok_button": "Retour au menu principal"
+
+  },
+
+
+"en": {
+  "compte_ok_title": "Welcome to TY‑LUDIC!",
+  "compte_ok_text": "Your account has been successfully created.",
+  "compte_ok_pseudo": "Username : ",
+  "compte_ok_button": "Back to main menu"
+},
+
+
+"es": {
+  "compte_ok_title": "¡Bienvenido a TY‑LUDIC!",
+  "compte_ok_text": "Tu cuenta ha sido creada con éxito.",
+  "compte_ok_pseudo": "Seudónimo : ",
+  "compte_ok_button": "Volver al menú principal"
+}
+
+
+}
