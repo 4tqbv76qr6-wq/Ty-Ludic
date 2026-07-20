@@ -382,6 +382,9 @@ const isNew = await HighScore.update(score);
     }
 
     updateHud();
+    saveScore("breakout", score, pseudo);
+}
+
 }
 
 
