@@ -6,11 +6,11 @@
     "menu_contact": "Contact",
 
     "home_title": "Ty-Ludic",
-    "home_subtitle": "Studio de jeux indépendant, en Bretagne. Rien à télécharger, tout est en ligne et totalement gratuit.",
+    "home_subtitle": "Studio de jeux indépendant, associatif et à but non lucratif (association loi 1901 n° W561014432), basé en Bretagne. Le site et les jeux sont créés uniquement par des bénévoles. Rien à télécharger : tout est en ligne et entièrement gratuit. Tu peux jouer sans créer de compte. Mais si tu apprécies l’univers TY‑LUDIC, créer un compte est un petit geste d’encouragement qui ne t’engage absolument à rien.",
     "user_status" : "👤 Non connecté",
 
     "card_games_title": "Jeux",
-    "card_games_text": "Jeux d'arcade, de réflexion, RPG",
+    "card_games_text": "Jeux d'arcade, de réflexion",
     "card_games_button": "Viens jouer",
 
     "card_studio_title": "Le studio",
@@ -41,11 +41,13 @@
     "menu_contact": "Contact",
 
     "home_title": "Ty-Ludic",
-    "home_subtitle": "Independent game studio based in Brittany. Nothing to download — everything is online and completely free.",
+   "home_subtitle": "Independent, non‑profit and volunteer‑run game studio, based in Brittany. The website and the games are created entirely by volunteers. Nothing to download: everything is online and completely free. You can play without creating an account. But if you enjoy the TY‑LUDIC universe, creating an account is a small gesture of support that doesn’t commit you to anything.",
+
+
 
 "user_status" : "👤 Not connected",
     "card_games_title": "Games",
-    "card_games_text": "Arcade, puzzle, RPG",
+    "card_games_text": "Arcade, puzzle",
     "card_games_button": "Play now",
 
     "card_studio_title": "The Studio",
@@ -66,11 +68,14 @@
     "menu_contact": "Contacto",
 
     "home_title": "Ty-Ludic",
-    "home_subtitle": "Estudio de juegos independiente en Bretaña. Nada que descargar — todo está en línea y completamente gratis.",
+    "home_subtitle": "Estudio de juegos independiente, asociativo y sin ánimo de lucro , con sede en Bretaña. El sitio y los juegos están creados únicamente por voluntarios. No hay nada que descargar: todo está en línea y es completamente gratuito. Puedes jugar sin crear una cuenta. Pero si te gusta el universo de TY‑LUDIC, crear una cuenta es un pequeño gesto de apoyo que no te compromete a nada.",
+
+
+
 "user_status" : "👤 No conectado",
 
     "card_games_title": "Juegos",
-    "card_games_text": "Juegos arcade, rompecabezas, RPG",
+    "card_games_text": "Juegos arcade, rompecabezas",
     "card_games_button": "Jugar ahora",
 
     "card_studio_title": "El estudio",
