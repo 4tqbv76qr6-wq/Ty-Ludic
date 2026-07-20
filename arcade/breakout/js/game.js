@@ -8,6 +8,8 @@ let newScoreIndex = -1;
 let highScoreValue = 0;
 let highScoreDate = null;
 
+import { saveScore } from "../../../labo/scoremanager.js";
+
 
 const scoreDisplay = document.getElementById("score");
 const levelDisplay = document.getElementById("level");
