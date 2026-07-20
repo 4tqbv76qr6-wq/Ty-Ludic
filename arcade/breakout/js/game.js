@@ -385,7 +385,6 @@ const isNew = await HighScore.update(score);
 
     updateHud();
 
-import { saveScore } from "../modules/ScoreManager.js";
 
 
     const pseudo = localStorage.getItem("pseudo");
@@ -393,7 +392,6 @@ import { saveScore } from "../modules/ScoreManager.js";
     saveScore("breakout", score, pseudo);
 }
 
-}
 
 
 function restartGame() {
