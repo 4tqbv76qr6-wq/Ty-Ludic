@@ -1,0 +1,33 @@
+{
+  "fr": {
+    "login_title": "Connexion TY‑LUDIC",
+    "login_text": "Entre ton pseudo et ton mot de passe pour rejoindre l’aventure",
+    "login_pseudo": "Pseudo : ",
+    "login_passwd" : "Mot de passe : ",
+"login_button": "Connexion",
+"login_create": " Pas de compte ? Créer un compte"
+
+
+  },
+
+"en": {
+    "login_title": "TY‑LUDIC Login",
+    "login_text": "Enter your username and password to join the adventure",
+    "login_pseudo": "Username:",
+    "login_passwd": "Password:",
+    "login_button": "Log in",
+    "login_create": "No account yet? Create one"
+},
+
+
+"es": {
+    "login_title": "Conexión TY‑LUDIC",
+    "login_text": "Introduce tu usuario y contraseña para unirte a la aventura",
+    "login_pseudo": "Usuario:",
+    "login_passwd": "Contraseña:",
+    "login_button": "Conectar",
+    "login_create": "¿No tienes cuenta? Crear una"
+}
+
+
+}
