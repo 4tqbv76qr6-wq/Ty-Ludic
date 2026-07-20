@@ -9,6 +9,15 @@ let highScoreValue = 0;
 let highScoreDate = null;
 import { auth } from "../../../firebase/firebase-init.js";
 
+auth.onAuthStateChanged(user => {
+    if (!user) {
+        alert("Tu dois être connecté pour enregistrer ton score !");
+    } else {
+        console.log("Breakout voit bien l'utilisateur :", user.uid);
+    }
+});
+
+
 import { saveScore } from "../../../labo/scoremanager.js";
 
 
