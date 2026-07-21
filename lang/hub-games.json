@@ -1,7 +1,7 @@
 {
   "fr": {
     "games_title": "Les jeux du studio",
-    "games_subtitle": "Choisis ton univers : arcade rétro, réflexion, ou RPG narratif.",
+    "games_subtitle": "Choisis ton univers : arcade rétro, réflexion.",
 
     "games_arcade_title": "Jeux d’arcade",
     "games_arcade_text": "Jeux rapides, vintage, inspirés des bornes d’arcade.",
@@ -18,7 +18,7 @@
 
   "en": {
     "games_title": "Studio Games",
-    "games_subtitle": "Choose your universe: retro arcade, puzzle, or narrative RPG.",
+    "games_subtitle": "Choose your universe: retro arcade, puzzle.",
 
     "games_arcade_title": "Arcade Games",
     "games_arcade_text": "Fast, vintage games inspired by classic arcade machines.",
@@ -35,7 +35,7 @@
 
   "es": {
     "games_title": "Juegos del estudio",
-    "games_subtitle": "Elige tu universo: arcade retro, rompecabezas o RPG narrativo.",
+    "games_subtitle": "Elige tu universo: arcade retro, rompecabezas.",
 
     "games_arcade_title": "Juegos arcade",
     "games_arcade_text": "Juegos rápidos y vintage inspirados en las máquinas arcade.",
