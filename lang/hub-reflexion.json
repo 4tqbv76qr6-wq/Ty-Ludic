@@ -1,8 +1,5 @@
 {
   "fr": {
-    "menu_home": "Accueil",
-    "menu_games": "Jeux",
-    "menu_reflexion": "Réflexion",
 
     "reflexion_title": "Réflexion – TY‑LUDIC",
     "reflexion_intro_title": "Bienvenue dans notre salon de réflexion",
@@ -18,46 +15,45 @@
 
     "reflexion_tetris_title": "Falling Blocks",
     "reflexion_tetris_text": "Empile les blocks, forme les lignes et vise le meilleur score.",
-    "reflexion_tetris_button": "On y va ",
+    "reflexion_tetris_button": "On y va "
 
-    "footer_text": "© 2026 TY‑LUDIC — Studio de jeux indépendant"
   },
 
   "en": {
-    "menu_home": "Home",
-    "menu_games": "Games",
+    "reflexion_title": "Reflection – TY‑LUDIC",
+    "reflexion_intro_title": "Welcome to our reflection lounge",
+    "reflexion_intro_text": "Choose your game.",
 
-    "arcade_title": "Arcade – TY‑LUDIC",
-    "arcade_intro_title": "Welcome to our arcade room",
-    "arcade_intro_text": "Pick your game.",
+    "reflexion_morpion_title": "Triple Strike",
+    "reflexion_morpion_text": "Align 3 squares",
+    "reflexion_morpion_button": "Let's go",
 
-    "arcade_alien_title": "Alien Pulse",
-    "arcade_alien_text": "Stop the aliens from invading us.",
-    "arcade_alien_button": "Shoot them all",
+    "reflexion_puissance4_title": "Quad Strike",
+    "reflexion_puissance4_text": "Align 4 in a row",
+    "reflexion_puissance4_button": "Let's go",
 
-    "arcade_breakout_title": "Breakout",
-    "arcade_breakout_text": "Smash those brick walls.",
-    "arcade_breakout_button": "Let's go",
+    "reflexion_tetris_title": "Falling Blocks",
+    "reflexion_tetris_text": "Stack the blocks, form lines, and aim for the best score.",
+    "reflexion_tetris_button": "Let's go"
+},
 
-    "footer_text": "© 2026 TY‑LUDIC — Independent game studio"
-  },
+"es": {
+    "reflexion_title": "Reflexión – TY‑LUDIC",
+    "reflexion_intro_title": "Bienvenido a nuestro salón de reflexión",
+    "reflexion_intro_text": "Elige tu juego.",
 
-  "es": {
-    "menu_home": "Inicio",
-    "menu_games": "Juegos",
+    "reflexion_morpion_title": "Triple Strike",
+    "reflexion_morpion_text": "Alinea 3 casillas",
+    "reflexion_morpion_button": "Vamos",
 
-    "arcade_title": "Arcade – TY‑LUDIC",
-    "arcade_intro_title": "Bienvenido a nuestra sala arcade",
-    "arcade_intro_text": "Elige tu juego.",
+    "reflexion_puissance4_title": "Quad Strike",
+    "reflexion_puissance4_text": "Alinea 4 seguidas",
+    "reflexion_puissance4_button": "Vamos",
 
-    "arcade_alien_title": "Alien Pulse",
-    "arcade_alien_text": "Evita que los alienígenas nos invadan.",
-    "arcade_alien_button": "Dispárales a todos",
+    "reflexion_tetris_title": "Falling Blocks",
+    "reflexion_tetris_text": "Apila los bloques, forma líneas y apunta al mejor puntaje.",
+    "reflexion_tetris_button": "Vamos"
+}
 
-    "arcade_breakout_title": "Breakout",
-    "arcade_breakout_text": "Rompe esos muros de ladrillo.",
-    "arcade_breakout_button": "Vamos allá",
-
-    "footer_text": "© 2026 TY‑LUDIC — Estudio de juegos independiente"
-  }
+ 
 }

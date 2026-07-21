@@ -1,7 +1,5 @@
 {
   "fr": {
-    "menu_home": "Accueil",
-    "menu_contact": "Contact",
     "contact_title": "Contact",
     "contact_subtitle": "Etre un membre Ty-ludic c'est entièrement gratuit et te permet de bénéficier de fonctionnalités supplémentaires sur le site.",
 
@@ -19,8 +17,6 @@
   },
 
 "en": {
-  "menu_home": "Home",
-  "menu_contact": "Contact",
   "contact_title": "Contact",
   "contact_subtitle": "Being a Ty‑ludic member is completely free and gives you access to additional features on the site.",
 
@@ -38,8 +34,6 @@
 },
 
 "es": {
-  "menu_home": "Inicio",
-  "menu_contact": "Contacto",
   "contact_title": "Contacto",
   "contact_subtitle": "Ser miembro de Ty‑ludic es completamente gratuito y te permite disfrutar de funciones adicionales en el sitio.",
 

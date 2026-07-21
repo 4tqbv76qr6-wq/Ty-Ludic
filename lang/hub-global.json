@@ -1,0 +1,34 @@
+{
+  "fr": {
+    "menu_home": "Accueil",
+    "menu_games": "Jeux",
+    "menu_studio": "Le Studio",
+    "menu_contact": "Contact",
+    "menu_reflexion": "Réflexion",
+    "user_status" : "👤 Non connecté ",
+    "footer_text": "© 2026 TY‑LUDIC — Studio de jeux indépendant"
+
+  },
+
+  "en": {
+    "menu_home": "Home",
+    "menu_games": "Games",
+    "menu_studio": "The Studio",
+    "menu_contact": "Contact",
+    "menu_reflexion": "Puzzle",
+"user_status" : "👤 Not connected",
+    "footer_text": "© 2026 TY‑LUDIC — Independent game studio"
+  },
+
+  "es": {
+    "menu_home": "Inicio",
+    "menu_games": "Juegos",
+    "menu_studio": "El Estudio",
+    "menu_contact": "Contacto",
+    "menu_reflexion": "Rompecabezas",
+
+"user_status" : "👤 No conectado",
+
+    "footer_text": "© 2026 TY‑LUDIC — Estudio de juegos independiente"
+  }
+}

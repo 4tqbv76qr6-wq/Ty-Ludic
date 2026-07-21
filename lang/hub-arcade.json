@@ -1,8 +1,5 @@
 {
   "fr": {
-    "menu_home": "Accueil",
-    "menu_games": "Jeux",
-    "menu_arcade": "Arcade",
 
     "arcade_title": "Arcade – TY‑LUDIC",
     "arcade_intro_title": "Bienvenue dans notre salon d'arcade",
@@ -18,16 +15,11 @@
 
    "arcade_neon_racer_title": "Neon Racer",
     "arcade_neon_racer_text": "conduis le plus loin possible.",
-    "arcade_neon_racer_button": "Vas y",
-
-
-    "footer_text": "© 2026 TY‑LUDIC — Studio de jeux indépendant"
+    "arcade_neon_racer_button": "Vas y"
   },
 
   "en": {
-    "menu_home": "Home",
-    "menu_games": "Games",
-    "menu_arcade": "Arcade",
+ 
 
     "arcade_title": "Arcade – TY‑LUDIC",
     "arcade_intro_title": "Welcome to our arcade room",
@@ -39,15 +31,11 @@
 
     "arcade_breakout_title": "Breakout",
     "arcade_breakout_text": "Smash those brick walls.",
-    "arcade_breakout_button": "Let's go",
-
-    "footer_text": "© 2026 TY‑LUDIC — Independent game studio"
+    "arcade_breakout_button": "Let's go"
   },
 
   "es": {
-    "menu_home": "Inicio",
-    "menu_games": "Juegos",
-    "menu_arcade": "Arcade",
+ 
 
     "arcade_title": "Arcade – TY‑LUDIC",
     "arcade_intro_title": "Bienvenido a nuestra sala arcade",
@@ -59,8 +47,6 @@
 
     "arcade_breakout_title": "Breakout",
     "arcade_breakout_text": "Rompe esos muros de ladrillo.",
-    "arcade_breakout_button": "Vamos allá",
-
-    "footer_text": "© 2026 TY‑LUDIC — Estudio de juegos independiente"
+    "arcade_breakout_button": "Vamos allá"
   }
 }
