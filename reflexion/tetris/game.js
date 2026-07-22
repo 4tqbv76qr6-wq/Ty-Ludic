@@ -292,6 +292,13 @@ alert("ScoreManager.update() exécuté");
 
 alert("auth = " + window.auth);
 alert("auth.currentUser = " + window.auth.currentUser);
+try {
+    const ref = window.doc(window.db, "tetris_scores", window.auth.currentUser.uid);
+    alert("doc() OK : " + ref.path);
+} catch(e) {
+    alert("doc() ERREUR : " + e.message);
+}
+
 
 
     if (score > bestScore) {
