@@ -5,6 +5,7 @@
     "menu_studio": "Le Studio",
     "menu_contact": "Contact",
     "menu_reflexion": "Réflexion",
+    "menu_arcade": "Arcade",
     "user_status" : "👤 Non connecté ",
     "footer_text": "© 2026 TY‑LUDIC — Studio de jeux indépendant"
 
@@ -16,6 +17,7 @@
     "menu_studio": "The Studio",
     "menu_contact": "Contact",
     "menu_reflexion": "Puzzle",
+"menu_arcade": "Arcade",
 "user_status" : "👤 Not connected",
     "footer_text": "© 2026 TY‑LUDIC — Independent game studio"
   },
@@ -26,6 +28,7 @@
     "menu_studio": "El Estudio",
     "menu_contact": "Contacto",
     "menu_reflexion": "Rompecabezas",
+    "menu_arcade": "Arcade",
 
 "user_status" : "👤 No conectado",
 
