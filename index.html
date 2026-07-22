@@ -100,6 +100,55 @@ loadI18n({
     ]
 });
 </script>
+<!-- Firebase + RSL -->
+<script type="module">
+    import { auth, db } from "./firebase/firebase-init.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+    const userBox = document.getElementById("user-info");
+    const pseudo = localStorage.getItem("tyludic_pseudo");
+
+    // Masquer les cartes RSL par défaut
+    document.querySelectorAll(".role-rsl").forEach(card => {
+        card.style.display = "none";
+    });
+
+    // Fonction pour afficher les cartes RSL
+    function showRslCards() {
+        document.querySelectorAll(".role-rsl").forEach(card => {
+            card.style.display = "block";
+        });
+    }
+
+    // Vérifier si le pseudo est membre RSL
+    async function checkRslRole(pseudo) {
+        const rslDocRef = doc(db, "config", "rsl_players");
+        const snap = await getDoc(rslDocRef);
+
+        if (!snap.exists()) return false;
+
+        const players = snap.data().players || [];
+        return players.includes(pseudo);
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+    if (user && pseudo) {
+        userBox.textContent = "👤 " + pseudo;   // ici c’est normal, pseudo = dynamique
+    } else {
+        userBox.setAttribute("data-i18n", "user_status");
+
+        // Re-appliquer la traduction
+        fetch("lang/hub.json")
+            .then(r => r.json())
+            .then(data => {
+                const text = data[currentLang]["user_status"];
+                userBox.textContent = text;
+            });
+    }
+});
+
+</script>
 
 
 </body>
