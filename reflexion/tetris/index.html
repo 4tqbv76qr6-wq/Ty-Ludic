@@ -47,6 +47,28 @@
 </script>
 
     <script src="../../js/ScoreManager.js"></script>
+<div id="debug" style="
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    max-height:150px;
+    overflow:auto;
+    background:#001;
+    color:#0f0;
+    font-family:monospace;
+    font-size:12px;
+    padding:5px;
+    z-index:9999;
+"></div>
+
+<script>
+    window.debugLog = function(msg) {
+        const d = document.getElementById("debug");
+        d.innerHTML += msg + "<br>";
+    };
+</script>
+
     <script src="game.js"></script>
 </body>
 </html>
