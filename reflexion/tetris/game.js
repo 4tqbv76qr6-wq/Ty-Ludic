@@ -290,6 +290,9 @@ alert("Fin de partie : appel ScoreManager.update()");
     ScoreManager.update("tetris", score, pseudo)
 alert("ScoreManager.update() exécuté");
 
+alert("auth = " + window.auth);
+alert("auth.currentUser = " + window.auth.currentUser);
+
 
     if (score > bestScore) {
         bestScore = score;
