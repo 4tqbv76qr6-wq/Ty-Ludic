@@ -105,6 +105,7 @@ loadI18n({
     import { auth, db } from "./firebase/firebase-init.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { ScoreManager } from "./js/ScoreManager.js";
 
     const userBox = document.getElementById("user-info");
     const pseudo = localStorage.getItem("tyludic_pseudo");
@@ -133,12 +134,22 @@ loadI18n({
     }
 
     onAuthStateChanged(auth, async (user) => {
+
     if (user && pseudo) {
-        userBox.textContent = "👤 " + pseudo;   // ici c’est normal, pseudo = dynamique
+        userBox.textContent = "👤 " + pseudo;
+
+        // 🔥 Synchronisation des scores offline
+        await ScoreManager.sync("tetris", pseudo);
+        
+
+        // 🔥 Chargement des scores locaux (optionnel)
+        const tetrisBest = await ScoreManager.load("tetris");
+       
+
+
     } else {
         userBox.setAttribute("data-i18n", "user_status");
 
-        // Re-appliquer la traduction
         fetch("lang/hub.json")
             .then(r => r.json())
             .then(data => {
@@ -147,6 +158,7 @@ loadI18n({
             });
     }
 });
+
 
 </script>
 
