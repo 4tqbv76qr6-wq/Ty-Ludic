@@ -285,7 +285,11 @@ function endGame() {
     gameOver = true;
 
     // Mise à jour du record via ScoreManager
-    ScoreManager.update("tetris", score, pseudo);
+alert("Fin de partie : appel ScoreManager.update()");
+
+    ScoreManager.update("tetris", score, pseudo)
+alert("ScoreManager.update() exécuté");
+
 
     if (score > bestScore) {
         bestScore = score;
