@@ -19,8 +19,7 @@ const levelDisplay = document.getElementById("level");
    ============================================================ */
 async function initBestScore() {
     bestScore = await ScoreManager.load("tetris");
-    const div = document.getElementById("highscores");
-    div.textContent = "Record : " + bestScore;
+    document.getElementById("highscores").textContent = "Record : " + bestScore;
 }
 
 initBestScore();
@@ -234,7 +233,7 @@ function drawPiece() {
 }
 
 /* ============================================================
-   GAME OVER — ScoreManager intégré
+   GAME OVER — correctif clic
    ============================================================ */
 function showGameOverScreen() {
     ctx.fillStyle = "rgba(0,0,0,0.85)";
@@ -292,8 +291,6 @@ function endGame() {
         bestScore = score;
         document.getElementById("highscores").textContent = "Record : " + bestScore;
     }
-
-    canvas.addEventListener("click", handleGameOverClick, { once: true });
 }
 
 function handleGameOverClick(e) {
@@ -362,10 +359,17 @@ function update(timestamp) {
 
 function draw() {
     drawGrid();
+
     if (!gameOver) {
         drawPiece();
     } else {
         showGameOverScreen();
+
+        // Activation des boutons APRES affichage
+        if (!window._goActive) {
+            canvas.addEventListener("click", handleGameOverClick);
+            window._goActive = true;
+        }
     }
 }
 
