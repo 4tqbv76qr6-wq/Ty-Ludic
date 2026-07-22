@@ -17,11 +17,10 @@
             <div id="score">Score : 0</div>
             <div id="level">Niveau : 1</div>
         </div>
-        <!--cadre du jeu -->
+
         <div id="tl-bezel">
             <div class="canvas-wrapper">
-              <canvas id="game" width="500" height="800"></canvas>
-
+                <canvas id="game" width="500" height="800"></canvas>
             </div>
         </div>
     </div>
@@ -34,41 +33,52 @@
     </div>
 
     <div id="highscores"></div>
+
     <script src="canvas.js"></script>
     <script src="grille.js"></script>
+
+    <!-- Firebase exposé global -->
     <script type="module">
-    import { auth, db } from "../../firebase/firebase-init.js";
-    import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    window.auth = auth;
-    window.db = db;
-    window.doc = doc;
-    window.getDoc = getDoc;
-    window.setDoc = setDoc;
-</script>
+        import { auth, db } from "../../firebase/firebase-init.js";
+        import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        window.auth = auth;
+        window.db = db;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.setDoc = setDoc;
+    </script>
+
+    <!-- PAVÉ DEBUG : créé dynamiquement, garanti visible -->
+    <script>
+        const dbg = document.createElement("div");
+        dbg.id = "debug";
+        dbg.style.position = "fixed";
+        dbg.style.bottom = "0";
+        dbg.style.left = "0";
+        dbg.style.width = "100%";
+        dbg.style.maxHeight = "150px";
+        dbg.style.overflow = "auto";
+        dbg.style.background = "#001";
+        dbg.style.color = "#0f0";
+        dbg.style.fontFamily = "monospace";
+        dbg.style.fontSize = "12px";
+        dbg.style.padding = "5px";
+        dbg.style.zIndex = "999999999";
+        document.body.appendChild(dbg);
+
+        window.debugLog = function(msg) {
+            dbg.innerHTML += msg + "<br>";
+        };
+
+        debugLog("DEBUG READY");
+    </script>
+
+    <!-- ScoreManager -->
     <script src="../../js/ScoreManager.js"></script>
-<div id="debug" style="
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    max-height:150px;
-    overflow:auto;
-    background:#001;
-    color:#0f0;
-    font-family:monospace;
-    font-size:12px;
-    padding:5px;
-    z-index:9999;
-"></div>
 
-<script>
-    window.debugLog = function(msg) {
-        const d = document.getElementById("debug");
-        d.innerHTML += msg + "<br>";
-    };
-</script>
-
+    <!-- Jeu -->
     <script src="game.js"></script>
+
 </body>
 </html>
