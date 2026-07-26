@@ -1,7 +1,4 @@
-import { auth } from "./firebase-init.js";
-import { signInWithEmailAndPassword } 
-    from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
+// Convertit un pseudo en email interne TY‑LUDIC
 function pseudoToEmail(pseudo) {
     return pseudo.toLowerCase() + "@tyludic.local";
 }
@@ -23,12 +20,20 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     try {
         const emailInterne = pseudoToEmail(pseudo);
 
-        const userCred = await signInWithEmailAndPassword(auth, emailInterne, password);
+        // 🔥 Version globale : window.signInWithEmailAndPassword
+        const userCred = await window.signInWithEmailAndPassword(
+            window.auth,
+            emailInterne,
+            password
+        );
+
         const uid = userCred.user.uid;
 
+        // Stockage local
         localStorage.setItem("tyludic_uid", uid);
         localStorage.setItem("tyludic_pseudo", pseudo);
 
+        // Redirection
         window.location.href = "login-ok.html";
 
     } catch (err) {

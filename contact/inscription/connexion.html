@@ -84,12 +84,17 @@ button:active {
     <p id="error"></p>
 </div>
 
-<script type="module">
-import { auth, db } from "./firebase-init.js";
-import { signInAnonymously } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+<!-- Firebase global -->
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js"></script>
 
-/* Hash SHA-256 */
+<!-- Ton init global -->
+<script src="../../firebase/firebase-init.js"></script>
+
+<script>
+// Hash SHA-256
 async function hashPassword(password) {
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
@@ -108,8 +113,8 @@ document.getElementById("login-btn").onclick = async () => {
 
     try {
         // 1. Chercher le pseudo dans Firestore
-        const q = query(collection(db, "users"), where("pseudo", "==", pseudo));
-        const snap = await getDocs(q);
+        const q = window.query(window.collection(window.db, "users"), window.where("pseudo", "==", pseudo));
+        const snap = await window.getDocs(q);
 
         if (snap.empty) {
             errorBox.textContent = "Pseudo introuvable.";
@@ -127,7 +132,7 @@ document.getElementById("login-btn").onclick = async () => {
         }
 
         // 3. Auth anonyme Firebase
-        await signInAnonymously(auth);
+        await window.signInAnonymously(window.auth);
 
         // 4. Stocker l’UID et pseudo localement
         localStorage.setItem("tyludic_uid", data.uid);

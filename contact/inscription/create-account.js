@@ -1,15 +1,7 @@
 // ======================================================
 //  TY‑LUDIC – Création de compte (version email interne)
+//  Version globale (window.*) compatible TY‑LUDIC
 // ======================================================
-
-// -----------------------------
-// IMPORTS FIREBASE
-// -----------------------------
-import { auth, db } from "./firebase-init.js";
-import { createUserWithEmailAndPassword } 
-    from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { doc, setDoc } 
-    from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 // -----------------------------
 // Validation du pseudo
@@ -51,28 +43,36 @@ async function createAccount(pseudo, password) {
     // 1. Générer l’email interne TY‑LUDIC
     const emailInterne = pseudo.toLowerCase() + "@tyludic.local";
 
-    // 2. Créer le compte Firebase Auth
-    const userCred = await createUserWithEmailAndPassword(auth, emailInterne, password);
+    // 2. Créer le compte Firebase Auth (version globale)
+    const userCred = await window.createUserWithEmailAndPassword(
+        window.auth,
+        emailInterne,
+        password
+    );
+
     const uid = userCred.user.uid;
 
-    // 3. Créer le document Firestore
-    await setDoc(doc(db, "users", uid), {
-        uid: uid,
-        pseudo: pseudo,
-        email: emailInterne,
-        scores: {
-            spaceInvader: 0,
-            neonRacer: 0,
-            domino: 0
-        },
-        scoreGlobal: 0,
-        badges: [],
-        settings: {
-            sound: true,
-            music: true,
-            language: "fr"
+    // 3. Créer le document Firestore (version globale)
+    await window.setDoc(
+        window.doc(window.db, "users/" + uid),
+        {
+            uid: uid,
+            pseudo: pseudo,
+            email: emailInterne,
+            coins: 0,
+            badges: [],
+            scoreTetris: 0,
+            scoreRacer: 0,
+            scoreInvaders: 0,
+            scoreMatch3: 0,
+            scoreCasino: 0,
+            settings: {
+                sound: true,
+                music: true,
+                language: "fr"
+            }
         }
-    });
+    );
 
     return uid;
 }
@@ -92,9 +92,11 @@ document.getElementById("create-account-form").addEventListener("submit", async 
     try {
         const uid = await createAccount(pseudo, password);
 
+        // Stockage local
         localStorage.setItem("tyludic_uid", uid);
         localStorage.setItem("tyludic_pseudo", pseudo);
 
+        // Redirection
         window.location.href = "compte-ok.html";
 
     } catch (err) {

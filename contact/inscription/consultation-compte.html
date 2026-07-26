@@ -93,11 +93,17 @@ h1 {
     <button id="back">Retour au menu</button>
 </div>
 
-<script type="module">
-import { auth, db } from "./firebase-init.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+<!-- Firebase global -->
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js"></script>
 
+<!-- Ton init global -->
+<script src="../../firebase/firebase-init.js"></script>
+
+<script>
+// Récupération des éléments
 const pseudoEl = document.getElementById("pseudo");
 const uidEl = document.getElementById("uid");
 const createdEl = document.getElementById("created");
@@ -111,7 +117,9 @@ const scoreInvadersEl = document.getElementById("scoreInvaders");
 const scoreMatch3El = document.getElementById("scoreMatch3");
 const scoreCasinoEl = document.getElementById("scoreCasino");
 
-onAuthStateChanged(auth, async (user) => {
+// Auth globale
+window.onAuthStateChanged(window.auth, async (user) => {
+
     if (!user) {
         window.location.href = "index.html";
         return;
@@ -121,8 +129,9 @@ onAuthStateChanged(auth, async (user) => {
     createdEl.textContent = user.metadata.creationTime;
     lastLoginEl.textContent = user.metadata.lastSignInTime;
 
-    const ref = doc(db, "users", user.uid);
-    const snap = await getDoc(ref);
+    // Lecture Firestore
+    const ref = window.doc(window.db, "users/" + user.uid);
+    const snap = await window.getDoc(ref);
 
     if (!snap.exists()) {
         pseudoEl.textContent = "Inconnu";
@@ -145,8 +154,9 @@ onAuthStateChanged(auth, async (user) => {
     badgesEl.textContent = data.badges ? data.badges.join(", ") : "Aucun badge";
 });
 
+// Retour
 document.getElementById("back").onclick = () => {
-    window.location.href = "../index.html"; // 🔥 Mets ici ton vrai menu
+    window.location.href = "../index.html";
 };
 </script>
 
