@@ -1,8 +1,9 @@
-// ============================================================
-//  Firebase INIT — Version globale TY‑LUDIC
-// ============================================================
+// firebase-init.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
 
-// Configuration Firebase TY‑LUDIC
 const firebaseConfig = {
   apiKey: "AIzaSyDODrXEPdxUIB_trqiZEFPMF5qQcZRuMyI",
   authDomain: "ty-ludic-f37a9.firebaseapp.com",
@@ -13,22 +14,9 @@ const firebaseConfig = {
   measurementId: "G-8MBXBRGXVW"
 };
 
-// App
-const app = window.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const analytics = getAnalytics(app);
 
-// Auth globale
-window.auth = window.getAuth(app);
-
-// Firestore globale
-window.db = window.getFirestore(app);
-
-// Analytics
-window.analytics = window.getAnalytics(app);
-
-// Fonctions Firestore v9
-window.doc = window.doc;
-window.getDoc = window.getDoc;
-window.setDoc = window.setDoc;
-window.collection = window.collection;
-
-console.log("Firebase initialisé (global) — auth & db disponibles");
+export { db, auth, analytics };
