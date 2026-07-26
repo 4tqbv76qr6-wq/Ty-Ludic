@@ -18,7 +18,6 @@
     <!-- Bloc utilisateur -->
     <div id="user-info" class="tl-user" data-i18n="user_status"></div>
 
-
     <div class="lang-switch">
         <a href="index.html" onclick="localStorage.setItem('lang','fr')" class="lang-item">🇫🇷 <span>FR</span></a>
         <span>|</span>
@@ -69,7 +68,7 @@
             <a href="rsl/index.html" class="hub-button" data-i18n="card_rsl_button"></a>
         </article>
 
-        <!-- Admin (pas encore de gestion de droits) -->
+        <!-- Admin -->
         <article class="hub-card hub-rpg role-rsl">
             <div class="hub-icon">⚙️</div>
             <h2 data-i18n="card_admin_title"></h2>
@@ -81,10 +80,6 @@
 </main>
 
 <footer class="tl-footer" data-i18n="footer_text"></footer>
-
-
-
-
 
 <!-- Multilingue -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
@@ -100,52 +95,55 @@ loadI18n({
     ]
 });
 </script>
-<!-- Firebase + RSL -->
-<script type="module">
-    import { auth, db } from "./firebase/firebase-init.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-import { ScoreManager } from "./js/ScoreManager.js";
 
-    const userBox = document.getElementById("user-info");
-    const pseudo = localStorage.getItem("tyludic_pseudo");
+<!-- Firebase global (pas de modules) -->
+<script src="firebase/firebase-init.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js"></script>
 
-    // Masquer les cartes RSL par défaut
-    document.querySelectorAll(".role-rsl").forEach(card => {
-        card.style.display = "none";
-    });
+<!-- ScoreManager global -->
+<script src="js/ScoreManager.js"></script>
 
-    // Fonction pour afficher les cartes RSL
-    function showRslCards() {
-        document.querySelectorAll(".role-rsl").forEach(card => {
-            card.style.display = "block";
-        });
-    }
+<script>
+const userBox = document.getElementById("user-info");
+const pseudo = localStorage.getItem("tyludic_pseudo");
 
-    // Vérifier si le pseudo est membre RSL
-    async function checkRslRole(pseudo) {
-        const rslDocRef = doc(db, "config", "rsl_players");
-        const snap = await getDoc(rslDocRef);
+// Masquer les cartes RSL par défaut
+document.querySelectorAll(".role-rsl").forEach(card => {
+    card.style.display = "none";
+});
 
-        if (!snap.exists()) return false;
+// Vérifier si le pseudo est membre RSL
+async function checkRslRole(pseudo) {
+    const rslDocRef = window.doc(window.db, "config/rsl_players");
+    const snap = await window.getDoc(rslDocRef);
 
-        const players = snap.data().players || [];
-        return players.includes(pseudo);
-    }
+    if (!snap.exists()) return false;
 
-    onAuthStateChanged(auth, async (user) => {
+    const players = snap.data().players || [];
+    return players.includes(pseudo);
+}
+
+window.onAuthStateChanged(window.auth, async (user) => {
 
     if (user && pseudo) {
         userBox.textContent = "👤 " + pseudo;
 
-        // 🔥 Synchronisation des scores offline
-        await ScoreManager.sync("tetris", pseudo);
-        
+        // Synchronisation des scores offline
+        if (window.ScoreManager.sync) {
+            await window.ScoreManager.sync("tetris", pseudo);
+        }
 
-        // 🔥 Chargement des scores locaux (optionnel)
-        const tetrisBest = await ScoreManager.load("tetris");
-       
+        // Chargement du meilleur score local
+        const tetrisBest = await window.ScoreManager.load("tetris");
 
+        // Vérification du rôle RSL
+        const isRsl = await checkRslRole(pseudo);
+        if (isRsl) {
+            document.querySelectorAll(".role-rsl").forEach(card => {
+                card.style.display = "block";
+            });
+        }
 
     } else {
         userBox.setAttribute("data-i18n", "user_status");
@@ -158,10 +156,7 @@ import { ScoreManager } from "./js/ScoreManager.js";
             });
     }
 });
-
-
 </script>
-
 
 </body>
 </html>
