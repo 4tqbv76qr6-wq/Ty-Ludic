@@ -1,4 +1,4 @@
-/* ============================================================
+ /* ============================================================
    SCORE & LEVEL
    ============================================================ */
 let score = 0;
@@ -289,6 +289,10 @@ alert("Fin de partie : appel ScoreManager.update()");
 
     ScoreManager.update("tetris", score, pseudo)
 alert("ScoreManager.update() exécuté");
+alert("window.db = " + window.db);
+alert("typeof window.db = " + typeof window.db);
+alert("window.db.constructor = " + (window.db && window.db.constructor.name));
+
 
 alert("auth = " + window.auth);
 alert("auth.currentUser = " + window.auth.currentUser);
