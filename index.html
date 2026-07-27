@@ -104,12 +104,13 @@ loadI18n({
         document.body.appendChild(script);
         return;
     }
-
+      alert("appel home-online");
     // Mode online → charger home-online.js (module ES)
     const script = document.createElement("script");
     script.type = "module";
     script.src = "js/home-online.js";
     document.body.appendChild(script);
+      alert("home-online appele");
 
 })();
 </script>
