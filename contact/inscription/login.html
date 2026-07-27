@@ -38,7 +38,7 @@
 <!-- Firebase MODULAR -->
 <script type="module">
     import { auth } from "../../firebase/firebase-init.js";
-    import { signInWithEmailAndPassword }
+    import { signInWithEmailAndPassword, updateProfile }
         from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
     function pseudoToEmail(pseudo) {
@@ -68,10 +68,13 @@
                 password
             );
 
-            const uid = userCred.user.uid;
+            // 🔥 Mise à jour du profil Firebase Auth
+            await updateProfile(userCred.user, {
+                displayName: pseudo
+            });
 
-            // Stockage local
-            localStorage.setItem("tyludic_uid", uid);
+            // Stockage local (offline)
+            localStorage.setItem("tyludic_uid", userCred.user.uid);
             localStorage.setItem("tyludic_pseudo", pseudo);
 
             // Redirection
