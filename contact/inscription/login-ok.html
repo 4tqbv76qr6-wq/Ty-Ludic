@@ -2,7 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Connexion réussie– TY‑LUDIC</title>
+    <title>Connexion réussie – TY‑LUDIC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,16 +16,42 @@
 
     <p><strong>Pseudo :</strong> <span id="pseudo"></span></p>
 
-    <button onclick="window.location.href='../../index.html'">
+    <button id="btn-retour">
         Retour au menu principal
     </button>
 
 </div>
 
 <script>
-    // Affiche le pseudo stocké
+    // Affiche le pseudo stocké (offline ou online)
     const pseudo = localStorage.getItem("tyludic_pseudo");
     document.getElementById("pseudo").textContent = pseudo || "Joueur";
+</script>
+
+<!-- Mode ONLINE : restauration de session Firebase -->
+<script type="module">
+    // On ne charge Firebase que si HTTPS
+    if (window.location.protocol === "https:") {
+
+        import { auth } from "../../firebase/firebase-init.js";
+        import { onAuthStateChanged }
+            from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("Session Firebase restaurée :", user.uid);
+            } else {
+                console.log("Aucune session Firebase active.");
+            }
+        });
+    }
+</script>
+
+<script>
+    // Bouton retour
+    document.getElementById("btn-retour").addEventListener("click", () => {
+        window.location.href = "../../index.html";
+    });
 </script>
 
 </body>
