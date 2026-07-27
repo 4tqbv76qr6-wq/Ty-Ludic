@@ -10,7 +10,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/f
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 //import { ScoreManager } from "../js/ScoreManager.js";
 
-alert("debut home-online");
+alert("debut home-online jl");
 alert("auth.currentUser = " + (auth.currentUser ? auth.currentUser.uid : "NULL"));
 
 // Bloc utilisateur
