@@ -7,7 +7,6 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/f
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 // import { ScoreManager } from "../js/ScoreManager.js";
 
-alert("auth.currentUser = " + (auth.currentUser ? auth.currentUser.uid : "NULL"));
 
 const userBox = document.getElementById("user-info");
 
