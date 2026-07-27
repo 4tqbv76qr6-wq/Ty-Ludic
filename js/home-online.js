@@ -4,17 +4,14 @@
 // Ce script est chargé uniquement si on est en HTTPS.
 // Firebase v12 MODULAR est disponible.
 // -----------------------------------------------------------
-      alert("debut home-online");
-
 
 import { auth, db } from "../firebase/firebase-init.js";
-alert("auth.currentUser = " + (auth.currentUser ? auth.currentUser.uid : "NULL"));
-
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
-
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import { ScoreManager } from "../js/ScoreManager.js";
+
+alert("debut home-online");
+alert("auth.currentUser = " + (auth.currentUser ? auth.currentUser.uid : "NULL"));
 
 // Bloc utilisateur
 const userBox = document.getElementById("user-info");
@@ -41,23 +38,18 @@ async function hasFirebaseAccess() {
     const firebaseOK = await hasFirebaseAccess();
 
     if (!firebaseOK) {
-        // Si HTTPS mais Firebase KO → fallback hors-ligne
         userBox.textContent = "🔌 Hors‑ligne";
         await ScoreManager.load("tetris");
         return;
     }
 
-    // Mode online complet
     onAuthStateChanged(auth, async (user) => {
 
         if (user && pseudo) {
-            // Affichage pseudo
             userBox.textContent = "👤 " + pseudo;
 
-            // Synchronisation des scores
             await ScoreManager.sync("tetris", pseudo);
 
-            // Vérification du rôle RSL
             const rslRef = doc(db, "config", "rsl_players");
             const snap = await getDoc(rslRef);
 
@@ -71,7 +63,6 @@ async function hasFirebaseAccess() {
             }
 
         } else {
-            // Pas connecté
             userBox.textContent = "Non connecté";
         }
     });
