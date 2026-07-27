@@ -6,12 +6,13 @@
 // -----------------------------------------------------------
 
 
-import { auth } from "../firebase/firebase-init.js";
+
+import { auth, db } from "../firebase/firebase-init.js";
 alert("auth.currentUser = " + (auth.currentUser ? auth.currentUser.uid : "NULL"));
 
-
-//import { auth, db } from "../firebase/firebase-init.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import { ScoreManager } from "../js/ScoreManager.js";
 
