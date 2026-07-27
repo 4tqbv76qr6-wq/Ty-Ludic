@@ -4,7 +4,7 @@
 // Ce script est chargé uniquement si on est en HTTPS.
 // Firebase v12 MODULAR est disponible.
 // -----------------------------------------------------------
-
+      alert("debut home-online");
 
 
 import { auth, db } from "../firebase/firebase-init.js";
