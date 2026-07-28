@@ -19,13 +19,13 @@
 <main class="hub-container">
     <section class="hub-intro">
         <h1 data-i18n="contact_title"></h1>
-        <p data-i18n="contact_subtitle"> </p>
+        <p data-i18n="contact_subtitle"></p>
     </section>
 
     <section class="hub-grid">
 
         <!-- Inscription (guest) -->
-        <article class="hub-card hub-arcade card-guest">
+        <article id="card-inscription" class="hub-card hub-arcade card-guest">
             <div class="hub-icon">🧾</div>
             <h2 data-i18n="contact_inscription_title"></h2>
             <p data-i18n="contact_inscription_text"></p>
@@ -33,7 +33,7 @@
         </article>
 
         <!-- Connexion (guest) -->
-        <article class="hub-card hub-arcade card-guest">
+        <article id="card-connexion" class="hub-card hub-arcade card-guest">
             <div class="hub-icon">🧾</div>
             <h2 data-i18n="contact_connexion_title"></h2>
             <p data-i18n="contact_connexion_text"></p>
@@ -41,7 +41,7 @@
         </article>
 
         <!-- Déconnexion (member) -->
-        <article class="hub-card hub-arcade hidden-game">
+        <article id="card-deconnexion" class="hub-card hub-arcade hidden-game">
             <div class="hub-icon">🧾</div>
             <h2>Déconnexion</h2>
             <p>Déconnecte toi de ton compte</p>
@@ -49,7 +49,7 @@
         </article>
 
         <!-- Mon compte (member) -->
-        <article class="hub-card hub-arcade hidden-game">
+        <article id="card-compte" class="hub-card hub-arcade hidden-game">
             <div class="hub-icon">🧾</div>
             <h2>Mon Compte</h2>
             <p>Consultation du compte</p>
@@ -57,15 +57,15 @@
         </article>
 
         <!-- Tchat (member) -->
-        <article class="hub-card hub-reflexion card-member">
+        <article id="card-tchat" class="hub-card hub-reflexion card-member">
             <div class="hub-icon">🎤</div>
             <h2 data-i18n="contact_tchat_title"></h2>
             <p data-i18n="contact_tchat_text"></p>
             <a href="../contact/tchat/index.html" class="hub-button" data-i18n="contact_tchat_button"></a>
         </article>
 
-        <!-- Contact (member) -->
-        <article class="hub-card hub-rpg hidden-game">
+        <!-- Assistance (member) -->
+        <article id="card-assistance" class="hub-card hub-rpg hidden-game">
             <div class="hub-icon">📩</div>
             <h2>Assistance Ty-Ludic</h2>
             <p>Tu as des questions, un problème de jeu, contacte nous</p>
@@ -94,7 +94,29 @@ loadI18n({
 });
 </script>
 
+<!-- CHARGEMENT DYNAMIQUE ONLINE / OFFLINE -->
+<script>
+(function() {
 
+    const isHttps = window.location.protocol === "https:";
+    const userBox = document.getElementById("user-info");
+
+    if (!isHttps) {
+        // Mode hors-ligne → charger home-offline.js
+        const script = document.createElement("script");
+        script.src = "../js/home-offline.js";
+        document.body.appendChild(script);
+        return;
+    }
+
+    // Mode online → charger home-online.js (module ES)
+    const script = document.createElement("script");
+    script.type = "module";
+    script.src = "../js/home-online.js";
+    document.body.appendChild(script);
+
+})();
+</script>
 
 </body>
 </html>
