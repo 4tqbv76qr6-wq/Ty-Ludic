@@ -8,7 +8,7 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase
 // import { ScoreManager } from "../js/ScoreManager.js";
 
 // -----------------------------------------------------------
-// Cartes du hub
+// Cartes du hub principal
 // -----------------------------------------------------------
 
 const cardJeux  = document.getElementById("card-jeux");
@@ -17,17 +17,33 @@ const cardRsl   = document.getElementById("card-rsl");
 const cardAdmin = document.getElementById("card-admin");
 
 function applyHubVisibility(state) {
-    // Toujours visible
-    cardJeux.style.display = "block";
+    if (cardJeux)  cardJeux.style.display  = "block";
+    if (cardCanal) cardCanal.style.display = state.identified ? "block" : "none";
+    if (cardRsl)   cardRsl.style.display   = state.roles.includes("rsl") ? "block" : "none";
+    if (cardAdmin) cardAdmin.style.display = state.roles.includes("admin") ? "block" : "none";
+}
 
-    // Canal TY-LUDIC : seulement online identifié
-    cardCanal.style.display = state.identified ? "block" : "none";
+// -----------------------------------------------------------
+// Cartes du hub-contact
+// -----------------------------------------------------------
 
-    // RSL : seulement si rôle RSL
-    cardRsl.style.display = state.roles.includes("rsl") ? "block" : "none";
+const cardInscription = document.getElementById("card-inscription");
+const cardConnexion   = document.getElementById("card-connexion");
+const cardDeconnexion = document.getElementById("card-deconnexion");
+const cardCompte      = document.getElementById("card-compte");
+const cardTchat       = document.getElementById("card-tchat");
+const cardAssistance  = document.getElementById("card-assistance");
 
-    // Admin : seulement si rôle admin
-    cardAdmin.style.display = state.roles.includes("admin") ? "block" : "none";
+function applyHubContactVisibility(state) {
+    const isMember = state.identified;
+
+    if (cardInscription) cardInscription.style.display = isMember ? "none" : "block";
+    if (cardConnexion)   cardConnexion.style.display   = isMember ? "none" : "block";
+
+    if (cardDeconnexion) cardDeconnexion.style.display = isMember ? "block" : "none";
+    if (cardCompte)      cardCompte.style.display      = isMember ? "block" : "none";
+    if (cardTchat)       cardTchat.style.display       = isMember ? "block" : "none";
+    if (cardAssistance)  cardAssistance.style.display  = isMember ? "block" : "none";
 }
 
 // -----------------------------------------------------------
@@ -36,7 +52,7 @@ function applyHubVisibility(state) {
 
 const userBox = document.getElementById("user-info");
 
-// Masquer les cartes RSL par défaut (sécurité)
+// Sécurité : masquer les cartes RSL par défaut
 document.querySelectorAll(".role-rsl").forEach(card => {
     card.style.display = "none";
 });
@@ -74,6 +90,12 @@ async function hasFirebaseAccess() {
             roles: []
         });
 
+        applyHubContactVisibility({
+            offline: true,
+            online: false,
+            identified: false
+        });
+
         return;
     }
 
@@ -88,6 +110,12 @@ async function hasFirebaseAccess() {
                 identified: false,
                 pseudo: null,
                 roles: []
+            });
+
+            applyHubContactVisibility({
+                offline: false,
+                online: true,
+                identified: false
             });
 
             return;
@@ -120,13 +148,20 @@ async function hasFirebaseAccess() {
             }
         }
 
-        // 🔥 Application des règles du hub
+        // 🔥 Application des règles du hub principal
         applyHubVisibility({
             offline: false,
             online: true,
             identified: true,
             pseudo: pseudoOnline,
             roles
+        });
+
+        // 🔥 Application des règles du hub-contact
+        applyHubContactVisibility({
+            offline: false,
+            online: true,
+            identified: true
         });
 
         // 🔥 Synchro ScoreManager (quand tu le réactives)

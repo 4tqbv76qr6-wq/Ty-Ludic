@@ -6,7 +6,7 @@
 // -----------------------------------------------------------
 
 // -----------------------------------------------------------
-// Cartes du hub
+// Cartes du hub principal
 // -----------------------------------------------------------
 
 const cardJeux  = document.getElementById("card-jeux");
@@ -15,17 +15,33 @@ const cardRsl   = document.getElementById("card-rsl");
 const cardAdmin = document.getElementById("card-admin");
 
 function applyHubVisibility(state) {
-    // Jeux toujours visible
-    cardJeux.style.display = "block";
+    if (cardJeux)  cardJeux.style.display  = "block";
+    if (cardCanal) cardCanal.style.display = "none";
+    if (cardRsl)   cardRsl.style.display   = "none";
+    if (cardAdmin) cardAdmin.style.display = "none";
+}
 
-    // Canal TY-LUDIC : jamais hors-ligne
-    cardCanal.style.display = "none";
+// -----------------------------------------------------------
+// Cartes du hub-contact
+// -----------------------------------------------------------
 
-    // RSL : jamais hors-ligne
-    cardRsl.style.display = "none";
+const cardInscription = document.getElementById("card-inscription");
+const cardConnexion   = document.getElementById("card-connexion");
+const cardDeconnexion = document.getElementById("card-deconnexion");
+const cardCompte      = document.getElementById("card-compte");
+const cardTchat       = document.getElementById("card-tchat");
+const cardAssistance  = document.getElementById("card-assistance");
 
-    // Admin : jamais hors-ligne
-    cardAdmin.style.display = "none";
+function applyHubContactVisibility(state) {
+    const isMember = state.identified; // toujours false hors-ligne
+
+    if (cardInscription) cardInscription.style.display = isMember ? "none" : "block";
+    if (cardConnexion)   cardConnexion.style.display   = isMember ? "none" : "block";
+
+    if (cardDeconnexion) cardDeconnexion.style.display = isMember ? "block" : "none";
+    if (cardCompte)      cardCompte.style.display      = isMember ? "block" : "none";
+    if (cardTchat)       cardTchat.style.display       = isMember ? "block" : "none";
+    if (cardAssistance)  cardAssistance.style.display  = isMember ? "block" : "none";
 }
 
 // -----------------------------------------------------------
@@ -51,7 +67,7 @@ if (pseudo) {
 }
 
 // -----------------------------------------------------------
-// Application des règles du hub (mode hors-ligne)
+// Application des règles du hub principal + hub-contact
 // -----------------------------------------------------------
 
 applyHubVisibility({
@@ -60,4 +76,10 @@ applyHubVisibility({
     identified: false,
     pseudo,
     roles: []
+});
+
+applyHubContactVisibility({
+    offline: true,
+    online: false,
+    identified: false
 });
