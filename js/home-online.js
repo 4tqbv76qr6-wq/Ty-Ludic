@@ -18,7 +18,8 @@ const cardAdmin = document.getElementById("card-admin");
 
 function applyHubVisibility(state) {
     if (cardJeux)  cardJeux.style.display  = "block";
-    if (cardCanal) cardCanal.style.display = state.identified ? "block" : "none";
+       if (cardCanal) cardCanal.style.display = "block";
+    //if (cardCanal) cardCanal.style.display = state.identified ? "block" : "none";
     if (cardRsl)   cardRsl.style.display   = state.roles.includes("rsl") ? "block" : "none";
     if (cardAdmin) cardAdmin.style.display = state.roles.includes("admin") ? "block" : "none";
 }
