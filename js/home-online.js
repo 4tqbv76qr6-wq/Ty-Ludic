@@ -80,7 +80,9 @@ async function hasFirebaseAccess() {
     const firebaseOK = await hasFirebaseAccess();
 
     if (!firebaseOK) {
-        userBox.textContent = "🔌 Hors‑ligne";
+        alert("DEBUG: Firebase inaccessible → mode hors-ligne");
+
+        if (userBox) userBox.textContent = "🔌 Hors‑ligne";
 
         applyHubVisibility({
             offline: true,
@@ -101,8 +103,12 @@ async function hasFirebaseAccess() {
 
     onAuthStateChanged(auth, async (user) => {
 
+        alert("DEBUG: onAuthStateChanged déclenché\nUser = " + (user ? "CONNECTÉ" : "NON CONNECTÉ"));
+
         if (!user) {
-            userBox.textContent = "Non connecté";
+            alert("DEBUG: utilisateur NON connecté");
+
+            if (userBox) userBox.textContent = "Non connecté";
 
             applyHubVisibility({
                 offline: false,
@@ -123,7 +129,9 @@ async function hasFirebaseAccess() {
 
         // 🔥 PSEUDO ONLINE = Firebase
         const pseudoOnline = user.displayName || "Joueur";
-        userBox.textContent = "👤 " + pseudoOnline;
+        alert("DEBUG: utilisateur CONNECTÉ\nPseudo = " + pseudoOnline);
+
+        if (userBox) userBox.textContent = "👤 " + pseudoOnline;
 
         // 🔥 Récupération des rôles
         const roles = [];
@@ -148,6 +156,8 @@ async function hasFirebaseAccess() {
             }
         }
 
+        alert("DEBUG: rôles détectés = " + (roles.length ? roles.join(", ") : "aucun"));
+
         // 🔥 Application des règles du hub principal
         applyHubVisibility({
             offline: false,
@@ -158,6 +168,16 @@ async function hasFirebaseAccess() {
         });
 
         // 🔥 Application des règles du hub-contact
+        alert(
+            "DEBUG: Application hub-contact\n" +
+            "inscription=" + !!cardInscription + "\n" +
+            "connexion=" + !!cardConnexion + "\n" +
+            "deconnexion=" + !!cardDeconnexion + "\n" +
+            "compte=" + !!cardCompte + "\n" +
+            "tchat=" + !!cardTchat + "\n" +
+            "assistance=" + !!cardAssistance
+        );
+
         applyHubContactVisibility({
             offline: false,
             online: true,
