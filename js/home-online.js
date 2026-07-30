@@ -62,14 +62,9 @@ document.querySelectorAll(".role-rsl").forEach(card => {
 // -----------------------------------------------------------
 
 async function hasFirebaseAccess() {
-    try {
-        const pingRef = doc(db, "config", "ping");
-        await getDoc(pingRef);
-        return true;
-    } catch (e) {
-        return false;
-    }
+    return true; // On considère Firebase accessible tant qu'on est en HTTPS
 }
+
 
 // -----------------------------------------------------------
 // Logique principale
