@@ -18,8 +18,7 @@ const cardAdmin = document.getElementById("card-admin");
 
 function applyHubVisibility(state) {
     if (cardJeux)  cardJeux.style.display  = "block";
-       if (cardCanal) cardCanal.style.display = "block";
-    //if (cardCanal) cardCanal.style.display = state.identified ? "block" : "none";
+    if (cardCanal) cardCanal.style.display = "block"; // Canal toujours visible online
     if (cardRsl)   cardRsl.style.display   = state.roles.includes("rsl") ? "block" : "none";
     if (cardAdmin) cardAdmin.style.display = state.roles.includes("admin") ? "block" : "none";
 }
@@ -61,11 +60,12 @@ document.querySelectorAll(".role-rsl").forEach(card => {
 // -----------------------------------------------------------
 // Test Firebase (Firestore)
 // -----------------------------------------------------------
+// IMPORTANT : ne plus tester Firestore pour déterminer le mode offline.
+// Cela évite les faux hors-ligne après un logout.
 
 async function hasFirebaseAccess() {
-    return true; // On considère Firebase accessible tant qu'on est en HTTPS
+    return true; // HTTPS = Firebase accessible
 }
-
 
 // -----------------------------------------------------------
 // Logique principale
@@ -76,7 +76,6 @@ async function hasFirebaseAccess() {
     const firebaseOK = await hasFirebaseAccess();
 
     if (!firebaseOK) {
-        alert("DEBUG: Firebase inaccessible → mode hors-ligne");
 
         if (userBox) userBox.textContent = "🔌 Hors‑ligne";
 
@@ -99,10 +98,7 @@ async function hasFirebaseAccess() {
 
     onAuthStateChanged(auth, async (user) => {
 
-        alert("DEBUG: onAuthStateChanged déclenché\nUser = " + (user ? "CONNECTÉ" : "NON CONNECTÉ"));
-
         if (!user) {
-            alert("DEBUG: utilisateur NON connecté");
 
             if (userBox) userBox.textContent = "Non connecté";
 
@@ -125,7 +121,6 @@ async function hasFirebaseAccess() {
 
         // 🔥 PSEUDO ONLINE = Firebase
         const pseudoOnline = user.displayName || "Joueur";
-        alert("DEBUG: utilisateur CONNECTÉ\nPseudo = " + pseudoOnline);
 
         if (userBox) userBox.textContent = "👤 " + pseudoOnline;
 
@@ -152,8 +147,6 @@ async function hasFirebaseAccess() {
             }
         }
 
-        alert("DEBUG: rôles détectés = " + (roles.length ? roles.join(", ") : "aucun"));
-
         // 🔥 Application des règles du hub principal
         applyHubVisibility({
             offline: false,
@@ -164,16 +157,6 @@ async function hasFirebaseAccess() {
         });
 
         // 🔥 Application des règles du hub-contact
-        alert(
-            "DEBUG: Application hub-contact\n" +
-            "inscription=" + !!cardInscription + "\n" +
-            "connexion=" + !!cardConnexion + "\n" +
-            "deconnexion=" + !!cardDeconnexion + "\n" +
-            "compte=" + !!cardCompte + "\n" +
-            "tchat=" + !!cardTchat + "\n" +
-            "assistance=" + !!cardAssistance
-        );
-
         applyHubContactVisibility({
             offline: false,
             online: true,
