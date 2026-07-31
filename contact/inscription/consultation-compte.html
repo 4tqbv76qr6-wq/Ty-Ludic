@@ -82,26 +82,32 @@ h1 {
 <!-- Ton init global -->
 <script src="../../firebase/firebase-init.js"></script>
 
-<script>
+<!-- SCRIPT CORRIGÉ -->
+<script type="module">
+import { auth, db } from "../../firebase/firebase-init.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
 // Récupération des éléments
 const pseudoEl = document.getElementById("pseudo");
 const createdEl = document.getElementById("created");
 const lastLoginEl = document.getElementById("lastLogin");
 
 // Auth globale
-window.onAuthStateChanged(window.auth, async (user) => {
+onAuthStateChanged(auth, async (user) => {
 
     if (!user) {
         window.location.href = "index.html";
         return;
     }
 
+    // Métadonnées Firebase Auth
     createdEl.textContent = user.metadata.creationTime;
     lastLoginEl.textContent = user.metadata.lastSignInTime;
 
     // Lecture Firestore
-    const ref = window.doc(window.db, "users/" + user.uid);
-    const snap = await window.getDoc(ref);
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
 
     if (!snap.exists()) {
         pseudoEl.textContent = "Inconnu";
