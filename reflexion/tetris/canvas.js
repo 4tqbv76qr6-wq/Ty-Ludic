@@ -1,10 +1,10 @@
 /* ============================================================
-   CANVAS — VERSION STABLE POUR KODER
+   CANVAS — VERSION MODULE ES
    ============================================================ */
 
-window.COLS = 10;
-window.ROWS = 20;
-window.BLOCK = 36;
+export const COLS = 10;
+export const ROWS = 20;
+export const BLOCK = 36;
 
 /*
     Grille Tetris : 20 × 36 = 720 px
@@ -13,44 +13,41 @@ window.BLOCK = 36;
     Hauteur totale : 720 + 200 + 40 = 960 px
 */
 
-window.canvas = document.getElementById("game");
-//canvas.width  = COLS * BLOCK + 130;   // 490 px
-//canvas.height = ROWS * BLOCK + 240;   // 960 px
-canvas.width  = COLS * BLOCK + 40;   // 490 px
-canvas.height = ROWS * BLOCK + 60;   // 960 px
-window.ctx = canvas.getContext("2d");
+export const canvas = document.getElementById("game");
+
+canvas.width  = COLS * BLOCK + 40;
+canvas.height = ROWS * BLOCK + 60;
+
+export const ctx = canvas.getContext("2d");
 
 /* ============================================================
    OFFSETS TY‑LUDIC
    ============================================================ */
 
-//window.offsetX = (canvas.width - COLS * BLOCK) / 2;
-//window.offsetY = (canvas.height - ROWS * BLOCK) / 2;
-window.offsetX = (canvas.width  - COLS * BLOCK) / 2;
- window.offsetY = 30;   // ⭐ marge haute légèrement augmentée (20 → 30)
+export const offsetX = (canvas.width - COLS * BLOCK) / 2;
+export const offsetY = 30;
 
 /* ============================================================
    ZONE GAME OVER
    ============================================================ */
 
-window.GAMEOVER_Y = offsetY + ROWS * BLOCK + 20;
-window.GAMEOVER_H = 200;
+export const GAMEOVER_Y = offsetY + ROWS * BLOCK + 20;
+export const GAMEOVER_H = 200;
 
 /* ============================================================
-   RESPONSIVE — VERSION CORRECTE
+   RESPONSIVE — VERSION MODULE
    ============================================================ */
 
-window.resizeGame = function() {
+export function resizeGame() {
     const wrapper = document.querySelector(".canvas-wrapper");
     const width = wrapper.clientWidth;
 
     const ratio = canvas.width / canvas.height;
     let height = width / ratio;
 
-    // ⭐ On respecte la hauteur réelle du canvas
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
-};
+}
 
 window.addEventListener("resize", resizeGame);
 window.addEventListener("orientationchange", resizeGame);

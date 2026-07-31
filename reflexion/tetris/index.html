@@ -11,7 +11,7 @@
 
     <div id="tl-arcade-frame">
 
-        <div id="marquee">TY‑LUDIC — FALLING BLO</div>
+        <div id="marquee">FALLING BLOCKS</div>
 
         <div id="hud">
             <div id="score">Score : 0</div>
@@ -34,55 +34,10 @@
 
     <div id="highscores"></div>
 
-    <!-- Moteur du jeu -->
-    <script src="canvas.js"></script>
-    <script src="grille.js"></script>
-
-    <!-- Firebase MODULAR -->
-    <script type="module">
-        import { auth, db } from "../../firebase/firebase-init.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-        import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-        import { ScoreManager } from "../../js/ScoreManager.js";
-        import { startGame } from "./game.js";   // Ton moteur Tetris
-
-        const pseudo = localStorage.getItem("tyludic_pseudo");
-        const scoreEl = document.getElementById("score");
-
-        // Vérification de la connexion
-        onAuthStateChanged(auth, async (user) => {
-
-            if (!user || !pseudo) {
-                alert("ERREUR : utilisateur non connecté");
-                window.location.href = "../../index.html";
-                return;
-            }
-
-            // Chargement du meilleur score
-            const best = await ScoreManager.load("tetris");
-            console.log("Meilleur score local :", best);
-
-            // Démarrage du jeu
-            startGame(async (scoreFinal) => {
-
-                scoreEl.textContent = "Score : " + scoreFinal;
-
-                // Enregistrement Firestore
-                const ref = doc(db, "scores_tetris", user.uid);
-                await setDoc(ref, {
-                    uid: user.uid,
-                    pseudo: pseudo,
-                    score: scoreFinal,
-                    date: new Date().toISOString()
-                });
-
-                // Enregistrement local
-                await ScoreManager.save("tetris", scoreFinal);
-
-                alert("Score enregistré !");
-            });
-        });
-    </script>
+    <!-- Modules ES -->
+    <script type="module" src="canvas.js"></script>
+    <script type="module" src="grille.js"></script>
+    <script type="module" src="game.js"></script>
 
 </body>
 </html>

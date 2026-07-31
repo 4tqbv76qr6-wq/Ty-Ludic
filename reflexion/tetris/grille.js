@@ -1,8 +1,10 @@
 /* ============================================================
-   MODULE GRILLE — TETRIS (TY‑LUDIC)
+   MODULE GRILLE — TETRIS (TY‑LUDIC) — VERSION MODULE ES
    ============================================================ */
 
-window.Grille = {
+import { COLS, ROWS } from "./canvas.js";
+
+export const Grille = {
     grid: [],
 
     init() {
