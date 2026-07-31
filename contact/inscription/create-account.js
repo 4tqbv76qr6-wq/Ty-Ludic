@@ -1,7 +1,9 @@
 // create-account.js
 import { auth, db } from "./firebase-init.js";
-import { createUserWithEmailAndPassword } 
-  from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { 
+  createUserWithEmailAndPassword,
+  updateProfile
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 import { doc, setDoc } 
   from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
@@ -25,9 +27,17 @@ async function createAccount(pseudo, password) {
 
   const emailInterne = pseudo.toLowerCase() + "@tyludic.local";
 
+  // Création du compte Firebase Auth
   const userCred = await createUserWithEmailAndPassword(auth, emailInterne, password);
+
+  // 🔥 Correction essentielle : définir le displayName immédiatement
+  await updateProfile(userCred.user, {
+    displayName: pseudo
+  });
+
   const uid = userCred.user.uid;
 
+  // Enregistrement Firestore
   await setDoc(doc(db, "users", uid), {
     uid,
     pseudo,
