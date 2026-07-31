@@ -41,12 +41,21 @@
 <!-- Ton init global -->
 <script src="../../firebase/firebase-init.js"></script>
 
-<script>
+<!-- SCRIPT CORRIGÉ -->
+<script type="module">
+import { auth, db } from "../../firebase/firebase-init.js";
+import { 
+    onAuthStateChanged, 
+    createUserWithEmailAndPassword, 
+    signOut 
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
 const errorBox = document.getElementById("error-msg");
 const form = document.getElementById("create-account-form");
 
 // Si déjà connecté → on bloque
-window.onAuthStateChanged(window.auth, (user) => {
+onAuthStateChanged(auth, (user) => {
     if (user) {
         errorBox.textContent = "Tu es déjà connecté. Déconnecte-toi pour créer un nouveau compte.";
         form.style.display = "none";
@@ -54,7 +63,7 @@ window.onAuthStateChanged(window.auth, (user) => {
         const btn = document.createElement("button");
         btn.textContent = "Se déconnecter";
         btn.onclick = async () => {
-            await window.signOut(window.auth);
+            await signOut(auth);
             window.location.reload();
         };
         errorBox.appendChild(btn);
@@ -75,7 +84,19 @@ form.addEventListener("submit", async (e) => {
 
     try {
         // Création Firebase Auth
-        const userCred = await window.createUserWithEmailAndPassword(window.auth, pseudo + "@tyludic.local", password);
+        const userCred = await createUserWithEmailAndPassword(
+            auth,
+            pseudo + "@tyludic.local",
+            password
+        );
+
+        const user = userCred.user;
+
+        // Enregistrement Firestore minimal
+        await setDoc(doc(db, "users", user.uid), {
+            pseudo: pseudo,
+            createdAt: new Date().toISOString()
+        });
 
         // Stockage pseudo local
         localStorage.setItem("tyludic_pseudo", pseudo);
