@@ -238,6 +238,17 @@ function showGameOverScreen() {
     const frameX = (canvas.width - frameW) / 2;
     const frameY = (canvas.height - frameH) / 2;
 
+// Bouton HIGHSCORES
+ctx.fillStyle = "#003344";
+ctx.fillRect(frameX + 40, frameY + frameH - 180, 280, 45);
+ctx.strokeStyle = "#00ffff";
+ctx.strokeRect(frameX + 40, frameY + frameH - 180, 280, 45);
+
+ctx.fillStyle = "#00ffff";
+ctx.font = "20px 'Press Start 2P'";
+ctx.fillText("HIGHSCORES", frameX + 60, frameY + frameH - 150);
+
+
     ctx.strokeStyle = "#00ffff";
     ctx.lineWidth = 4;
     ctx.strokeRect(frameX, frameY, frameW, frameH);
@@ -269,9 +280,11 @@ function showGameOverScreen() {
     ctx.fillText("QUITTER", frameX + 100, frameY + frameH - 30);
 
     window._goButtons = [
-        { x: frameX + 40, y: frameY + frameH - 120, w: 280, h: 45, action: "replay" },
-        { x: frameX + 40, y: frameY + frameH - 60,  w: 280, h: 45, action: "quit" }
-    ];
+    { x: frameX + 40, y: frameY + frameH - 180, w: 280, h: 45, action: "highscores" },
+    { x: frameX + 40, y: frameY + frameH - 120, w: 280, h: 45, action: "replay" },
+    { x: frameX + 40, y: frameY + frameH - 60,  w: 280, h: 45, action: "quit" }
+];
+
 }
 
 function endGame() {
@@ -293,6 +306,9 @@ function handleGameOverClick(e) {
         if (x >= b.x && x <= b.x + b.w &&
             y >= b.y && y <= b.y + b.h) {
 
+            if (b.action === "highscores") {
+                window.showHighscores();
+            }
             if (b.action === "replay") {
                 document.location.reload();
             }

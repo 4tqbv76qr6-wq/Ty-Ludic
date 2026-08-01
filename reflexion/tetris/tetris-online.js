@@ -87,3 +87,21 @@ onAuthStateChanged(auth, (user) => {
     initOnline(user);
     watchGameOver(user);
 });
+
+
+window.showHighscores = async function () {
+
+    alert("Chargement des highscores...");
+
+    const ref = collection(db, "tetris_scores");
+    const snapshot = await getDocs(ref);
+
+    let message = "🏆 Highscores Tetris\n\n";
+
+    snapshot.forEach(doc => {
+        const d = doc.data();
+        message += `${d.pseudo} — ${d.bestScore}\n`;
+    });
+
+    alert(message);
+};
