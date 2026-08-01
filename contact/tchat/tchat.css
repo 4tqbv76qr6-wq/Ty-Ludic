@@ -224,12 +224,3 @@ body {
         height: 320px;
     }
 }
-/* Messages envoyés par soi-même */
-.tchat-message.self .tchat-text {
-    background: #001a22;
-    border-color: #00e5ff;
-}
-
-.tchat-message.self .tchat-pseudo {
-    color: #7df9ff;
-}
