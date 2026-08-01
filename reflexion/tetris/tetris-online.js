@@ -71,6 +71,7 @@ function watchGameOver(user) {
    AUTH
    ============================================================ */
 onAuthStateChanged(auth, async (user) => {
-    await initOnline(user);
+    initOnline(user);   // pas besoin d'attendre
     watchGameOver(user);
+
 });
