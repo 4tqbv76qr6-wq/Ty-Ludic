@@ -4,7 +4,7 @@ import { auth, db } from "../../firebase/firebase-init.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import { ScoreManager } from "../../js/ScoreManager.js";
-alert("tetris-online.js chargé");
+//alert("tetris-online.js chargé");
 
 const pseudo = localStorage.getItem("tyludic_pseudo");
 const highscoreEl = document.getElementById("highscores");
@@ -37,24 +37,24 @@ async function initOnline(user) {
    ============================================================ */
 function watchGameOver(user) {
 
-    alert("Surveillance du gameOver démarrée");
+    //alert("Surveillance du gameOver démarrée");
 
     function check() {
 
         if (window.gameOver && onlineReady) {
 
-            alert("GAME OVER détecté");
+            //alert("GAME OVER détecté");
 
             const finalScore = window.score || 0;
-            alert("Score final = " + finalScore);
+            //alert("Score final = " + finalScore);
 
             if (finalScore > bestScore) {
 
-                alert("Nouveau record → écriture Firestore");
+                //alert("Nouveau record → écriture Firestore");
 
                 const ref = doc(db, "tetris_scores", user.uid);
 
-                alert("Chemin Firestore : tetris_scores / " + user.uid);
+                //alert("Chemin Firestore : tetris_scores / " + user.uid);
 
                 setDoc(ref, {
                     bestScore: finalScore,
@@ -62,7 +62,7 @@ function watchGameOver(user) {
                     updated: Date.now()
                 });
 
-                alert("setDoc() exécuté");
+                //alert("setDoc() exécuté");
 
                 ScoreManager.update("tetris", finalScore, pseudo);
                 alert("ScoreManager.update() exécuté");
@@ -83,7 +83,7 @@ function watchGameOver(user) {
    AUTH
    ============================================================ */
 onAuthStateChanged(auth, (user) => {
-    alert("onAuthStateChanged() déclenché");
+    //alert("onAuthStateChanged() déclenché");
     initOnline(user);
     watchGameOver(user);
 });
