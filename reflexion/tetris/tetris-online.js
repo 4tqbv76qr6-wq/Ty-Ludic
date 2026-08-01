@@ -17,29 +17,20 @@ let onlineReady = false;
    ============================================================ */
 async function initOnline(user) {
 
-    alert("initOnline() appelé");
-
-    if (!user) {
-        alert("Utilisateur NON connecté → mode offline");
+    if (!user || !pseudo) {
         highscoreEl.textContent = "Mode offline";
         return;
     }
 
-    alert("Utilisateur connecté : " + user.uid);
-
-    if (!pseudo) {
-        alert("Pseudo manquant → impossible d'écrire le score");
-        return;
-    }
-
+    // Charger le record
     bestScore = await ScoreManager.load("tetris");
-    alert("Record chargé via ScoreManager : " + bestScore);
 
+    // Afficher immédiatement dans le HUD
     highscoreEl.textContent = "Record : " + bestScore;
 
     onlineReady = true;
-    alert("onlineReady = true");
 }
+
 
 /* ============================================================
    SURVEILLANCE GAME OVER
