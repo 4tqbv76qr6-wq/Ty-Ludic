@@ -1,20 +1,4 @@
-/* ============================================================
-   IMPORTS MODULES ES
-   ============================================================ */
-import {
-    canvas,
-    ctx,
-    COLS,
-    ROWS,
-    BLOCK,
-    offsetX,
-    offsetY
-} from "./canvas.js";
-
-import { Grille } from "./grille.js";
-import { ScoreManager } from "../../js/ScoreManager.js";
-
-/* ============================================================
+ /* ============================================================
    SCORE & LEVEL
    ============================================================ */
 let score = 0;
@@ -24,20 +8,8 @@ let dropInterval = 800;
 let lastDropTime = 0;
 let gameOver = false;
 
-let bestScore = 0;
-const pseudo = localStorage.getItem("tyludic_pseudo");
-
 const scoreDisplay = document.getElementById("score");
 const levelDisplay = document.getElementById("level");
-
-/* ============================================================
-   CHARGEMENT DU RECORD
-   ============================================================ */
-async function initBestScore() {
-    bestScore = await ScoreManager.load("tetris");
-    document.getElementById("highscores").textContent = "Record : " + bestScore;
-}
-initBestScore();
 
 /* ============================================================
    GRILLE
@@ -245,36 +217,82 @@ function drawPiece() {
 }
 
 /* ============================================================
-   GAME OVER
+   GAME OVER — version OFFLINE
    ============================================================ */
 function showGameOverScreen() {
     ctx.fillStyle = "rgba(0,0,0,0.85)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    const frameW = 360;
+    const frameH = 520;
+    const frameX = (canvas.width - frameW) / 2;
+    const frameY = (canvas.height - frameH) / 2;
+
+    ctx.strokeStyle = "#00ffff";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(frameX, frameY, frameW, frameH);
+
     ctx.fillStyle = "#00ffff";
     ctx.font = "28px 'Press Start 2P'";
-    ctx.fillText("GAME OVER", 80, 200);
+    ctx.fillText("GAME OVER", frameX + 60, frameY + 60);
 
     ctx.font = "16px 'Press Start 2P'";
-    ctx.fillText("Score : " + score, 80, 260);
-    ctx.fillText("Niveau : " + level, 80, 300);
+    ctx.fillText("Score : " + score, frameX + 40, frameY + 120);
+    ctx.fillText("Niveau : " + level, frameX + 40, frameY + 150);
+
+    ctx.fillStyle = "#003344";
+    ctx.fillRect(frameX + 40, frameY + frameH - 120, 280, 45);
+    ctx.strokeStyle = "#00ffff";
+    ctx.strokeRect(frameX + 40, frameY + frameH - 120, 280, 45);
+
+    ctx.fillStyle = "#00ffff";
+    ctx.font = "20px 'Press Start 2P'";
+    ctx.fillText("REJOUER", frameX + 100, frameY + frameH - 90);
+
+    ctx.fillStyle = "#003344";
+    ctx.fillRect(frameX + 40, frameY + frameH - 60, 280, 45);
+    ctx.strokeStyle = "#00ffff";
+    ctx.strokeRect(frameX + 40, frameY + frameH - 60, 280, 45);
+
+    ctx.fillStyle = "#00ffff";
+    ctx.font = "20px 'Press Start 2P'";
+    ctx.fillText("QUITTER", frameX + 100, frameY + frameH - 30);
+
+    window._goButtons = [
+        { x: frameX + 40, y: frameY + frameH - 120, w: 280, h: 45, action: "replay" },
+        { x: frameX + 40, y: frameY + frameH - 60,  w: 280, h: 45, action: "quit" }
+    ];
 }
 
-async function endGame() {
+function endGame() {
     if (gameOver) return;
     gameOver = true;
+}
 
-    // Mise à jour du record
-    await ScoreManager.update("tetris", score, pseudo);
+/* ============================================================
+   CLICK GAME OVER
+   ============================================================ */
+function handleGameOverClick(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
 
-    if (score > bestScore) {
-        bestScore = score;
-        document.getElementById("highscores").textContent = "Record : " + bestScore;
+    for (const b of window._goButtons) {
+        if (x >= b.x && x <= b.x + b.w &&
+            y >= b.y && y <= b.y + b.h) {
+
+            if (b.action === "replay") {
+                document.location.reload();
+            }
+            if (b.action === "quit") {
+                window.location.href = "../../hub/hub-reflexion.html";
+            }
+        }
     }
 }
 
 /* ============================================================
-   CONTROLES
+   CONTROLES TACTILES
    ============================================================ */
 const Controls = {
     init() {
@@ -284,8 +302,12 @@ const Controls = {
         document.getElementById("drop").addEventListener("touchstart", () => hardDrop());
     }
 };
+
 Controls.init();
 
+/* ============================================================
+   CONTROLES CLAVIER
+   ============================================================ */
 window.addEventListener("keydown", (e) => {
     if (gameOver) return;
     if (e.key === "ArrowLeft") move(-1);
@@ -316,6 +338,11 @@ function draw() {
         drawPiece();
     } else {
         showGameOverScreen();
+
+        if (!window._goActive) {
+            canvas.addEventListener("click", handleGameOverClick);
+            window._goActive = true;
+        }
     }
 }
 
