@@ -1,12 +1,18 @@
- /* ============================================================
+/* ============================================================
    SCORE & LEVEL
    ============================================================ */
+
 let score = 0;
 let level = 1;
 let linesCleared = 0;
 let dropInterval = 800;
 let lastDropTime = 0;
 let gameOver = false;
+
+// Rendre visibles pour tetris-online.js
+window.score = score;
+window.level = level;
+window.gameOver = gameOver;
 
 const scoreDisplay = document.getElementById("score");
 const levelDisplay = document.getElementById("level");
@@ -75,6 +81,8 @@ function clearLines() {
     if (lines > 0) {
         const points = [0, 40, 100, 300, 1200][lines] || 0;
         score += points * level;
+        window.score = score;
+
         linesCleared += lines;
 
         scoreDisplay.textContent = "Score : " + score;
@@ -125,6 +133,7 @@ function softDrop() {
     } else {
         mergePiece();
         clearLines();
+        window.score = score;
         current = randomTetromino();
         if (collides(current.shape, current.x, current.y)) {
             endGame();
@@ -139,6 +148,7 @@ function hardDrop() {
 
     mergePiece();
     clearLines();
+    window.score = score;
     current = randomTetromino();
 
     if (collides(current.shape, current.x, current.y)) {
@@ -267,7 +277,9 @@ function showGameOverScreen() {
 function endGame() {
     if (gameOver) return;
     gameOver = true;
+    window.gameOver = true;
 }
+
 
 /* ============================================================
    CLICK GAME OVER
