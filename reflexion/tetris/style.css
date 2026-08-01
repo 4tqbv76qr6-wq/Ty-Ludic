@@ -120,9 +120,12 @@ canvas {
 }
 
 /* ------------------------------------------------------------
-   HIGH SCORES (désactivé)
+   HIGH SCORES 
 ------------------------------------------------------------ */
 
+
 #highscores {
-    display: none; /* ⭐ On désactive totalement */
+    display: inline-block;
+    margin-right: 20px;
 }
+
